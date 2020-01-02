@@ -1,64 +1,8 @@
-const path = require(`path`)
-const { createFilePath } = require(`gatsby-source-filesystem`)
+// typescript hack here: https://github.com/gatsbyjs/gatsby/issues/1457#issuecomment-381405638
 
-exports.createPages = async ({ graphql, actions }) => {
-  const { createPage } = actions
+require('source-map-support').install()
+require('ts-node').register()
 
-  const blogPost = path.resolve(`./src/templates/blog-post.js`)
-  const result = await graphql(
-    `
-      {
-        allMarkdownRemark(
-          sort: { fields: [frontmatter___date], order: DESC }
-          limit: 1000
-        ) {
-          edges {
-            node {
-              fields {
-                slug
-              }
-              frontmatter {
-                title
-              }
-            }
-          }
-        }
-      }
-    `
-  )
-
-  if (result.errors) {
-    throw result.errors
-  }
-
-  // Create blog posts pages.
-  const posts = result.data.allMarkdownRemark.edges
-
-  posts.forEach((post, index) => {
-    const previous = index === posts.length - 1 ? null : posts[index + 1].node
-    const next = index === 0 ? null : posts[index - 1].node
-
-    createPage({
-      path: post.node.fields.slug,
-      component: blogPost,
-      context: {
-        slug: post.node.fields.slug,
-        previous,
-        next,
-      },
-    })
-  })
-}
-
-exports.onCreateNode = ({ node, actions, getNode }) => {
-  const { createNodeField } = actions
-
-  if (node.internal.type === `MarkdownRemark`) {
-    const value = createFilePath({ node, getNode })
-    createNodeField({
-      name: `slug`,
-      node,
-      value,
-    })
-  }
-}
+const { createPages, onCreateNode } = require("./src/gatsby-node.ts"); // eslint-disable-line @typescript-eslint/no-var-requires
+exports.createPages = createPages;
+exports.onCreateNode = onCreateNode;

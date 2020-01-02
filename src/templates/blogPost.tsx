@@ -1,4 +1,4 @@
-import React from "react"
+import * as React from "react"
 import { Link, graphql } from "gatsby"
 
 import Bio from "../components/bio"
@@ -6,7 +6,8 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { rhythm, scale } from "../utils/typography"
 
-class BlogPostTemplate extends React.Component {
+
+class BlogPostTemplate extends React.Component<BlogPostTemplateProps, {}> {
   render() {
     const post = this.props.data.markdownRemark
     const siteTitle = this.props.data.site.siteMetadata.title
@@ -20,14 +21,14 @@ class BlogPostTemplate extends React.Component {
         />
         <article>
           <header>
-            <h1
+            <h2
               style={{
                 marginTop: rhythm(1),
                 marginBottom: 0,
               }}
             >
               {post.frontmatter.title}
-            </h1>
+            </h2>
             <p
               style={{
                 ...scale(-1 / 5),
@@ -38,14 +39,14 @@ class BlogPostTemplate extends React.Component {
               {post.frontmatter.date}
             </p>
           </header>
-          <section dangerouslySetInnerHTML={{ __html: post.html }} />
+          <section dangerouslySetInnerHTML={{ __html: post.html }}/>
           <hr
             style={{
               marginBottom: rhythm(1),
             }}
           />
           <footer>
-            <Bio />
+            <Bio/>
           </footer>
         </article>
 
@@ -80,24 +81,56 @@ class BlogPostTemplate extends React.Component {
   }
 }
 
+interface Frontmatter {
+  title: string
+  date: string
+  description: string
+}
+
+interface MarkdownRemark {
+  id: string
+  excerpt: string
+  html: string
+  frontmatter: Frontmatter
+}
+
+interface PageSiteMetadata {
+  title: string
+}
+
+interface PageSite {
+  siteMetadata: PageSiteMetadata
+}
+
+interface BlogPostData {
+  markdownRemark: MarkdownRemark
+  site: PageSite
+}
+
+interface BlogPostTemplateProps {
+  data: BlogPostData
+  location: Location
+  pageContext: any
+}
+
 export default BlogPostTemplate
 
 export const pageQuery = graphql`
-  query BlogPostBySlug($slug: String!) {
-    site {
-      siteMetadata {
-        title
-      }
+    query BlogPostBySlug($slug: String!) {
+        site {
+            siteMetadata {
+                title
+            }
+        }
+        markdownRemark(fields: { slug: { eq: $slug } }) {
+            id
+            excerpt(pruneLength: 160)
+            html
+            frontmatter {
+                title
+                date(formatString: "MMMM DD, YYYY")
+                description
+            }
+        }
     }
-    markdownRemark(fields: { slug: { eq: $slug } }) {
-      id
-      excerpt(pruneLength: 160)
-      html
-      frontmatter {
-        title
-        date(formatString: "MMMM DD, YYYY")
-        description
-      }
-    }
-  }
 `

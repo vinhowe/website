@@ -1,21 +1,23 @@
-import React from "react"
+import * as React from "react"
 import { Link, graphql } from "gatsby"
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
-import SEO from "../components/seo"
+import SEO, { rootTitle } from "../components/seo"
 import { rhythm } from "../utils/typography"
+import { MarkdownRemarkConnection, SiteNode } from "../queries"
+import HeroImage from "../components/heroImage"
 
-class BlogIndex extends React.Component {
+class BlogIndex extends React.Component<BlogIndexProps, {}> {
   render() {
     const { data } = this.props
     const siteTitle = data.site.siteMetadata.title
     const posts = data.allMarkdownRemark.edges
 
     return (
-      <Layout location={this.props.location} title={siteTitle}>
-        <SEO title="All posts" />
-        <Bio />
+      <Layout location={this.props.location} title={"test iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"}>
+        <SEO title={rootTitle}/>
+        <HeroImage />
         {posts.map(({ node }) => {
           const title = node.frontmatter.title || node.fields.slug
           return (
@@ -48,6 +50,16 @@ class BlogIndex extends React.Component {
 }
 
 export default BlogIndex
+
+interface BlogIndexQuery {
+  site: SiteNode
+  allMarkdownRemark: MarkdownRemarkConnection
+}
+
+interface BlogIndexProps {
+  data: BlogIndexQuery,
+  location: Location
+}
 
 export const pageQuery = graphql`
   query {

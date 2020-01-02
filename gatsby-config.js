@@ -1,12 +1,24 @@
+const accentColor = `#00AD50`
+
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
-    author: `Kyle Mathews`,
-    description: `A starter blog demonstrating what Gatsby can do.`,
-    siteUrl: `https://gatsby-starter-blog-demo.netlify.com/`,
-    social: {
-      twitter: `kylemathews`,
-    },
+    title: `vin howe`,
+    author: `Vin Howe`,
+    description: `The personal blog of Vin Howe`,
+    siteUrl: `https://howe.vin/`,
+    accentColor: accentColor,
+    social: [
+      {
+        name: `GitHub`,
+        username: `vinhowe`,
+        url: `https://github.com/vinhowe`,
+      },
+      {
+        name: `LinkedIn`,
+        username: `tvinhowe`,
+        url: `https://github.com/tvinhowe`,
+      },
+    ],
   },
   plugins: [
     {
@@ -23,6 +35,21 @@ module.exports = {
         name: `assets`,
       },
     },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/content/resume`,
+        name: `resume`,
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-netlify-cms',
+      options: {
+        modulePath: `${__dirname}/src/cms/cms.ts`,
+      },
+    },
+    `gatsby-transformer-yaml`,
+    `gatsby-transformer-remark`,
     {
       resolve: `gatsby-transformer-remark`,
       options: {
@@ -50,15 +77,15 @@ module.exports = {
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
-        //trackingId: `ADD YOUR TRACKING ID HERE`,
+        trackingId: `UA-55118707-9`,
       },
     },
     `gatsby-plugin-feed`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Gatsby Starter Blog`,
-        short_name: `GatsbyJS`,
+        name: `Vin Howe`,
+        short_name: `Vin Howe`,
         start_url: `/`,
         background_color: `#ffffff`,
         theme_color: `#663399`,
@@ -74,5 +101,7 @@ module.exports = {
         pathToConfigModule: `src/utils/typography`,
       },
     },
+    // `gatsby-plugin-mdx`,
+    `gatsby-plugin-typescript`,
   ],
 }
