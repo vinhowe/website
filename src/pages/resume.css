@@ -1,0 +1,398 @@
+.resume {
+  font-family: "Lato", "Source Sans Pro", Roboto, "San Francisco", "Segoe UI",
+    sans-serif;
+  color: #212121;
+  font-size: 75%;
+  -webkit-print-color-adjust: exact !important;
+}
+
+.resume *,
+.resume h1 {
+  line-height: initial;
+}
+
+.resume h1,
+.resume h2,
+.resume h3,
+.resume h4,
+.resume h5,
+.resume h6 {
+  font-family: "Lato", "Source Sans Pro", Roboto, "San Francisco", "Segoe UI",
+    sans-serif;
+}
+
+.resume h2,
+.resume h3 {
+  font-weight: 700;
+}
+
+.resume h2 {
+  font-size: 16px;
+}
+
+.resume h3 {
+  font-size: 14px;
+}
+
+.resume a {
+  text-decoration: none;
+  box-shadow: none;
+  color: darkblue;
+}
+
+.resume * {
+  margin: 0;
+}
+
+.resume,
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 16px;
+}
+
+.resume .content {
+  max-width: 40rem;
+  width: 100%;
+}
+
+@media print {
+  .resume,
+  .container {
+    padding: 0;
+    display: block;
+  }
+
+  .resume .content {
+    max-width: 100%;
+    padding: 0 2px;
+  }
+
+  /* Prevent purple links when printing to PDF */
+  .resume a:visited {
+    color: blue !important;
+  }
+
+  .resume .project-title a {
+    color: #212121;
+  }
+
+  .resume .project-title a:visited {
+    color: #212121;
+  }
+
+  .resume .resume-item {
+    page-break-inside: avoid;
+  }
+
+  @page
+  {
+    size: auto;   /* auto is the current printer page size */
+    margin: 0.5in;  /* this affects the margin in the printer settings */
+  }
+
+  html,
+  body {
+    padding: 0 !important;
+    overflow: hidden !important;
+    break-after: auto;
+    display: block;
+    margin: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .resume, .resume * {
+    overflow: visible !important;
+  }
+}
+
+.resume .content > section > :first-child {
+  margin-top: 0;
+}
+
+.resume .flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+@media only screen and (max-width: 40rem) {
+  .resume .info-row {
+    flex-direction: column;
+  }
+
+  .resume .info-row > * {
+    flex: 0;
+  }
+}
+
+.resume .flex-row > * {
+  align-self: flex-start;
+  margin: 0;
+}
+
+.resume .flex-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  width: 100%;
+}
+
+.resume .flex-1 {
+  flex: 1;
+}
+
+.resume .flex-2 {
+  flex: 2;
+}
+
+.resume .flex-3 {
+  flex: 3;
+}
+
+.resume h1 {
+  /*font-family: 'IBM Plex Mono', monospace;*/
+  font-weight: 600;
+}
+
+.resume h1,
+.resume h2,
+.resume h3,
+.resume h4,
+.resume h5,
+.resume h6 {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.resume ul {
+  padding-left: 24px;
+}
+
+@media only screen and (max-width: 40rem) {
+  /* top-level ul */
+  .resume :not(li) > ul {
+    padding-left: 0;
+  }
+}
+
+.resume ul > li {
+  list-style-type: none;
+}
+
+.resume ul > li:before {
+  content: "•";
+  padding-right: 4px;
+}
+
+.resume ul > li > ul > li:before {
+  content: "⚬";
+}
+
+.resume .text-right {
+  text-align: right;
+}
+
+.resume .name-contact-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.resume .name-contact-box > * {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  text-align: left;
+}
+
+.resume .social-box {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+  align-self: center;
+  text-align: left;
+}
+
+.resume .social-box > * {
+  margin: 2px 0;
+}
+
+@media only screen and (max-width: 40rem) {
+  .resume .social-box {
+    align-self: start;
+  }
+}
+
+.resume .social-box > p > .icon {
+  margin-right: 2px;
+}
+
+.resume .blurb {
+  font-style: italic;
+  font-weight: normal;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.resume .name {
+  font-size: 2em;
+}
+
+.resume .last-updated {
+  font-style: italic;
+  color: #888;
+}
+
+.resume section {
+  margin-top: 8px;
+}
+
+.resume .section-header-line {
+  height: 0;
+  border-top: 2px dashed #333;
+  width: 100%;
+  align-self: flex-end;
+  margin-bottom: 3px;
+  margin-left: 4px;
+}
+
+.resume h2 {
+  color: #333;
+}
+
+.resume .section-header {
+  margin-bottom: 4px;
+}
+
+.resume .skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+  font-family: "IBM Plex Mono", monospace;
+  line-height: calc(100% + 4px);
+}
+
+.resume .skills-list > span {
+  border: 1px solid #aaaaaa;
+  border-radius: 2px;
+  padding: 2px 6px;
+  margin: 2px 2px;
+  white-space: nowrap;
+}
+
+.resume .skills-list .skills-legend {
+  background-color: #e1e1e1;
+  border-color: #e1e1e1;
+}
+
+.resume .show-mobile {
+  display: none;
+
+}
+
+.resume .technologies {
+  margin-left: 2px;
+  margin-bottom: 1px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 1;
+  justify-content: end;
+}
+
+.resume .technologies > span {
+  color: #888;
+  border: 1px solid #888;
+  border-radius: 2px;
+  padding: 0 4px;
+  white-space: nowrap;
+  /*margin-right: 4px;*/
+}
+
+.resume .technologies {
+  margin: 0 -2px;
+}
+
+.resume .technologies > span {
+  margin: 2px;
+}
+
+.resume .project-dates-title {
+  line-height: 100%;
+}
+
+.resume .dates-description {
+  text-transform: uppercase;
+  opacity: 0.6;
+  font-size: 0.6rem;
+  font-weight: bold;
+  padding: 0;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.resume .project-header {
+  margin-top: 6px;
+}
+
+.resume .project-title-technologies {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-bottom: 6pt;
+}
+
+.resume .project-title-technologies > .project-title {
+  /* Thanks https://stackoverflow.com/questions/29157016/prevent-flexbox-shrinking#comment74015900_29157145 */
+  flex: 1 0 auto;
+}
+
+.resume .project-title {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.resume .resume-item {
+  margin-top: 10px;
+}
+
+.resume .text-transform-exception {
+  text-transform: none;
+}
+
+.resume main section > .resume-item {
+  margin-top: 6px;
+}
+
+@media only screen and (max-width: 40rem) {
+  .resume .hide-mobile {
+    display: none;
+  }
+
+  .resume .show-mobile {
+    display: inline;
+  }
+
+  .resume .project-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 4px;
+  }
+
+  .resume .project-title-technologies {
+    flex-wrap: wrap;
+  }
+
+  .resume .technologies {
+    font-size: 0.7rem;
+    justify-content: start;
+  }
+
+  .resume #education {
+    margin-top: 4px;
+  }
+}

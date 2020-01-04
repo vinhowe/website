@@ -2,7 +2,7 @@ const accentColor = `#00AD50`
 
 module.exports = {
   siteMetadata: {
-    title: `vin howe`,
+    title: `howe.vin`,
     author: `Vin Howe`,
     description: `The personal blog of Vin Howe`,
     siteUrl: `https://howe.vin/`,
@@ -16,7 +16,7 @@ module.exports = {
       {
         name: `LinkedIn`,
         username: `tvinhowe`,
-        url: `https://github.com/tvinhowe`,
+        url: `https://linkedin.com/in/tvinhowe`,
       },
     ],
   },
@@ -103,5 +103,13 @@ module.exports = {
     },
     // `gatsby-plugin-mdx`,
     `gatsby-plugin-typescript`,
+    {
+      resolve: `gatsby-plugin-web-font-loader`,
+      options: {
+        typekit: {
+	  id: 'yww2nlu'
+        }
+      }
+    }
   ],
 }

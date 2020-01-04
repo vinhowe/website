@@ -46,10 +46,10 @@ const Nav = () => {
       name: "resume",
       path: "/resume",
     },
-    {
-      name: "about",
-      path: "/about",
-    },
+    // {
+    //   name: "about",
+    //   path: "/about",
+    // },
   ]
 
   const navItemElementList = navItemList.map((item: NavItem, i: number) => {
@@ -71,16 +71,17 @@ const Nav = () => {
     <div
       className={"nav-flex-container"}
       style={{
-        paddingBottom: rhythm(1)
+        paddingBottom: rhythm(1),
+        alignItems: "center"
       }}
     >
       <h1
         style={{
-          ...scale(0.2),
+          ...scale(0.5),
           color: accentColor,
           marginTop: 0,
           height: "min-content",
-          flexShrink: 0
+          flexShrink: 0,
         }}
         className={"site-title"}
       >

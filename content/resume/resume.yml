@@ -1,0 +1,186 @@
+---
+info:
+  lastUpdated: "1/4/2020"
+
+bio:
+  name: "Vin Howe"
+  location: "Provo, UT"
+  # May decide to phase out the blurb
+  blurb: "Driven software architect with experience solving complex, customer-oriented problems seeking a challenging and educational internship to provide value for customers."
+  contact:
+    phoneNumber: "(864) 663-3334"
+    email: "vin@byu.net"
+  social:
+    github: "vinhowe"
+    linkedin: "tvinhowe"
+    website: "howe.vin"
+
+education:
+  - name: "Brigham Young University"
+    featured: true
+    degree: "Bachelors of Science"
+    major: "Computer Science"
+    location: "Provo, UT"
+    dateRange:
+      startDate: "Sep 2019"
+      endDate: "Apr 2025"
+      current: true
+    gpaInfo:
+      gpa: "4.00"
+      lastUpdated: "12/30/2019"
+    relevantCoursework:
+      - code: "cs 142"
+        name: "Intro to Computer Programming"
+      - code: "cs 235"
+        name: "Data Structures"
+      - code: "math 112"
+        name: "Calculus 1"
+      - code: "math 113"
+        name: "Calculus 2"
+      - code: "stats 121"
+        name: "Principles of Statistics"
+      - code: "wrtg 150"
+        name: "Intro to Writing"
+    additionalInfo:
+      - "Member of BYU Developers Club"
+#  - name: "test university"
+
+work:
+  - name: "The Church of Jesus Christ of Latter-day Saints"
+    url: "https://www.churchofjesuschrist.org"
+    featured: true
+    location: "Lehi, UT"
+    address: "3201 Garden Dr, Lehi, UT 84043"
+    position: "Web development intern"
+    bullets:
+      - "bullet 1"
+      - "bullet 2"
+    dateRange:
+      startDate: "Apr 2019"
+      endDate: "Aug 2019"
+      current: false
+
+projects:
+  - name: "Valley⁠—producer mobile app"
+    featured: true
+    dateRange:
+      startDate: "Aug 2019"
+      endDate: "Feb 2019"
+      current: false
+    bullets:
+      - "Recognized a potential to use technology as a solution to help local producers market and sell their products."
+      - "Conducted market research project consisting of in-person interviews conducted with farmers."
+      - "Created pencil-and-paper wireframes and built Android app and then Flutter app with cross-platform support for iOS"
+      - "Firebase products (Cloud Firestore, Cloud Storage, Authentication, Cloud Functions, and Cloud Messaging) were used on the backend."
+    technologies:
+      - "Android"
+      - "Java"
+      - "Kotlin"
+      - "Flutter"
+      - "Dart"
+      - "Firebase BaaS"
+      - "Node.js"
+  - name: "Math problem generator"
+    featured: true
+    dateRange:
+      startDate: "Jun 2019"
+      endDate: "Sep 2019"
+      current: false
+    url: "https://github.com/vinhowe/problem-sets"
+    bullets:
+      - "Needed a system for reviewing math problems by type without repetition."
+      - "Created a Python API with Flask server for randomly generating LaTeX-formatted problems by type, and Vue frontend for retrieving and viewing problems."
+      - "Created problem type prototyping workflow using Jupyter Notebook support in Visual Studio Code. "
+      - "Later refactored to add static problem type functionality with SQLite backend."
+    technologies:
+      - "Python"
+      - "Flask"
+      - "SQLite"
+      - "TypeScript"
+      - "Vue"
+      - "LaTeX"
+      - "Jupyter Notebooks"
+  - name: "Flower delivery subscription service"
+    featured: false
+    dateRange:
+      startDate: "Jul 2017"
+      current: false
+    bullets:
+      - "Created a web app for a flower delivery subscription service for a customer."
+      - "Built form that called Node.js Firebase Cloud Functions endpoint when submitted, notifying customer via email and processing payment with Stripe API."
+    technologies:
+      - "Node.js"
+      - "Stripe API"
+      - "Firebase BaaS"
+  - name: "2D tile game engine"
+    featured: false
+    dateRange:
+      startDate: "Jun 2015"
+      endDate: "Aug 2018"
+      current: false
+    bullets:
+      - "Created a proof-of-concept for a destructible tile-based game in Java using LibGDX. Researched and implemented custom physics and collision handling logic."
+      - "Learned enough about OpenGL shader language (GLSL) to write shaders for custom lighting effects."
+    technologies:
+      - "Java"
+      - "GLSL"
+      - "LibGDX"
+  - name: "Ordo⁠—memory training mobile app"
+    featured: true
+    url: "https://github.com/vinhowe/ordo"
+    dateRange:
+      startDate: "Feb 2017"
+      current: false
+    bullets:
+      - "Designed, prototyped, and built a multiplayer memory game for Android with Firebase Realtime Database."
+    technologies:
+      - "Android"
+      - "Java"
+      - "Firebase BaaS"
+  - name: "My résumé"
+    featured: true
+    url: "https://github.com/vinhowe/website"
+    dateRange:
+      startDate: "Dec 2019"
+      endDate: "Jan 2020"
+      current: false
+    bullets:
+      - "Generated this résumé from YAML data with Gatsby static React site generator into a responsive HTML layout using CSS flex."
+
+skills:
+  proficient:
+    - name: "Java"
+      featured: true
+    - name: "Python"
+      featured: true
+    - name: "JavaScript"
+      featured: true
+    - name: "Dart"
+      featured: true
+    - name: "Android"
+      featured: true
+    - name: "Flutter"
+      featured: true
+    - name: "Debian-based Linux"
+      featured: true
+  familiar:
+    - name: "Node.js"
+      featured: true
+    - name: "TypeScript"
+      featured: true
+    - name: "React"
+      featured: true
+    - name: "Vue"
+      featured: true
+    - name: "jQuery"
+      featured: true
+    - name: "Firebase BaaS"
+      featured: true
+    - name: "ReactiveX"
+      featured: true
+    - name: "Jupyter Notebooks"
+      featured: true
+    - name: "Flask"
+      featured: true
+    - name: "Git"
+      featured: true

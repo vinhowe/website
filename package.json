@@ -1,19 +1,22 @@
 {
-  "name": "gatsby-starter-blog",
+  "name": "howe-vin-website",
   "private": true,
-  "description": "A starter for a blog powered by Gatsby and Markdown",
+  "description": "The personal website of Vin Howe",
   "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
-  },
+  "author": "Vin Howe <vin@byu.net>",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.26",
+    "@fortawesome/free-brands-svg-icons": "^5.12.0",
+    "@fortawesome/free-regular-svg-icons": "^5.12.0",
+    "@fortawesome/free-solid-svg-icons": "^5.12.0",
+    "@fortawesome/react-fontawesome": "^0.1.8",
     "@mdx-js/mdx": "^1.5.3",
     "@mdx-js/react": "^1.5.3",
     "@types/gray-percentage": "^2.0.0",
     "@types/react-helmet": "^5.0.14",
     "@types/typography": "^0.16.3",
     "@types/typography-breakpoint-constants": "^0.16.0",
+    "cross-env": "^6.0.3",
     "gatsby": "^2.18.12",
     "gatsby-image": "^2.2.34",
     "gatsby-plugin-feed": "^2.3.23",
@@ -28,6 +31,7 @@
     "gatsby-plugin-sharp": "^2.3.5",
     "gatsby-plugin-typescript": "^2.1.23",
     "gatsby-plugin-typography": "^2.3.18",
+    "gatsby-plugin-web-font-loader": "^1.0.4",
     "gatsby-remark-copy-linked-files": "^2.1.31",
     "gatsby-remark-images": "^3.1.35",
     "gatsby-remark-prismjs": "^3.3.25",
@@ -56,6 +60,7 @@
     "typography-theme-wordpress-2016": "^0.16.19"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.7",
     "@types/node": "^13.1.2",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",

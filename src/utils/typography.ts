@@ -8,16 +8,16 @@ const typography = new Typography({
   scaleRatio: 5 / 2,
   googleFonts: [
     {
-      name: "Gelasio",
-      styles: ["500"],
+      name: "IBM Plex Mono",
+      styles: ["700"],
     },
     {
-      name: "Merriweather",
-      styles: ["400", "400i", "700", "700i", "900", "900i"],
+      name: "Lato",
+      styles: ["400", "400i", "700"],
     },
   ],
-  headerFontFamily: ["Gelasio", "Georgia", "serif"],
-  bodyFontFamily: ["Merriweather", "Georgia", "serif"],
+  headerFontFamily: ["forma-djr-display", "Georgia", "serif"],
+  bodyFontFamily: ["miller-text", "Georgia", "serif"],
   bodyColor: "hsla(0,0%,0%,0.9)",
   headerWeight: 500,
   bodyWeight: 400,
@@ -62,8 +62,8 @@ const typography = new Typography({
       marginTop: rhythm(2),
     },
     h4: {
-      letterSpacing: "0.140625em",
-      textTransform: "uppercase",
+      // letterSpacing: "0.140625em",
+      // textTransform: "uppercase",
     },
     h6: {
       fontStyle: "italic",
@@ -83,8 +83,8 @@ const typography = new Typography({
       textDecoration: "none",
     },
     '.site-title': {
-      fontFamily: ["Arial", "sans-serif"].join(","),
-      fontWeight: 600,
+      fontFamily: ["forma-djr-display", "sans-serif"].join(","),
+      fontWeight: 700,
     },
   }),
 })
