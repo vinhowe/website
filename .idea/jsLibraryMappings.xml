@@ -3,6 +3,5 @@
   <component name="JavaScriptLibraryMappings">
     <file url="PROJECT" libraries="{cms}" />
     <includedPredefinedLibrary name="Node.js Core" />
-    <excludedPredefinedLibrary name="gatsby-starter-blog/plugins-staging/gatsby-transformer-yaml/node_modules" />
   </component>
 </project>
