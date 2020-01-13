@@ -1,0 +1,23 @@
+name: Gatsby Deploy to Firebase
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout master
+      uses: actions/checkout@master
+    - name: Set Node.js
+      uses: actions/setup-node@master
+      with:
+        node-version: 10.x
+    - name: Install dependencies
+      run: npm install --prod --pure-lockfile
+    - name: Deploy to Firebase
+      uses: lowply/deploy-firebase@v0.0.2
