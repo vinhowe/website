@@ -343,7 +343,6 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  margin-bottom: 6pt;
 }
 
 .resume .project-title-technologies > .project-title {
