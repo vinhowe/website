@@ -480,7 +480,6 @@ type MarkdownRemarkFields {
 }
 
 type MarkdownRemarkFrontmatter {
-    author: String
     date(
         #Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\".
         difference: String,
@@ -528,18 +527,14 @@ type Query {
     allSite(filter: SiteFilterInput, limit: Int, skip: Int, sort: SiteSortInput): SiteConnection!
     allSitePage(filter: SitePageFilterInput, limit: Int, skip: Int, sort: SitePageSortInput): SitePageConnection!
     allSitePlugin(filter: SitePluginFilterInput, limit: Int, skip: Int, sort: SitePluginSortInput): SitePluginConnection!
-    allStrapiPost(filter: StrapiPostFilterInput, limit: Int, skip: Int, sort: StrapiPostSortInput): StrapiPostConnection!
-    allStrapiUser(filter: StrapiUserFilterInput, limit: Int, skip: Int, sort: StrapiUserSortInput): StrapiUserConnection!
     directory(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): Directory
     file(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, childImageSharp: ImageSharpFilterInput, childMarkdownRemark: MarkdownRemarkFilterInput, childResumeYaml: ResumeYamlFilterInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, publicURL: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): File
     imageSharp(children: NodeFilterListInput, fixed: ImageSharpFixedFilterInput, fluid: ImageSharpFluidFilterInput, id: StringQueryOperatorInput, internal: InternalFilterInput, original: ImageSharpOriginalFilterInput, parent: NodeFilterInput, resize: ImageSharpResizeFilterInput, resolutions: ImageSharpResolutionsFilterInput, sizes: ImageSharpSizesFilterInput): ImageSharp
     markdownRemark(children: NodeFilterListInput, excerpt: StringQueryOperatorInput, excerptAst: JSONQueryOperatorInput, fields: MarkdownRemarkFieldsFilterInput, fileAbsolutePath: StringQueryOperatorInput, frontmatter: MarkdownRemarkFrontmatterFilterInput, headings: MarkdownHeadingFilterListInput, html: StringQueryOperatorInput, htmlAst: JSONQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, rawMarkdownBody: StringQueryOperatorInput, tableOfContents: StringQueryOperatorInput, timeToRead: IntQueryOperatorInput, wordCount: MarkdownWordCountFilterInput): MarkdownRemark
-    resumeYaml(bio: ResumeYamlBioFilterInput, children: NodeFilterListInput, education: ResumeYamlEducationFilterListInput, id: StringQueryOperatorInput, info: ResumeYamlInfoFilterInput, internal: InternalFilterInput, parent: NodeFilterInput, projects: ResumeYamlProjectsFilterListInput, skills: ResumeYamlSkillsFilterInput, work: ResumeYamlWorkFilterListInput): ResumeYaml
+    resumeYaml(bio: ResumeYamlBioFilterInput, children: NodeFilterListInput, education: ResumeYamlEducationFilterListInput, id: StringQueryOperatorInput, info: ResumeYamlInfoFilterInput, internal: InternalFilterInput, parent: NodeFilterInput, projects: ResumeYamlProjectsFilterListInput, skills: ResumeYamlSkillsFilterInput): ResumeYaml
     site(buildTime: DateQueryOperatorInput, children: NodeFilterListInput, host: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, pathPrefix: StringQueryOperatorInput, polyfill: BooleanQueryOperatorInput, port: IntQueryOperatorInput, siteMetadata: SiteSiteMetadataFilterInput): Site
-    sitePage(children: NodeFilterListInput, component: StringQueryOperatorInput, componentChunkName: StringQueryOperatorInput, componentPath: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, internalComponentName: StringQueryOperatorInput, isCreatedByStatefulCreatePages: BooleanQueryOperatorInput, parent: NodeFilterInput, path: StringQueryOperatorInput, pluginCreator: SitePluginFilterInput, pluginCreatorId: StringQueryOperatorInput): SitePage
+    sitePage(children: NodeFilterListInput, component: StringQueryOperatorInput, componentChunkName: StringQueryOperatorInput, componentPath: StringQueryOperatorInput, context: SitePageContextFilterInput, id: StringQueryOperatorInput, internal: InternalFilterInput, internalComponentName: StringQueryOperatorInput, isCreatedByStatefulCreatePages: BooleanQueryOperatorInput, parent: NodeFilterInput, path: StringQueryOperatorInput, pluginCreator: SitePluginFilterInput, pluginCreatorId: StringQueryOperatorInput): SitePage
     sitePlugin(browserAPIs: StringQueryOperatorInput, children: NodeFilterListInput, id: StringQueryOperatorInput, internal: InternalFilterInput, name: StringQueryOperatorInput, nodeAPIs: StringQueryOperatorInput, packageJson: SitePluginPackageJsonFilterInput, parent: NodeFilterInput, pluginFilepath: StringQueryOperatorInput, pluginOptions: SitePluginPluginOptionsFilterInput, resolve: StringQueryOperatorInput, ssrAPIs: StringQueryOperatorInput, version: StringQueryOperatorInput): SitePlugin
-    strapiPost(author: StrapiPostAuthorFilterInput, body: StringQueryOperatorInput, children: NodeFilterListInput, created_at: DateQueryOperatorInput, description: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, publishedAt: DateQueryOperatorInput, slug: StringQueryOperatorInput, strapiId: IntQueryOperatorInput, title: StringQueryOperatorInput, updated_at: DateQueryOperatorInput): StrapiPost
-    strapiUser(blocked: BooleanQueryOperatorInput, children: NodeFilterListInput, confirmed: BooleanQueryOperatorInput, created_at: DateQueryOperatorInput, email: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, posts: StrapiUserPostsFilterListInput, provider: StringQueryOperatorInput, role: StrapiUserRoleFilterInput, strapiId: IntQueryOperatorInput, updated_at: DateQueryOperatorInput, username: StringQueryOperatorInput): StrapiUser
 }
 
 type ResumeYaml implements Node {
@@ -552,7 +547,6 @@ type ResumeYaml implements Node {
     parent: Node
     projects: [ResumeYamlProjects]
     skills: ResumeYamlSkills
-    work: [ResumeYamlWork]
 }
 
 type ResumeYamlBio {
@@ -593,7 +587,6 @@ type ResumeYamlEducation {
     additionalInfo: [String]
     dateRange: ResumeYamlEducationDateRange
     degree: String
-    featured: Boolean
     gpaInfo: ResumeYamlEducationGpaInfo
     location: String
     major: String
@@ -633,10 +626,8 @@ type ResumeYamlInfo {
 type ResumeYamlProjects {
     bullets: [String]
     dateRange: ResumeYamlProjectsDateRange
-    featured: Boolean
     name: String
     technologies: [String]
-    url: String
 }
 
 type ResumeYamlProjectsDateRange {
@@ -646,35 +637,8 @@ type ResumeYamlProjectsDateRange {
 }
 
 type ResumeYamlSkills {
-    familiar: [ResumeYamlSkillsFamiliar]
-    proficient: [ResumeYamlSkillsProficient]
-}
-
-type ResumeYamlSkillsFamiliar {
-    featured: Boolean
-    name: String
-}
-
-type ResumeYamlSkillsProficient {
-    featured: Boolean
-    name: String
-}
-
-type ResumeYamlWork {
-    address: String
-    bullets: [String]
-    dateRange: ResumeYamlWorkDateRange
-    featured: Boolean
-    location: String
-    name: String
-    position: String
-    url: String
-}
-
-type ResumeYamlWorkDateRange {
-    current: Boolean
-    endDate: String
-    startDate: String
+    familiar: [String]
+    proficient: [String]
 }
 
 type Site implements Node {
@@ -728,6 +692,7 @@ type SitePage implements Node {
     component: String
     componentChunkName: String
     componentPath: String
+    context: SitePageContext
     id: ID!
     internal: Internal!
     internalComponentName: String
@@ -745,6 +710,38 @@ type SitePageConnection {
     nodes: [SitePage!]!
     pageInfo: PageInfo!
     totalCount: Int!
+}
+
+type SitePageContext {
+    next: SitePageContextNext
+    previous: SitePageContextPrevious
+    slug: String
+}
+
+type SitePageContextNext {
+    fields: SitePageContextNextFields
+    frontmatter: SitePageContextNextFrontmatter
+}
+
+type SitePageContextNextFields {
+    slug: String
+}
+
+type SitePageContextNextFrontmatter {
+    title: String
+}
+
+type SitePageContextPrevious {
+    fields: SitePageContextPreviousFields
+    frontmatter: SitePageContextPreviousFrontmatter
+}
+
+type SitePageContextPreviousFields {
+    slug: String
+}
+
+type SitePageContextPreviousFrontmatter {
+    title: String
 }
 
 type SitePageEdge {
@@ -830,32 +827,30 @@ type SitePluginPackageJsonPeerDependencies {
 }
 
 type SitePluginPluginOptions {
-    apiURL: String
     backgroundColor: String
     background_color: String
-    contentTypes: [String]
     disableBgImage: Boolean
     disableBgImageOnAlpha: Boolean
     display: String
+    icon: String
     ignoreFileExtensions: [String]
     linkImagesToOriginal: Boolean
     loading: String
     markdownCaptions: Boolean
     maxWidth: Int
+    modulePath: String
     name: String
     path: String
     pathCheck: Boolean
     pathPrefix: String
     pathToConfigModule: String
     plugins: [SitePluginPluginOptionsPlugins]
-    queryLimit: Int
     short_name: String
     showCaptions: Boolean
     start_url: String
     theme_color: String
     tracedSVG: Boolean
     trackingId: String
-    typekit: SitePluginPluginOptionsTypekit
     withWebp: Boolean
     wrapperStyle: String
 }
@@ -887,10 +882,6 @@ type SitePluginPluginOptionsPluginsPluginOptions {
     wrapperStyle: String
 }
 
-type SitePluginPluginOptionsTypekit {
-    id: String
-}
-
 type SiteSiteMetadata {
     accentColor: String
     author: String
@@ -904,208 +895,6 @@ type SiteSiteMetadataSocial {
     name: String
     url: String
     username: String
-}
-
-type StrapiPost implements Node {
-    author: StrapiPostAuthor
-    body: String
-    children: [Node!]!
-    created_at(
-        #Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\".
-        difference: String,
-        #Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens.
-        formatString: String,
-        #Returns a string generated with Moment.js' `fromNow` function
-        fromNow: Boolean,
-        #Configures the locale Moment.js will use to format the date.
-        locale: String
-    ): Date
-    description: String
-    id: ID!
-    internal: Internal!
-    parent: Node
-    publishedAt(
-        #Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\".
-        difference: String,
-        #Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens.
-        formatString: String,
-        #Returns a string generated with Moment.js' `fromNow` function
-        fromNow: Boolean,
-        #Configures the locale Moment.js will use to format the date.
-        locale: String
-    ): Date
-    slug: String
-    strapiId: Int
-    title: String
-    updated_at(
-        #Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\".
-        difference: String,
-        #Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens.
-        formatString: String,
-        #Returns a string generated with Moment.js' `fromNow` function
-        fromNow: Boolean,
-        #Configures the locale Moment.js will use to format the date.
-        locale: String
-    ): Date
-}
-
-type StrapiPostAuthor {
-    blocked: Boolean
-    confirmed: Boolean
-    created_at(
-        #Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\".
-        difference: String,
-        #Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens.
-        formatString: String,
-        #Returns a string generated with Moment.js' `fromNow` function
-        fromNow: Boolean,
-        #Configures the locale Moment.js will use to format the date.
-        locale: String
-    ): Date
-    email: String
-    id: Int
-    provider: String
-    role: Int
-    updated_at(
-        #Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\".
-        difference: String,
-        #Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens.
-        formatString: String,
-        #Returns a string generated with Moment.js' `fromNow` function
-        fromNow: Boolean,
-        #Configures the locale Moment.js will use to format the date.
-        locale: String
-    ): Date
-    username: String
-}
-
-type StrapiPostConnection {
-    distinct(field: StrapiPostFieldsEnum!): [String!]!
-    edges: [StrapiPostEdge!]!
-    group(field: StrapiPostFieldsEnum!, limit: Int, skip: Int): [StrapiPostGroupConnection!]!
-    nodes: [StrapiPost!]!
-    pageInfo: PageInfo!
-    totalCount: Int!
-}
-
-type StrapiPostEdge {
-    next: StrapiPost
-    node: StrapiPost!
-    previous: StrapiPost
-}
-
-type StrapiPostGroupConnection {
-    edges: [StrapiPostEdge!]!
-    field: String!
-    fieldValue: String
-    nodes: [StrapiPost!]!
-    pageInfo: PageInfo!
-    totalCount: Int!
-}
-
-type StrapiUser implements Node {
-    blocked: Boolean
-    children: [Node!]!
-    confirmed: Boolean
-    created_at(
-        #Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\".
-        difference: String,
-        #Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens.
-        formatString: String,
-        #Returns a string generated with Moment.js' `fromNow` function
-        fromNow: Boolean,
-        #Configures the locale Moment.js will use to format the date.
-        locale: String
-    ): Date
-    email: String
-    id: ID!
-    internal: Internal!
-    parent: Node
-    posts: [StrapiUserPosts]
-    provider: String
-    role: StrapiUserRole
-    strapiId: Int
-    updated_at(
-        #Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\".
-        difference: String,
-        #Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens.
-        formatString: String,
-        #Returns a string generated with Moment.js' `fromNow` function
-        fromNow: Boolean,
-        #Configures the locale Moment.js will use to format the date.
-        locale: String
-    ): Date
-    username: String
-}
-
-type StrapiUserConnection {
-    distinct(field: StrapiUserFieldsEnum!): [String!]!
-    edges: [StrapiUserEdge!]!
-    group(field: StrapiUserFieldsEnum!, limit: Int, skip: Int): [StrapiUserGroupConnection!]!
-    nodes: [StrapiUser!]!
-    pageInfo: PageInfo!
-    totalCount: Int!
-}
-
-type StrapiUserEdge {
-    next: StrapiUser
-    node: StrapiUser!
-    previous: StrapiUser
-}
-
-type StrapiUserGroupConnection {
-    edges: [StrapiUserEdge!]!
-    field: String!
-    fieldValue: String
-    nodes: [StrapiUser!]!
-    pageInfo: PageInfo!
-    totalCount: Int!
-}
-
-type StrapiUserPosts {
-    author: Int
-    body: String
-    created_at(
-        #Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\".
-        difference: String,
-        #Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens.
-        formatString: String,
-        #Returns a string generated with Moment.js' `fromNow` function
-        fromNow: Boolean,
-        #Configures the locale Moment.js will use to format the date.
-        locale: String
-    ): Date
-    description: String
-    id: Int
-    publishedAt(
-        #Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\".
-        difference: String,
-        #Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens.
-        formatString: String,
-        #Returns a string generated with Moment.js' `fromNow` function
-        fromNow: Boolean,
-        #Configures the locale Moment.js will use to format the date.
-        locale: String
-    ): Date
-    slug: String
-    title: String
-    updated_at(
-        #Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\".
-        difference: String,
-        #Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens.
-        formatString: String,
-        #Returns a string generated with Moment.js' `fromNow` function
-        fromNow: Boolean,
-        #Configures the locale Moment.js will use to format the date.
-        locale: String
-    ): Date
-}
-
-type StrapiUserRole {
-    description: String
-    id: Int
-    name: String
-    type: String
 }
 
 enum DirectoryFieldsEnum {
@@ -1352,7 +1141,6 @@ enum FileFieldsEnum {
     childMarkdownRemark___excerptAst @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     childMarkdownRemark___fields___slug @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     childMarkdownRemark___fileAbsolutePath @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
-    childMarkdownRemark___frontmatter___author
     childMarkdownRemark___frontmatter___date
     childMarkdownRemark___frontmatter___description
     childMarkdownRemark___frontmatter___title
@@ -1419,7 +1207,6 @@ enum FileFieldsEnum {
     childResumeYaml___education___dateRange___endDate
     childResumeYaml___education___dateRange___startDate
     childResumeYaml___education___degree
-    childResumeYaml___education___featured
     childResumeYaml___education___gpaInfo___gpa
     childResumeYaml___education___gpaInfo___lastUpdated
     childResumeYaml___education___location
@@ -1457,27 +1244,10 @@ enum FileFieldsEnum {
     childResumeYaml___projects___dateRange___current
     childResumeYaml___projects___dateRange___endDate
     childResumeYaml___projects___dateRange___startDate
-    childResumeYaml___projects___featured
     childResumeYaml___projects___name
     childResumeYaml___projects___technologies
-    childResumeYaml___projects___url
     childResumeYaml___skills___familiar
-    childResumeYaml___skills___familiar___featured
-    childResumeYaml___skills___familiar___name
     childResumeYaml___skills___proficient
-    childResumeYaml___skills___proficient___featured
-    childResumeYaml___skills___proficient___name
-    childResumeYaml___work
-    childResumeYaml___work___address
-    childResumeYaml___work___bullets
-    childResumeYaml___work___dateRange___current
-    childResumeYaml___work___dateRange___endDate
-    childResumeYaml___work___dateRange___startDate
-    childResumeYaml___work___featured
-    childResumeYaml___work___location
-    childResumeYaml___work___name
-    childResumeYaml___work___position
-    childResumeYaml___work___url
     children
     children___children
     children___children___children
@@ -1817,7 +1587,6 @@ enum MarkdownRemarkFieldsEnum {
     excerptAst @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     fields___slug @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     fileAbsolutePath @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
-    frontmatter___author
     frontmatter___date
     frontmatter___description
     frontmatter___title
@@ -1944,7 +1713,6 @@ enum ResumeYamlFieldsEnum {
     education___dateRange___endDate
     education___dateRange___startDate
     education___degree
-    education___featured
     education___gpaInfo___gpa
     education___gpaInfo___lastUpdated
     education___location
@@ -2006,27 +1774,10 @@ enum ResumeYamlFieldsEnum {
     projects___dateRange___current
     projects___dateRange___endDate
     projects___dateRange___startDate
-    projects___featured
     projects___name
     projects___technologies
-    projects___url
     skills___familiar
-    skills___familiar___featured
-    skills___familiar___name
     skills___proficient
-    skills___proficient___featured
-    skills___proficient___name
-    work
-    work___address
-    work___bullets
-    work___dateRange___current
-    work___dateRange___endDate
-    work___dateRange___startDate
-    work___featured
-    work___location
-    work___name
-    work___position
-    work___url
 }
 
 enum SiteFieldsEnum {
@@ -2175,6 +1926,11 @@ enum SitePageFieldsEnum {
     component
     componentChunkName
     componentPath
+    context___next___fields___slug
+    context___next___frontmatter___title
+    context___previous___fields___slug
+    context___previous___frontmatter___title
+    context___slug
     id
     internalComponentName
     internal___content
@@ -2283,18 +2039,18 @@ enum SitePageFieldsEnum {
     pluginCreator___parent___parent___children
     pluginCreator___parent___parent___id
     pluginCreator___pluginFilepath
-    pluginCreator___pluginOptions___apiURL
     pluginCreator___pluginOptions___backgroundColor
     pluginCreator___pluginOptions___background_color
-    pluginCreator___pluginOptions___contentTypes
     pluginCreator___pluginOptions___disableBgImage
     pluginCreator___pluginOptions___disableBgImageOnAlpha
     pluginCreator___pluginOptions___display
+    pluginCreator___pluginOptions___icon
     pluginCreator___pluginOptions___ignoreFileExtensions
     pluginCreator___pluginOptions___linkImagesToOriginal
     pluginCreator___pluginOptions___loading
     pluginCreator___pluginOptions___markdownCaptions
     pluginCreator___pluginOptions___maxWidth
+    pluginCreator___pluginOptions___modulePath
     pluginCreator___pluginOptions___name
     pluginCreator___pluginOptions___path
     pluginCreator___pluginOptions___pathCheck
@@ -2308,14 +2064,12 @@ enum SitePageFieldsEnum {
     pluginCreator___pluginOptions___plugins___resolve
     pluginCreator___pluginOptions___plugins___ssrAPIs
     pluginCreator___pluginOptions___plugins___version
-    pluginCreator___pluginOptions___queryLimit
     pluginCreator___pluginOptions___short_name
     pluginCreator___pluginOptions___showCaptions
     pluginCreator___pluginOptions___start_url
     pluginCreator___pluginOptions___theme_color
     pluginCreator___pluginOptions___tracedSVG
     pluginCreator___pluginOptions___trackingId
-    pluginCreator___pluginOptions___typekit___id
     pluginCreator___pluginOptions___withWebp
     pluginCreator___pluginOptions___wrapperStyle
     pluginCreator___resolve
@@ -2429,18 +2183,18 @@ enum SitePluginFieldsEnum {
     parent___parent___parent___children
     parent___parent___parent___id
     pluginFilepath
-    pluginOptions___apiURL
     pluginOptions___backgroundColor
     pluginOptions___background_color
-    pluginOptions___contentTypes
     pluginOptions___disableBgImage
     pluginOptions___disableBgImageOnAlpha
     pluginOptions___display
+    pluginOptions___icon
     pluginOptions___ignoreFileExtensions
     pluginOptions___linkImagesToOriginal
     pluginOptions___loading
     pluginOptions___markdownCaptions
     pluginOptions___maxWidth
+    pluginOptions___modulePath
     pluginOptions___name
     pluginOptions___path
     pluginOptions___pathCheck
@@ -2467,14 +2221,12 @@ enum SitePluginFieldsEnum {
     pluginOptions___plugins___resolve
     pluginOptions___plugins___ssrAPIs
     pluginOptions___plugins___version
-    pluginOptions___queryLimit
     pluginOptions___short_name
     pluginOptions___showCaptions
     pluginOptions___start_url
     pluginOptions___theme_color
     pluginOptions___tracedSVG
     pluginOptions___trackingId
-    pluginOptions___typekit___id
     pluginOptions___withWebp
     pluginOptions___wrapperStyle
     resolve
@@ -2485,223 +2237,6 @@ enum SitePluginFieldsEnum {
 enum SortOrderEnum {
     ASC
     DESC
-}
-
-enum StrapiPostFieldsEnum {
-    author___blocked
-    author___confirmed
-    author___created_at
-    author___email
-    author___id
-    author___provider
-    author___role
-    author___updated_at
-    author___username
-    body
-    children
-    children___children
-    children___children___children
-    children___children___children___children
-    children___children___children___id
-    children___children___id
-    children___children___internal___content
-    children___children___internal___contentDigest
-    children___children___internal___description
-    children___children___internal___fieldOwners
-    children___children___internal___ignoreType
-    children___children___internal___mediaType
-    children___children___internal___owner
-    children___children___internal___type
-    children___children___parent___children
-    children___children___parent___id
-    children___id
-    children___internal___content
-    children___internal___contentDigest
-    children___internal___description
-    children___internal___fieldOwners
-    children___internal___ignoreType
-    children___internal___mediaType
-    children___internal___owner
-    children___internal___type
-    children___parent___children
-    children___parent___children___children
-    children___parent___children___id
-    children___parent___id
-    children___parent___internal___content
-    children___parent___internal___contentDigest
-    children___parent___internal___description
-    children___parent___internal___fieldOwners
-    children___parent___internal___ignoreType
-    children___parent___internal___mediaType
-    children___parent___internal___owner
-    children___parent___internal___type
-    children___parent___parent___children
-    children___parent___parent___id
-    created_at
-    description
-    id
-    internal___content
-    internal___contentDigest
-    internal___description
-    internal___fieldOwners
-    internal___ignoreType
-    internal___mediaType
-    internal___owner
-    internal___type
-    parent___children
-    parent___children___children
-    parent___children___children___children
-    parent___children___children___id
-    parent___children___id
-    parent___children___internal___content
-    parent___children___internal___contentDigest
-    parent___children___internal___description
-    parent___children___internal___fieldOwners
-    parent___children___internal___ignoreType
-    parent___children___internal___mediaType
-    parent___children___internal___owner
-    parent___children___internal___type
-    parent___children___parent___children
-    parent___children___parent___id
-    parent___id
-    parent___internal___content
-    parent___internal___contentDigest
-    parent___internal___description
-    parent___internal___fieldOwners
-    parent___internal___ignoreType
-    parent___internal___mediaType
-    parent___internal___owner
-    parent___internal___type
-    parent___parent___children
-    parent___parent___children___children
-    parent___parent___children___id
-    parent___parent___id
-    parent___parent___internal___content
-    parent___parent___internal___contentDigest
-    parent___parent___internal___description
-    parent___parent___internal___fieldOwners
-    parent___parent___internal___ignoreType
-    parent___parent___internal___mediaType
-    parent___parent___internal___owner
-    parent___parent___internal___type
-    parent___parent___parent___children
-    parent___parent___parent___id
-    publishedAt
-    slug
-    strapiId
-    title
-    updated_at
-}
-
-enum StrapiUserFieldsEnum {
-    blocked
-    children
-    children___children
-    children___children___children
-    children___children___children___children
-    children___children___children___id
-    children___children___id
-    children___children___internal___content
-    children___children___internal___contentDigest
-    children___children___internal___description
-    children___children___internal___fieldOwners
-    children___children___internal___ignoreType
-    children___children___internal___mediaType
-    children___children___internal___owner
-    children___children___internal___type
-    children___children___parent___children
-    children___children___parent___id
-    children___id
-    children___internal___content
-    children___internal___contentDigest
-    children___internal___description
-    children___internal___fieldOwners
-    children___internal___ignoreType
-    children___internal___mediaType
-    children___internal___owner
-    children___internal___type
-    children___parent___children
-    children___parent___children___children
-    children___parent___children___id
-    children___parent___id
-    children___parent___internal___content
-    children___parent___internal___contentDigest
-    children___parent___internal___description
-    children___parent___internal___fieldOwners
-    children___parent___internal___ignoreType
-    children___parent___internal___mediaType
-    children___parent___internal___owner
-    children___parent___internal___type
-    children___parent___parent___children
-    children___parent___parent___id
-    confirmed
-    created_at
-    email
-    id
-    internal___content
-    internal___contentDigest
-    internal___description
-    internal___fieldOwners
-    internal___ignoreType
-    internal___mediaType
-    internal___owner
-    internal___type
-    parent___children
-    parent___children___children
-    parent___children___children___children
-    parent___children___children___id
-    parent___children___id
-    parent___children___internal___content
-    parent___children___internal___contentDigest
-    parent___children___internal___description
-    parent___children___internal___fieldOwners
-    parent___children___internal___ignoreType
-    parent___children___internal___mediaType
-    parent___children___internal___owner
-    parent___children___internal___type
-    parent___children___parent___children
-    parent___children___parent___id
-    parent___id
-    parent___internal___content
-    parent___internal___contentDigest
-    parent___internal___description
-    parent___internal___fieldOwners
-    parent___internal___ignoreType
-    parent___internal___mediaType
-    parent___internal___owner
-    parent___internal___type
-    parent___parent___children
-    parent___parent___children___children
-    parent___parent___children___id
-    parent___parent___id
-    parent___parent___internal___content
-    parent___parent___internal___contentDigest
-    parent___parent___internal___description
-    parent___parent___internal___fieldOwners
-    parent___parent___internal___ignoreType
-    parent___parent___internal___mediaType
-    parent___parent___internal___owner
-    parent___parent___internal___type
-    parent___parent___parent___children
-    parent___parent___parent___id
-    posts
-    posts___author
-    posts___body
-    posts___created_at
-    posts___description
-    posts___id
-    posts___publishedAt
-    posts___slug
-    posts___title
-    posts___updated_at
-    provider
-    role___description
-    role___id
-    role___name
-    role___type
-    strapiId
-    updated_at
-    username
 }
 
 input BooleanQueryOperatorInput {
@@ -2986,7 +2521,6 @@ input MarkdownRemarkFilterInput {
 }
 
 input MarkdownRemarkFrontmatterFilterInput {
-    author: StringQueryOperatorInput
     date: DateQueryOperatorInput
     description: StringQueryOperatorInput
     title: StringQueryOperatorInput
@@ -3055,7 +2589,6 @@ input ResumeYamlEducationFilterInput {
     additionalInfo: StringQueryOperatorInput
     dateRange: ResumeYamlEducationDateRangeFilterInput
     degree: StringQueryOperatorInput
-    featured: BooleanQueryOperatorInput
     gpaInfo: ResumeYamlEducationGpaInfoFilterInput
     location: StringQueryOperatorInput
     major: StringQueryOperatorInput
@@ -3091,7 +2624,6 @@ input ResumeYamlFilterInput {
     parent: NodeFilterInput
     projects: ResumeYamlProjectsFilterListInput
     skills: ResumeYamlSkillsFilterInput
-    work: ResumeYamlWorkFilterListInput
 }
 
 input ResumeYamlInfoFilterInput {
@@ -3107,63 +2639,22 @@ input ResumeYamlProjectsDateRangeFilterInput {
 input ResumeYamlProjectsFilterInput {
     bullets: StringQueryOperatorInput
     dateRange: ResumeYamlProjectsDateRangeFilterInput
-    featured: BooleanQueryOperatorInput
     name: StringQueryOperatorInput
     technologies: StringQueryOperatorInput
-    url: StringQueryOperatorInput
 }
 
 input ResumeYamlProjectsFilterListInput {
     elemMatch: ResumeYamlProjectsFilterInput
 }
 
-input ResumeYamlSkillsFamiliarFilterInput {
-    featured: BooleanQueryOperatorInput
-    name: StringQueryOperatorInput
-}
-
-input ResumeYamlSkillsFamiliarFilterListInput {
-    elemMatch: ResumeYamlSkillsFamiliarFilterInput
-}
-
 input ResumeYamlSkillsFilterInput {
-    familiar: ResumeYamlSkillsFamiliarFilterListInput
-    proficient: ResumeYamlSkillsProficientFilterListInput
-}
-
-input ResumeYamlSkillsProficientFilterInput {
-    featured: BooleanQueryOperatorInput
-    name: StringQueryOperatorInput
-}
-
-input ResumeYamlSkillsProficientFilterListInput {
-    elemMatch: ResumeYamlSkillsProficientFilterInput
+    familiar: StringQueryOperatorInput
+    proficient: StringQueryOperatorInput
 }
 
 input ResumeYamlSortInput {
     fields: [ResumeYamlFieldsEnum]
     order: [SortOrderEnum] = [ASC]
-}
-
-input ResumeYamlWorkDateRangeFilterInput {
-    current: BooleanQueryOperatorInput
-    endDate: StringQueryOperatorInput
-    startDate: StringQueryOperatorInput
-}
-
-input ResumeYamlWorkFilterInput {
-    address: StringQueryOperatorInput
-    bullets: StringQueryOperatorInput
-    dateRange: ResumeYamlWorkDateRangeFilterInput
-    featured: BooleanQueryOperatorInput
-    location: StringQueryOperatorInput
-    name: StringQueryOperatorInput
-    position: StringQueryOperatorInput
-    url: StringQueryOperatorInput
-}
-
-input ResumeYamlWorkFilterListInput {
-    elemMatch: ResumeYamlWorkFilterInput
 }
 
 input SiteFilterInput {
@@ -3179,11 +2670,44 @@ input SiteFilterInput {
     siteMetadata: SiteSiteMetadataFilterInput
 }
 
+input SitePageContextFilterInput {
+    next: SitePageContextNextFilterInput
+    previous: SitePageContextPreviousFilterInput
+    slug: StringQueryOperatorInput
+}
+
+input SitePageContextNextFieldsFilterInput {
+    slug: StringQueryOperatorInput
+}
+
+input SitePageContextNextFilterInput {
+    fields: SitePageContextNextFieldsFilterInput
+    frontmatter: SitePageContextNextFrontmatterFilterInput
+}
+
+input SitePageContextNextFrontmatterFilterInput {
+    title: StringQueryOperatorInput
+}
+
+input SitePageContextPreviousFieldsFilterInput {
+    slug: StringQueryOperatorInput
+}
+
+input SitePageContextPreviousFilterInput {
+    fields: SitePageContextPreviousFieldsFilterInput
+    frontmatter: SitePageContextPreviousFrontmatterFilterInput
+}
+
+input SitePageContextPreviousFrontmatterFilterInput {
+    title: StringQueryOperatorInput
+}
+
 input SitePageFilterInput {
     children: NodeFilterListInput
     component: StringQueryOperatorInput
     componentChunkName: StringQueryOperatorInput
     componentPath: StringQueryOperatorInput
+    context: SitePageContextFilterInput
     id: StringQueryOperatorInput
     internal: InternalFilterInput
     internalComponentName: StringQueryOperatorInput
@@ -3255,32 +2779,30 @@ input SitePluginPackageJsonPeerDependenciesFilterListInput {
 }
 
 input SitePluginPluginOptionsFilterInput {
-    apiURL: StringQueryOperatorInput
     backgroundColor: StringQueryOperatorInput
     background_color: StringQueryOperatorInput
-    contentTypes: StringQueryOperatorInput
     disableBgImage: BooleanQueryOperatorInput
     disableBgImageOnAlpha: BooleanQueryOperatorInput
     display: StringQueryOperatorInput
+    icon: StringQueryOperatorInput
     ignoreFileExtensions: StringQueryOperatorInput
     linkImagesToOriginal: BooleanQueryOperatorInput
     loading: StringQueryOperatorInput
     markdownCaptions: BooleanQueryOperatorInput
     maxWidth: IntQueryOperatorInput
+    modulePath: StringQueryOperatorInput
     name: StringQueryOperatorInput
     path: StringQueryOperatorInput
     pathCheck: BooleanQueryOperatorInput
     pathPrefix: StringQueryOperatorInput
     pathToConfigModule: StringQueryOperatorInput
     plugins: SitePluginPluginOptionsPluginsFilterListInput
-    queryLimit: IntQueryOperatorInput
     short_name: StringQueryOperatorInput
     showCaptions: BooleanQueryOperatorInput
     start_url: StringQueryOperatorInput
     theme_color: StringQueryOperatorInput
     tracedSVG: BooleanQueryOperatorInput
     trackingId: StringQueryOperatorInput
-    typekit: SitePluginPluginOptionsTypekitFilterInput
     withWebp: BooleanQueryOperatorInput
     wrapperStyle: StringQueryOperatorInput
 }
@@ -3316,10 +2838,6 @@ input SitePluginPluginOptionsPluginsPluginOptionsFilterInput {
     wrapperStyle: StringQueryOperatorInput
 }
 
-input SitePluginPluginOptionsTypekitFilterInput {
-    id: StringQueryOperatorInput
-}
-
 input SitePluginSortInput {
     fields: [SitePluginFieldsEnum]
     order: [SortOrderEnum] = [ASC]
@@ -3346,84 +2864,6 @@ input SiteSiteMetadataSocialFilterListInput {
 
 input SiteSortInput {
     fields: [SiteFieldsEnum]
-    order: [SortOrderEnum] = [ASC]
-}
-
-input StrapiPostAuthorFilterInput {
-    blocked: BooleanQueryOperatorInput
-    confirmed: BooleanQueryOperatorInput
-    created_at: DateQueryOperatorInput
-    email: StringQueryOperatorInput
-    id: IntQueryOperatorInput
-    provider: StringQueryOperatorInput
-    role: IntQueryOperatorInput
-    updated_at: DateQueryOperatorInput
-    username: StringQueryOperatorInput
-}
-
-input StrapiPostFilterInput {
-    author: StrapiPostAuthorFilterInput
-    body: StringQueryOperatorInput
-    children: NodeFilterListInput
-    created_at: DateQueryOperatorInput
-    description: StringQueryOperatorInput
-    id: StringQueryOperatorInput
-    internal: InternalFilterInput
-    parent: NodeFilterInput
-    publishedAt: DateQueryOperatorInput
-    slug: StringQueryOperatorInput
-    strapiId: IntQueryOperatorInput
-    title: StringQueryOperatorInput
-    updated_at: DateQueryOperatorInput
-}
-
-input StrapiPostSortInput {
-    fields: [StrapiPostFieldsEnum]
-    order: [SortOrderEnum] = [ASC]
-}
-
-input StrapiUserFilterInput {
-    blocked: BooleanQueryOperatorInput
-    children: NodeFilterListInput
-    confirmed: BooleanQueryOperatorInput
-    created_at: DateQueryOperatorInput
-    email: StringQueryOperatorInput
-    id: StringQueryOperatorInput
-    internal: InternalFilterInput
-    parent: NodeFilterInput
-    posts: StrapiUserPostsFilterListInput
-    provider: StringQueryOperatorInput
-    role: StrapiUserRoleFilterInput
-    strapiId: IntQueryOperatorInput
-    updated_at: DateQueryOperatorInput
-    username: StringQueryOperatorInput
-}
-
-input StrapiUserPostsFilterInput {
-    author: IntQueryOperatorInput
-    body: StringQueryOperatorInput
-    created_at: DateQueryOperatorInput
-    description: StringQueryOperatorInput
-    id: IntQueryOperatorInput
-    publishedAt: DateQueryOperatorInput
-    slug: StringQueryOperatorInput
-    title: StringQueryOperatorInput
-    updated_at: DateQueryOperatorInput
-}
-
-input StrapiUserPostsFilterListInput {
-    elemMatch: StrapiUserPostsFilterInput
-}
-
-input StrapiUserRoleFilterInput {
-    description: StringQueryOperatorInput
-    id: IntQueryOperatorInput
-    name: StringQueryOperatorInput
-    type: StringQueryOperatorInput
-}
-
-input StrapiUserSortInput {
-    fields: [StrapiUserFieldsEnum]
     order: [SortOrderEnum] = [ASC]
 }
 

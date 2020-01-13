@@ -42,17 +42,12 @@ module.exports = {
         name: `resume`,
       },
     },
-   /* {
-      resolve: 'gatsby-source-strapi',
+    {
+      resolve: 'gatsby-plugin-netlify-cms',
       options: {
-        apiURL: 'http://localhost:1337',
-        contentTypes: [ // List of the Content Types you want to be able to request from Gatsby.
-          'post',
-          'user'
-        ],
-        queryLimit: 1000,
-      }
-    }, */
+        modulePath: `${__dirname}/src/cms/cms.ts`,
+      },
+    },
     `gatsby-transformer-yaml`,
     `gatsby-transformer-remark`,
     {
@@ -95,6 +90,7 @@ module.exports = {
         background_color: `#ffffff`,
         theme_color: `#663399`,
         display: `minimal-ui`,
+        icon: `content/assets/gatsby-icon.png`,
       },
     },
     `gatsby-plugin-offline`,

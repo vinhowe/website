@@ -1,6 +1,6 @@
 ---
 info:
-  lastUpdated: "1/13/2020"
+  lastUpdated: "1/4/2020"
 
 bio:
   name: "Vin Howe"
@@ -56,8 +56,8 @@ work:
       - "bullet 1"
       - "bullet 2"
     dateRange:
-      startDate: "Apr 2020"
-      endDate: "Aug 2020"
+      startDate: "Apr 2019"
+      endDate: "Aug 2019"
       current: false
 
 projects:
