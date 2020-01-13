@@ -5,9 +5,10 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { rhythm, scale } from "../utils/typography"
+import { StrapiPostNode } from "../queries"
 
 
-class BlogPostTemplate extends React.Component<BlogPostTemplateProps, {}> {
+class MarkdownBackedBlogPostTemplate extends React.Component<MarkdownBlogPostTemplateProps, {}> {
   render() {
     const post = this.props.data.markdownRemark
     const siteTitle = this.props.data.site.siteMetadata.title
@@ -98,21 +99,21 @@ interface PageSite {
   siteMetadata: PageSiteMetadata
 }
 
-interface BlogPostData {
-  markdownRemark: MarkdownRemark
+interface MarkdownBlogPostData {
+  strapiPost: MarkdownRemark
   site: PageSite
 }
 
-interface BlogPostTemplateProps {
-  data: BlogPostData
+interface MarkdownBlogPostTemplateProps {
+  markdownData: MarkdownBlogPostData
   location: Location
   pageContext: any
 }
 
-export default BlogPostTemplate
+export default MarkdownBackedBlogPostTemplate
 
 export const pageQuery = graphql`
-    query BlogPostBySlug($slug: String!) {
+    query MarkdownBackedBlogPostBySlug($slug: String!) {
         site {
             siteMetadata {
                 title

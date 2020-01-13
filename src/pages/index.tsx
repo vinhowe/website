@@ -5,7 +5,7 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO, { rootTitle } from "../components/seo"
 import { rhythm } from "../utils/typography"
-import { MarkdownRemarkConnection, SiteNode } from "../queries"
+import { MarkdownRemarkConnection, SiteNode, StrapiPostConnection } from "../queries"
 import HeroImage from "../components/heroImage"
 
 class BlogIndex extends React.Component<BlogIndexProps, {}> {
@@ -32,12 +32,12 @@ class BlogIndex extends React.Component<BlogIndexProps, {}> {
                     {title}
                   </Link>
                 </h3>
-                <small>{node.frontmatter.date}</small>
+                <small>{new Date(node.frontmatter.date).toLocaleDateString()}</small>
               </header>
               <section>
                 <p
                   dangerouslySetInnerHTML={{
-                    __html: node.frontmatter.description || node.excerpt,
+                    __html: node.frontmatter.description,
                   }}
                 />
               </section>
@@ -68,20 +68,30 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
-      edges {
-        node {
-          excerpt
-          fields {
-            slug
-          }
-          frontmatter {
-            date(formatString: "MMMM DD, YYYY")
-            title
-            description
-          }
-        }
-      }
-    }
+     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+       edges {
+         node {
+           excerpt
+           fields {
+             slug
+           }
+           frontmatter {
+             date(formatString: "MMMM DD, YYYY")
+             title
+             description
+           }
+         }
+       }
+     }
+#     allStrapiPost(sort: {fields: [publishedAt], order: DESC}) {
+#         edges {
+#             node {
+#                 title
+#                 publishedAt
+#                 description
+#                 slug
+#             }
+#         }
+#     }
   }
 `
