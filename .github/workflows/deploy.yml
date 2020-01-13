@@ -19,6 +19,8 @@ jobs:
         node-version: 10.x
     - name: Install dependencies
       run: npm install --prod --pure-lockfile
+    - name: Build Gatsby
+      run: npx gatsby build
     - name: Deploy to Firebase
       uses: lowply/deploy-firebase@v0.0.2
       env:
