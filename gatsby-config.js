@@ -42,12 +42,17 @@ module.exports = {
         name: `resume`,
       },
     },
-    {
-      resolve: 'gatsby-plugin-netlify-cms',
+   /* {
+      resolve: 'gatsby-source-strapi',
       options: {
-        modulePath: `${__dirname}/src/cms/cms.ts`,
-      },
-    },
+        apiURL: 'http://localhost:1337',
+        contentTypes: [ // List of the Content Types you want to be able to request from Gatsby.
+          'post',
+          'user'
+        ],
+        queryLimit: 1000,
+      }
+    }, */
     `gatsby-transformer-yaml`,
     `gatsby-transformer-remark`,
     {

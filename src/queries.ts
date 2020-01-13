@@ -21,6 +21,17 @@ export interface MarkdownRemarkNode {
   }
 }
 
+export interface StrapiPostNode {
+  description?: string
+  title?: string
+  slug?: string
+  author?: {
+    username?: string
+  }
+  publishedAt?: string
+  body?: string
+}
+
 export interface SiteNode {
   siteMetadata?: {
     title?: string
@@ -111,3 +122,4 @@ export interface ResumeSkills {
 }
 
 export type MarkdownRemarkConnection = Connection<MarkdownRemarkNode>
+export type StrapiPostConnection = Connection<StrapiPostNode>
