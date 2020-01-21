@@ -2,11 +2,13 @@ backend:
   name: github
   repo: vinhowe/website
   branch: master
+  publish_mode: ''
 
 media_folder: "static/images"
 public_folder: "/images"
 
 publish_mode: editorial_workflow
+display_url: https://howe.vin/
 
 collections:
   - name: "blog"
