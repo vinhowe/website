@@ -2,7 +2,7 @@ const accentColor = `#00AD50`
 
 module.exports = {
   siteMetadata: {
-    title: `howe.vin`,
+    title: `Vin Howe`,
     author: `Vin Howe`,
     description: `The personal blog of Vin Howe`,
     siteUrl: `https://howe.vin/`,

@@ -69,9 +69,9 @@ const typography = new Typography({
       fontStyle: "italic",
     },
     a: {
-      boxShadow: "0 1px 0 0 currentColor",
+      // boxShadow: "0 1px 0 0 currentColor",
       color: "inherit",
-      textDecoration: "none",
+      // textDecoration: "none",
     },
     "a:hover,a:active": {
       boxShadow: "none",

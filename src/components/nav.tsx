@@ -34,7 +34,6 @@ const Nav = () => {
   }
 
   const navItemLinkStyle = {
-    boxShadow: `none`,
     color: `inherit`,
     marginLeft: 0,
   }
@@ -87,7 +86,7 @@ const Nav = () => {
       >
         <Link
           style={{
-            boxShadow: `none`,
+            textDecoration: `none`,
             color: `inherit`,
           }}
           to={`/`}
