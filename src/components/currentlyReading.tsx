@@ -44,7 +44,7 @@ const CurrentlyReading = () => {
         Currently reading
       </p>
       <a href={firstBook.amazonUrl} className={"currently-reading-thumbnail"}>
-        <img src={firstBook.thumbnailUrl} alt=""/>
+        <img src={firstBook.thumbnailUrl} alt={firstBook.title}/>
       </a>
       <a href={firstBook.amazonUrl}>
         <i>
