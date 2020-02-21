@@ -70,7 +70,7 @@ const Nav = () => {
     <div
       className={"nav-flex-container"}
       style={{
-        paddingBottom: rhythm(1),
+        paddingBottom: rhythm(0.5),
         alignItems: "center"
       }}
     >

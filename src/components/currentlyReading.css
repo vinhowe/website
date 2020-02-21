@@ -1,0 +1,25 @@
+.currently-reading-container {
+  margin-top: 10px;
+  /* Account for margin of title */
+  margin-bottom: -16px;
+  display: flex;
+  align-items: center;
+}
+
+.currently-reading-container p {
+  margin-bottom: 0;
+}
+
+.currently-reading-thumbnail {
+  max-width: 32px;
+  border: 1px solid #888888;
+  border-radius: 2px;
+  margin: 0 6px;
+  padding: 0;
+  line-height: 0;
+}
+
+.currently-reading-thumbnail img {
+  margin-bottom: 0;
+}
+

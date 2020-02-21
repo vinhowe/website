@@ -1,12 +1,11 @@
 import * as React from "react"
-import { Link, graphql } from "gatsby"
-
-import Bio from "../components/bio"
+import { graphql, Link } from "gatsby"
 import Layout from "../components/layout"
 import SEO, { rootTitle } from "../components/seo"
 import { rhythm } from "../utils/typography"
 import { MarkdownRemarkConnection, SiteNode } from "../queries"
 import HeroImage from "../components/heroImage"
+import CurrentlyReading from "../components/currentlyReading"
 
 class BlogIndex extends React.Component<BlogIndexProps, {}> {
   render() {
@@ -18,6 +17,7 @@ class BlogIndex extends React.Component<BlogIndexProps, {}> {
       <Layout location={this.props.location} title={"test iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"}>
         <SEO title={rootTitle}/>
         <HeroImage />
+        <CurrentlyReading />
         {posts.map(({ node }) => {
           const title = node.frontmatter.title || node.fields.slug
           return (
@@ -26,6 +26,7 @@ class BlogIndex extends React.Component<BlogIndexProps, {}> {
                 <h3
                   style={{
                     marginBottom: rhythm(1 / 4),
+
                   }}
                 >
                   <Link style={{ textDecoration: `none` }} to={node.fields.slug}>
