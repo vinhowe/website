@@ -50,7 +50,7 @@ const CurrentlyReading = () => {
             {firstBook.title}
           </i>
         </a>
-        &nbsp;by {firstBook.author}
+        &nbsp;by {firstBook.author}.
       </div>
     </div>
   )
