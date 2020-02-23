@@ -15,9 +15,9 @@ import "./heroImage.css"
 const HeroImage = () => {
   const data = useStaticQuery(graphql`
       query HeroImageQuery {
-          heroImage: file(absolutePath: { regex: "/hero.jpg/" }) {
+          heroImage: file(absolutePath: { regex: "/hero_3.jpg/" }) {
               childImageSharp {
-                  fluid(maxWidth: 700) {
+                  fluid(maxWidth: 700, quality: 100) {
                       ...GatsbyImageSharpFluid
                   }
               }
