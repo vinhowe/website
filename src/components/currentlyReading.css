@@ -4,6 +4,7 @@
   margin-bottom: -16px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .currently-reading-container p {
@@ -11,15 +12,18 @@
 }
 
 .currently-reading-thumbnail {
-  max-width: 32px;
   border: 1px solid #888888;
+  display: inline-block;
   border-radius: 2px;
-  margin: 0 6px;
+  margin: 0 8px;
   padding: 0;
   line-height: 0;
+  height: 37px;
 }
 
+
 .currently-reading-thumbnail img {
-  margin-bottom: 0;
+  margin-bottom: -12px;
+  max-height: 35px;
 }
 

@@ -40,20 +40,18 @@ const CurrentlyReading = () => {
         paddingTop: rhythm(0.25),
       }}
     >
-      <p>
+      <div className="currently-reading-book-info">
         Currently reading
-      </p>
       <a href={firstBook.amazonUrl} className={"currently-reading-thumbnail"}>
         <img src={firstBook.thumbnailUrl} alt={firstBook.title}/>
       </a>
-      <a href={firstBook.amazonUrl}>
-        <i>
-          {firstBook.title}
-        </i>
-      </a>
-      <p>
-        &nbsp;by {firstBook.author}.
-      </p>
+        <a href={firstBook.amazonUrl}>
+          <i>
+            {firstBook.title}
+          </i>
+        </a>
+        &nbsp;by {firstBook.author}
+      </div>
     </div>
   )
 }
