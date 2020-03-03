@@ -13,20 +13,24 @@ class BlogIndex extends React.Component<BlogIndexProps, {}> {
     const siteTitle = data.site.siteMetadata.title
     const posts = data.allMarkdownRemark.edges
 
+
+
     return (
-      <Layout location={this.props.location} title={"test iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"}>
+      <Layout location={this.props.location}>
         <SEO title={rootTitle}/>
         <HeroImage />
         <CurrentlyReading />
         {posts.map(({ node }) => {
           const title = node.frontmatter.title || node.fields.slug
+          // Hack because description is a required field in Netlify CMS
+          // Related: https://github.com/netlify/netlify-cms/issues/315
+          const description = !node.frontmatter.description || node.frontmatter.description == " " ? node.excerpt : node.frontmatter.description
           return (
             <article key={node.fields.slug}>
               <header>
                 <h3
                   style={{
                     marginBottom: rhythm(1 / 4),
-
                   }}
                 >
                   <Link style={{ textDecoration: `none` }} to={node.fields.slug}>
@@ -38,7 +42,7 @@ class BlogIndex extends React.Component<BlogIndexProps, {}> {
               <section>
                 <p
                   dangerouslySetInnerHTML={{
-                    __html: node.frontmatter.description || node.excerpt,
+                    __html: description,
                   }}
                 />
               </section>
