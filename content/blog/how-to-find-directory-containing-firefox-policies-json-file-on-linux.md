@@ -1,7 +1,7 @@
 ---
 title: How to find directory containing Firefox policies.json file on Linux
 date: 2020-03-03T17:22:04.375Z
-description: Using the developer console
+description: ' '
 ---
 Recently, I wanted to use one of Firefox's [Enterprise Policies](https://support.mozilla.org/en-US/products/firefox-enterprise/policies-customization-enterprise/policies-overview-enterprise) settings but I didn't know which directory to put the policies.json file in. After some trial and error, I came across [these lines in Firefox's source](https://github.com/mozilla/gecko-dev/blob/445f39a14b9c1f38f1254813e4330ef0d8618b4b/toolkit/components/enterprisepolicies/EnterprisePolicies.js#L472-L481):
 
