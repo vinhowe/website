@@ -1,9 +1,11 @@
 ---
-title: Build it fast with Flutter
+title: Build It Fast With Flutter
 date: 2020-02-20T23:15:26.379Z
 description: A gentle introduction to Google's cross-platform toolkit
 ---
-**Slides from my presentation at ACM YHack 2020 are [here](https://docs.google.com/presentation/d/1PHiiXvkmM-mq_NXW9mDVhnGIrq0Aw9IUwKie4ASuCsc/edit?usp=sharing).**
+**The content of this post is adapted from a workshop that I was originally scheduled to host at BYU ACM's hackathon, the YHack, before it--and everything else at BYU--was cancelled due to the spread of COVID-19. Slides from my presentation are [here](https://docs.google.com/presentation/d/1PHiiXvkmM-mq_NXW9mDVhnGIrq0Aw9IUwKie4ASuCsc/edit?usp=sharing).**
+
+
 
 ## What is Flutter?
 
