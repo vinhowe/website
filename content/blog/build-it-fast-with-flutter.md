@@ -1,6 +1,6 @@
 ---
 title: Build It Fast With Flutter
-date: 2020-03-14T22:15:26.379Z
+date: 2020-03-14T04:35:00.000Z
 description: Brought to you by COVID-19
 ---
 *The content of this post is adapted from a workshop that I was originally scheduled to host at BYU ACM's hackathon, the YHack, before it—along with everything else at BYU—was cancelled in response to the COVID-19 pandemic. Slides from my presentation are [here](https://docs.google.com/presentation/d/1PHiiXvkmM-mq_NXW9mDVhnGIrq0Aw9IUwKie4ASuCsc/edit?usp=sharing).*
