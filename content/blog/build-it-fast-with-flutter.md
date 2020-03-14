@@ -13,10 +13,9 @@ description: Brought to you by COVID-19
 The Flutter team at Google is trying to create a fast, truly cross-platform development toolkit. As of today, Flutter for the web and desktop are still far from production-ready, so we’ll be focusing on mobile.
 
 ## Why use Flutter?
-
 ### Development speed
 
-![](images/flutter-hot-reload-demo.gif)﻿
+![](/images/flutter-hot-reload-demo.gif)﻿
 
 Changes in UI can be applied instantly with Flutter’s hot reload.
 
