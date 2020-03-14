@@ -37,7 +37,7 @@ I'll demo this in a moment.
 
 #### It's cross-platform!
 
-For mobile development, Flutter runs on both Android and iOS **natively**. If you're new to app development, the appeal of this might not immediately be clear. If you're experienced, you can skip ahead.
+For mobile development, Flutter runs on both Android and iOS **natively**. If you're new to app development, the appeal of this might not be clear immediately. If you're experienced, skip ahead!
 
 Professional app developers usually want an app to be able to run on both of the major mobile operating systems, Android and iOS. But they are profoundly different beasts:
 * Android, built by Google, runs apps written in Java and/or Kotlin using the Android SDK
@@ -45,6 +45,6 @@ Professional app developers usually want an app to be able to run on both of the
 
 Writing a high-quality app that runs well on either Android or iOS alone can be a full-time job. Building for both is effectively like writing two separate apps. This means keeping up with changes to the APIs and style updates of both operating systems, both on different release cycles. Hopefully it's easy to see why the promise of a development platform that can cut this time commitment _in half_ might be attractive.
 
-And yes, there's [React Native](https://reactnative.dev), [PhoneGap](https://phonegap.com), [Cordova](https://cordova.apache.org), et al. Cross-platform toolkits like these tend to rely on a JavaScript runtime of some form. This works well for many use cases. [Instagram](https://instagram-engineering.com/react-native-at-instagram-dd828a9a90c7), [Pinterest](https://medium.com/pinterest-engineering/supporting-react-native-at-pinterest-f8c2233f90e6), Tesla, and [many others](https://reactnative.dev/showcase) uses React Native and probably love it. These frameworks tend to be less performant than Flutter and lack its opinionated-but-flexible UI philosophy. There's a [fantastic article](https://hackernoon.com/whats-revolutionary-about-flutter-946915b09514) by Wm Leler that goes into detail about how Flutter stacks up against React Native in terms of performance.
+And yes, there's [React Native](https://reactnative.dev), among others ([PhoneGap](https://phonegap.com), [Cordova](https://cordova.apache.org), et al.). Cross-platform toolkits like React Native tend to rely on a JavaScript runtime of some form. This works well for many use cases. [Instagram](https://instagram-engineering.com/react-native-at-instagram-dd828a9a90c7), [Pinterest](https://medium.com/pinterest-engineering/supporting-react-native-at-pinterest-f8c2233f90e6), Tesla, and [many others](https://reactnative.dev/showcase) uses React Native and probably love it. But these frameworks tend to be less performant than Flutter and lack its opinionated-but-flexible UI philosophy. There's a [fantastic article](https://hackernoon.com/whats-revolutionary-about-flutter-946915b09514) by Wm Leler that goes into detail about how Flutter stacks up against the cross-platform approach that React Native uses.
 
 ## Demo
