@@ -5,7 +5,7 @@ description: Brought to you by COVID-19
 ---
 **The content of this post is adapted from a workshop that I was originally scheduled to host at BYU ACM's hackathon, the YHack, before it—along with everything else at BYU—was cancelled to slow the spread of COVID-19. Slides from my presentation are [here](https://docs.google.com/presentation/d/1PHiiXvkmM-mq_NXW9mDVhnGIrq0Aw9IUwKie4ASuCsc/edit?usp=sharing).**
 
-## A quick introduction
+## A quick introduction to Flutter
 
 I'm going to try to sell you on Flutter without getting into the specifics. I'm hoping that if this is your first real exposure to Flutter, it will get you excited enough to explore more on your own. 
 
@@ -47,4 +47,4 @@ Writing a high-quality app that runs well on either Android or iOS alone can be 
 
 And yes, there's [React Native](https://reactnative.dev), among others ([PhoneGap](https://phonegap.com), [Cordova](https://cordova.apache.org), et al.). Cross-platform toolkits like React Native tend to rely on a JavaScript runtime of some form. This works well for many use cases. [Instagram](https://instagram-engineering.com/react-native-at-instagram-dd828a9a90c7), [Pinterest](https://medium.com/pinterest-engineering/supporting-react-native-at-pinterest-f8c2233f90e6), Tesla, and [many others](https://reactnative.dev/showcase) uses React Native and probably love it. But these frameworks tend to be less performant than Flutter and lack its opinionated-but-flexible UI philosophy. There's a [fantastic article](https://hackernoon.com/whats-revolutionary-about-flutter-946915b09514) by Wm Leler that goes into detail about how Flutter stacks up against the cross-platform approach that React Native uses.
 
-## Demo
+## Let's build something
