@@ -16,7 +16,7 @@ const typography = new Typography({
       styles: ["400", "400i", "700"],
     },
   ],
-  headerFontFamily: ["forma-djr-display", "Georgia", "serif"],
+  headerFontFamily: ["forma-djr-display", "Arial", "sans-serif"],
   bodyFontFamily: ["miller-text", "Georgia", "serif"],
   bodyColor: "hsla(0,0%,0%,0.9)",
   headerWeight: 500,
@@ -45,9 +45,6 @@ const typography = new Typography({
     ul: {
       listStyle: "disc",
     },
-    "ul,ol": {
-      marginLeft: 0,
-    },
     [MOBILE_MEDIA_QUERY]: {
       "ul,ol": {
         marginLeft: rhythm(1),
@@ -62,8 +59,8 @@ const typography = new Typography({
       marginTop: rhythm(2),
     },
     h4: {
-      // letterSpacing: "0.140625em",
-      // textTransform: "uppercase",
+      letterSpacing: "0.140625em",
+      textTransform: "uppercase",
     },
     h6: {
       fontStyle: "italic",
@@ -83,7 +80,7 @@ const typography = new Typography({
       textDecoration: "none",
     },
     '.site-title': {
-      fontFamily: ["forma-djr-display", "sans-serif"].join(","),
+      fontFamily: ["forma-djr-display", "Arial", "sans-serif"].join(","),
       fontWeight: 700,
     },
   }),
