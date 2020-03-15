@@ -110,7 +110,7 @@ module.exports = {
         pathToConfigModule: `src/utils/typography`,
       },
     },
-    // `gatsby-plugin-mdx`,
+    `gatsby-plugin-mdx`,
     `gatsby-plugin-typescript`,
     {
       resolve: `gatsby-plugin-web-font-loader`,
