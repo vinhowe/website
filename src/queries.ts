@@ -9,11 +9,12 @@ export interface Connection<T> {
   edges: Edge<T>[]
 }
 
-export interface MarkdownRemarkNode {
+export interface MdxNode {
   excerpt?: string
+  id?: string
   fields?: {
     slug?: string
-  },
+  }
   frontmatter?: {
     title?: string
     date?: string
@@ -110,4 +111,4 @@ export interface ResumeSkills {
   familiar?: ResumeSkill[]
 }
 
-export type MarkdownRemarkConnection = Connection<MarkdownRemarkNode>
+export type MDXConnection = Connection<MdxNode>

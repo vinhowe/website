@@ -1,10 +1,10 @@
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
 import { CreateNodeArgs, CreatePagesArgs } from "gatsby"
-import { Edge, MarkdownRemarkConnection, MarkdownRemarkNode } from "./queries"
+import { Edge, MDXConnection, MdxNode } from "./queries"
 
 interface CreatePageQuery {
-  allMarkdownRemark: MarkdownRemarkConnection
+  allMdx: MDXConnection
 }
 
 export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
@@ -13,7 +13,7 @@ export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
   const blogPost = path.resolve(`./src/templates/blogPost.tsx`)
   const result = await graphql<CreatePageQuery, any>(`
       {
-          allMarkdownRemark(
+          allMdx(
               sort: { fields: [frontmatter___date], order: DESC }
               limit: 1000
           ) {
@@ -36,9 +36,9 @@ export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
   }
 
   // Create blog posts pages.
-  const posts: Array<Edge<MarkdownRemarkNode>> = result.data.allMarkdownRemark.edges
+  const posts: Array<Edge<MdxNode>> = result.data.allMdx.edges
 
-  posts.forEach((post: Edge<MarkdownRemarkNode>, index: number) => {
+  posts.forEach((post: Edge<MdxNode>, index: number) => {
     const previous = index === posts.length - 1 ? null : posts[index + 1].node
     const next = index === 0 ? null : posts[index - 1].node
 
@@ -57,7 +57,7 @@ export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
 exports.onCreateNode = ({ node, actions, getNode }: CreateNodeArgs) => {
   const { createNodeField } = actions
 
-  if (node.internal.type === `MarkdownRemark`) {
+  if (node.internal.type === `Mdx`) {
     const value = createFilePath({ node, getNode })
     createNodeField({
       name: `slug`,

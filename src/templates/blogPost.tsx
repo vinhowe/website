@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Link, graphql } from "gatsby"
 
-import Bio from "../components/bio"
+import { MDXRenderer } from "gatsby-plugin-mdx"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { rhythm, scale } from "../utils/typography"
@@ -9,7 +9,7 @@ import { rhythm, scale } from "../utils/typography"
 
 class BlogPostTemplate extends React.Component<BlogPostTemplateProps, {}> {
   render() {
-    const post = this.props.data.markdownRemark
+    const post = this.props.data.mdx
     const siteTitle = this.props.data.site.siteMetadata.title
     const { previous, next } = this.props.pageContext
 
@@ -39,7 +39,7 @@ class BlogPostTemplate extends React.Component<BlogPostTemplateProps, {}> {
               {post.frontmatter.date}
             </p>
           </header>
-          <section dangerouslySetInnerHTML={{ __html: post.html }}/>
+          <MDXRenderer>{post.body}</MDXRenderer>
 
           <footer>
             <p>vin</p>
@@ -83,10 +83,10 @@ interface Frontmatter {
   description: string
 }
 
-interface MarkdownRemark {
+interface MdxItem {
   id: string
   excerpt: string
-  html: string
+  body: string
   frontmatter: Frontmatter
 }
 
@@ -99,7 +99,7 @@ interface PageSite {
 }
 
 interface BlogPostData {
-  markdownRemark: MarkdownRemark
+  mdx: MdxItem
   site: PageSite
 }
 
@@ -112,16 +112,16 @@ interface BlogPostTemplateProps {
 export default BlogPostTemplate
 
 export const pageQuery = graphql`
-    query BlogPostBySlug($slug: String!) {
+    query BlogPostById($slug: String!) {
         site {
             siteMetadata {
                 title
             }
         }
-        markdownRemark(fields: { slug: { eq: $slug } }) {
+        mdx(fields: {slug: {eq: $slug}}) {
             id
             excerpt(pruneLength: 160)
-            html
+            body
             frontmatter {
                 title
                 date(formatString: "MMMM DD, YYYY")

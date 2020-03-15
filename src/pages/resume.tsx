@@ -5,7 +5,7 @@ import { Link, graphql } from "gatsby"
 import SEO from "../components/seo"
 // import { rhythm } from "../utils/typography"
 import {
-  MarkdownRemarkConnection,
+  MDXConnection,
   ResumeBio,
   ResumeEducationItem,
   ResumeInfo,

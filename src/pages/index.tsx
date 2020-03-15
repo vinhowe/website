@@ -3,7 +3,7 @@ import { graphql, Link } from "gatsby"
 import Layout from "../components/layout"
 import SEO, { rootTitle } from "../components/seo"
 import { rhythm } from "../utils/typography"
-import { MarkdownRemarkConnection, SiteNode } from "../queries"
+import { MDXConnection, SiteNode } from "../queries"
 import HeroImage from "../components/heroImage"
 import CurrentlyReading from "../components/currentlyReading"
 
@@ -11,12 +11,10 @@ class BlogIndex extends React.Component<BlogIndexProps, {}> {
   render() {
     const { data } = this.props
     const siteTitle = data.site.siteMetadata.title
-    const posts = data.allMarkdownRemark.edges
-
-
+    const posts = data.allMdx.edges
 
     return (
-      <Layout location={this.props.location}>
+      <Layout location={this.props.location} title={siteTitle}>
         <SEO title={rootTitle}/>
         <HeroImage />
         <CurrentlyReading />
@@ -58,7 +56,7 @@ export default BlogIndex
 
 interface BlogIndexQuery {
   site: SiteNode
-  allMarkdownRemark: MarkdownRemarkConnection
+  allMdx: MDXConnection
 }
 
 interface BlogIndexProps {
@@ -73,12 +71,13 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMdx(sort: { fields: [frontmatter___date], order: DESC }) {
       edges {
         node {
           excerpt
+          id
           fields {
-            slug
+              slug
           }
           frontmatter {
             date(formatString: "MMMM DD, YYYY")

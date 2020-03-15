@@ -59,7 +59,6 @@ const Layout = (props: LayoutProps) => {
     >
       <Nav/>
       <main>{children}</main>
-      {/* TODO Replace "Vin Howe" with a siteMetadata query */}
       <hr/>
       <footer style={{ display: "flex", justifyContent: "space-between" }}>
         <p>© {new Date().getFullYear()} {author}</p>
