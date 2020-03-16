@@ -12,23 +12,21 @@ export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
 
   const blogPost = path.resolve(`./src/templates/blogPost.tsx`)
   const result = await graphql<CreatePageQuery, any>(`
-      {
-          allMdx(
-              sort: { fields: [frontmatter___date], order: DESC }
-              limit: 1000
-          ) {
-              edges {
-                  node {
-                      fields {
-                          slug
-                      }
-                      frontmatter {
-                          title
-                      }
-                  }
-              }
+    {
+      allMdx(sort: { fields: [frontmatter___date], order: DESC }, limit: 1000) {
+        edges {
+          node {
+            fields {
+              slug
+            }
+            frontmatter {
+              title
+              layoutPath
+            }
           }
+        }
       }
+    }
   `)
 
   if (result.errors) {
@@ -42,9 +40,12 @@ export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
     const previous = index === posts.length - 1 ? null : posts[index + 1].node
     const next = index === 0 ? null : posts[index - 1].node
 
+    const layout = post.node.frontmatter.layoutPath
+      ? path.resolve(post.node.frontmatter.layoutPath)
+      : blogPost
     createPage({
       path: post.node.fields.slug,
-      component: blogPost,
+      component: layout,
       context: {
         slug: post.node.fields.slug,
         previous,

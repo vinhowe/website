@@ -1,4 +1,5 @@
 const accentColor = `#00AD50`
+const accentColorDark = `#30f288`
 
 module.exports = {
   siteMetadata: {
@@ -7,6 +8,7 @@ module.exports = {
     description: `The personal blog of Vin Howe`,
     siteUrl: `https://howe.vin/`,
     accentColor: accentColor,
+    accentColorDark: accentColorDark,
     social: [
       {
         name: `GitHub`,

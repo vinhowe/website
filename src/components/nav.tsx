@@ -16,7 +16,12 @@ interface NavItem {
   path: string
 }
 
-const Nav = () => {
+export interface NavArgs {
+  accentColor?: string
+  linkColor?: string
+}
+
+const Nav = ({ accentColor, linkColor }: NavArgs) => {
   const data: NavQuery = useStaticQuery(graphql`
       query NavQuery {
           site {
@@ -30,15 +35,17 @@ const Nav = () => {
 
   const navItemStyle: CSSProperties = {
     display: "inline",
-    marginBottom: 0
+    marginBottom: 0,
   }
 
   const navItemLinkStyle = {
-    color: `inherit`,
+    color: linkColor ? linkColor : `inherit`,
     marginLeft: 0,
   }
 
-  const { title, accentColor } = data.site.siteMetadata
+  const { title } = data.site.siteMetadata
+
+  const defaultAccentColor = data.site.siteMetadata.accentColor;
 
   const navItemList: NavItem[] = [
     {
@@ -52,18 +59,19 @@ const Nav = () => {
   ]
 
   const navItemElementList = navItemList.map((item: NavItem, i: number) => {
-    let elementWiseStyle: any = navItemStyle;
+    let elementWiseStyle: any = navItemStyle
 
     if (i !== navItemList.length - 1) {
-      elementWiseStyle = {...elementWiseStyle, paddingRight: "20px"}
+      elementWiseStyle = { ...elementWiseStyle, paddingRight: "20px" }
     }
 
-    return (<li style={elementWiseStyle}>
-      <Link
-        style={navItemLinkStyle}
-        to={item.path}
-      >{item.name}</Link>
-    </li>)
+    return (
+      <li style={elementWiseStyle}>
+        <Link style={navItemLinkStyle} to={item.path}>
+          {item.name}
+        </Link>
+      </li>
+    )
   })
 
   return (
@@ -71,13 +79,13 @@ const Nav = () => {
       className={"nav-flex-container"}
       style={{
         paddingBottom: rhythm(0.5),
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       <h1
         style={{
           ...scale(0.5),
-          color: accentColor,
+          color: accentColor ? accentColor : defaultAccentColor,
           marginTop: 0,
           height: "min-content",
           flexShrink: 0,
@@ -94,15 +102,18 @@ const Nav = () => {
           {title}
         </Link>
       </h1>
-      <ul style={{
-        flexGrow: 1,
-        flexDirection: "row",
-        listStyleType: "none",
-        textAlign: "right",
-        marginBottom: 0,
-        marginLeft: 0,
-        height: "min-content"
-      }} children={navItemElementList}/>
+      <ul
+        style={{
+          flexGrow: 1,
+          flexDirection: "row",
+          listStyleType: "none",
+          textAlign: "right",
+          marginBottom: 0,
+          marginLeft: 0,
+          height: "min-content",
+        }}
+        children={navItemElementList}
+      />
     </div>
   )
 }
