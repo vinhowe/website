@@ -51,6 +51,7 @@ const PointCloudLegend = () => {
       <PointCloudLegendItem name={"Uninfected"} color={"#555555"} />
       <PointCloudLegendItem name={"Incubating"} color={"#DB9D0B"} />
       <PointCloudLegendItem name={"Symptomatic"} color={"#DB2E0B"} />
+      <PointCloudLegendItem name={"Recovered"} color={"green"} />
       <PointCloudLegendItem name={"Dead"} color={"#555555"} stroke={true} />
     </div>
   )

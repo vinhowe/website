@@ -58,12 +58,16 @@ class PointCloud extends React.Component<{}, PointCloudState> {
       const isInfected = i == infectedIndex
       points.push({
         incubationPeriod: 4 + Math.round(Math.random() * 20),
-        daysToRecover: 4 + Math.round(Math.random() * 20),
-        age: 90 - Math.random() * 90,
+        // Make sure there's enough time for the initial infected person to
+        // spread the disease
+        daysToRecover: isInfected ? 100 : 4 + Math.round(Math.random() * 20),
+        // Make sure this person is unlikely to die just so the outbreak gets
+        // going
+        age: isInfected ? 18 : 90 - Math.random() * 90,
         daysInfected: isInfected ? 1 : -1,
         // Some people are more cautious
         percentInfectedQuarantineThreshold:
-          1 - Math.random() * (Math.random() < 0.25 ? 0.7 : 0.5),
+          1 - Math.random() * (Math.random() < 0.25 ? 0.8 : 0.5),
         position: {
           x: Math.random(),
           y: Math.random(),
@@ -286,9 +290,9 @@ class PointCloud extends React.Component<{}, PointCloudState> {
         context.fillStyle =
           point.daysInfected > 0
             ? point.daysInfected > point.incubationPeriod
-              ? // ? point.daysInfected > point.daysToRecover
-                //   ? "green"
-                /*:*/ "#DB2E0B"
+              ? point.daysInfected > point.daysToRecover
+                ? "green"
+                : "#DB2E0B"
               : "#DB9D0B"
             : "#555555"
         context.fill()
@@ -340,7 +344,7 @@ class PointCloud extends React.Component<{}, PointCloudState> {
           style={{
             width: "100vw",
             height: "100vh",
-            opacity: 0.35,
+            opacity: 0.45,
             zIndex: -1000,
             verticalAlign: "bottom",
           }}
