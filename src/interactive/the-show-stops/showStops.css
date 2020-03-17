@@ -2,6 +2,14 @@
   font-size: 80px;
 }
 
+.feature-title-outline {
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  font-weight: normal;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: white;
+  /*transition: -webkit-text-fill-color 100ms ease-in;*/
+}
+
 @media only screen and (min-width: 800px) {
   .feature-title {
     margin-right: -200px;

@@ -38,7 +38,7 @@ const PointCloudLegendItem = ({
   )
 }
 
-const PointCloudLegend = () => {
+const ViralVizLegend = () => {
   return (
     <div
       style={{
@@ -57,4 +57,4 @@ const PointCloudLegend = () => {
   )
 }
 
-export default PointCloudLegend
+export default ViralVizLegend

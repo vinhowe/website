@@ -1,10 +1,71 @@
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
-import { CreateNodeArgs, CreatePagesArgs } from "gatsby"
+import {
+  CreateNodeArgs,
+  CreatePagesArgs,
+  CreateWebpackConfigArgs,
+} from "gatsby"
 import { Edge, MDXConnection, MdxNode } from "./queries"
 
 interface CreatePageQuery {
   allMdx: MDXConnection
+}
+
+export const onCreateWebpackConfig = ({
+                                        stage,
+                                        rules,
+                                        loaders,
+                                        plugins,
+                                        actions,
+                                      }: CreateWebpackConfigArgs) => {
+  actions.setWebpackConfig({
+    module: {
+      rules: [
+        {
+          test: /\.wasm$/i,
+          type: "javascript/auto",
+          use: [
+            {
+              loader: 'file-loader',
+            },
+          ],
+        },
+        {
+          test: /\.js$/,
+          loader: require.resolve('@open-wc/webpack-import-meta-loader'),
+        },
+        // {
+        //   test: /\.wasm$/,
+        //   type: "webassembly/experimental",
+        //   // include: path.resolve(__dirname, 'src'),
+        //   // use: [{ loader: require.resolve('wasm-loader'), options: {} }]
+        // },
+        // {
+        //   test: /\.wasm$/,
+        //   // loaders: ["base64-loader"],
+        //   type: "javascript/auto",
+        // },
+      ],
+      // noParse: /\.wasm$/
+    },
+    // experiments: {
+    //   asyncWebAssembly: true,
+    //   importAwait: true,
+    // },
+    plugins: [
+      // new WasmPackPlugin({
+      //   crateDirectory: path.resolve(
+      //     __dirname,
+      //     "interactive",
+      //     "the-show-stops-wasm",
+      //     "the-show-stops-wasm-wasm",
+      //   ),
+      // }),
+      plugins.define({
+        __DEVELOPMENT__: stage === `develop` || stage === `develop-html`,
+      }),
+    ],
+  })
 }
 
 export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
@@ -55,7 +116,7 @@ export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
   })
 }
 
-exports.onCreateNode = ({ node, actions, getNode }: CreateNodeArgs) => {
+export const onCreateNode = ({ node, actions, getNode }: CreateNodeArgs) => {
   const { createNodeField } = actions
 
   if (node.internal.type === `Mdx`) {
