@@ -2,6 +2,7 @@ import React from "react"
 import viralVizStyles from "./viralViz.module.css"
 import init, { Population } from "./the-show-stops-wasm/pkg"
 import showStopsStyles from "./showStops.module.css"
+import { drawScene, initBuffers, initShaderProgram } from "./viralVizWebGl"
 
 export interface ViralVizState {
   lastTime: number
@@ -121,7 +122,8 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
 
       population.tick(delta)
 
-      this.draw()
+      // this.draw()
+      this.drawGl()
 
       if (
         this.state.initialAnimation &&
@@ -146,34 +148,256 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     }
     const canvas = this.canvasRef
     const context = canvas.getContext("2d")
+    const radius = 3
 
-    canvas.width = document.body.clientWidth
-    canvas.height = window.innerHeight
+    const width = document.body.clientWidth
+    const height = window.innerHeight
+
+    canvas.width = width
+    canvas.height = height
+
+
+    interface Point {
+      x: number
+      y: number
+    }
+
+    let uninfected: Point[] = []
+    let incubating: Point[] = []
+    let symptotic: Point[] = []
+    let recovered: Point[] = []
+    let dead: Point[] = []
 
     for (let i = 0; i < this.state.population.individual_count; i++) {
       const point = this.state.population.individual_at_index(i)
-      const radius = 3
-      const pointX = canvas.width * point.position.x
-      const pointY = canvas.height * point.position.y
 
-      context.beginPath()
-      context.arc(pointX, pointY, radius, 0, 2 * Math.PI, false)
-      if (point.is_alive) {
-        context.fillStyle =
-          point.days_infected > 0
-            ? point.days_infected > point.incubation_period
-              ? point.days_infected > point.days_to_recover
-                ? "green"
-                : "#DB2E0B"
-              : "#DB9D0B"
-            : "#555555"
-        context.fill()
-      } else {
-        context.strokeStyle = "#555555"
-        context.lineWidth = 2
-        context.stroke()
-      }
+      const targetList = point.is_alive
+        ? point.days_infected > 0
+          ? point.days_infected > point.incubation_period
+            ? point.days_infected > point.days_to_recover
+              ? recovered
+              : symptotic
+            : incubating
+          : uninfected
+        : dead
+
+      targetList.push({
+        x: point.position.x * width,
+        y: point.position.y * height,
+      })
     }
+
+    context.fillStyle = "#555555"
+    for (const point of uninfected) {
+      context.beginPath()
+      context.arc(point.x, point.y, radius, 0, 2 * Math.PI, false)
+      context.fill()
+    }
+
+    context.fillStyle = "rgba(219,157,11,0.85)"
+    for (const point of incubating) {
+      context.beginPath()
+      context.arc(point.x, point.y, radius, 0, 2 * Math.PI, false)
+      context.fill()
+    }
+
+    context.fillStyle = "rgba(219,46,11,0.87)"
+    for (const point of symptotic) {
+      context.beginPath()
+      context.arc(point.x, point.y, radius, 0, 2 * Math.PI, false)
+      context.fill()
+    }
+
+    context.fillStyle = "green"
+    for (const point of recovered) {
+      context.beginPath()
+      context.arc(point.x, point.y, radius, 0, 2 * Math.PI, false)
+      context.fill()
+    }
+
+    context.fillStyle = ""
+    context.strokeStyle = "rgba(85,85,85,0.72)"
+    context.lineWidth = 2
+    for (const point of dead) {
+      context.beginPath()
+      context.arc(point.x, point.y, radius, 0, 2 * Math.PI, false)
+      context.stroke()
+    }
+
+    // if (point.is_alive) {
+    //   context.fillStyle =
+    //     point.days_infected > 0
+    //       ? point.days_infected > point.incubation_period
+    //       ? point.days_infected > point.days_to_recover
+    //         ? "green"
+    //         : "#DB2E0B"
+    //       : "#DB9D0B"
+    //       : "#555555"
+    // } else {
+    //   context.strokeStyle = "#555555"
+    //   context.lineWidth = 2
+    //   context.stroke()
+    // }
+    //
+    // const pointX = canvas.width * point.position.x
+    // const pointY = canvas.height * point.position.y
+  }
+
+  drawGl() {
+    if (
+      !this.canvasRef ||
+      !this.state.population ||
+      this.state.opacity < 0.01
+    ) {
+      return
+    }
+
+    const canvas = this.canvasRef
+    const gl = canvas.getContext("webgl")
+
+    const width = document.body.clientWidth
+    const height = window.innerHeight
+
+    canvas.width = width
+    canvas.height = height
+
+    // Vertex shader program
+
+    const vsSource = `
+    attribute vec4 aVertexPosition;
+    
+    uniform mat4 uModelViewMatrix;
+    uniform mat4 uProjectionMatrix;
+    
+    void main() {
+      gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+      // // vColor = aVertexColor;
+      // float ambientStrength = 1.0;
+      // vec4 ambient = ambientStrength * aVertexColor;
+      //
+      // vec4 result = ambient * aVertexColor;
+      // vColor = result;
+    }
+  `
+
+    // Fragment shader program
+
+    const fsSource = `
+    #ifdef GL_ES
+      precision highp float;
+    #endif
+    uniform vec4 uGlobalColor; 
+    
+    void main(void) {
+      gl_FragColor = uGlobalColor;
+    }
+  `
+    // Only continue if WebGL is available and working
+    if (gl === null) {
+      alert("Unable to initialize WebGL. Your browser or machine may not support it.")
+      return
+    }
+
+    // Set clear color to black, fully opaque
+    gl.clearColor(0.0, 0.0, 0.0, 1.0)
+    // Clear the color buffer with specified clear color
+    gl.clear(gl.COLOR_BUFFER_BIT)
+    // Initialize a shader program; this is where all the lighting
+    // for the vertices and so forth is established.
+    const shaderProgram = initShaderProgram(gl, vsSource, fsSource)
+
+    // Collect all the info needed to use the shader program.
+    // Look up which attribute our shader program is using
+    // for aVertexPosition and look up uniform locations.
+    const programInfo = {
+      program: shaderProgram,
+      attribLocations: {
+        vertexColor: gl.getAttribLocation(shaderProgram, "aVertexColor"),
+        vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+      },
+      uniformLocations: {
+        projectionMatrix: gl.getUniformLocation(shaderProgram, "uProjectionMatrix"),
+        globalColor: gl.getUniformLocation(shaderProgram, "uGlobalColor"),
+        modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+      },
+    }
+
+    interface Point {
+      x: number
+      y: number
+    }
+
+    let uninfected: Point[] = []
+    let incubating: Point[] = []
+    let symptotic: Point[] = []
+    let recovered: Point[] = []
+    let dead: Point[] = []
+
+    for (let i = 0; i < this.state.population.individual_count; i++) {
+      const point = this.state.population.individual_at_index(i)
+
+      const targetList = point.is_alive
+        ? point.days_infected > 0
+          ? point.days_infected > point.incubation_period
+            ? point.days_infected > point.days_to_recover
+              ? recovered
+              : symptotic
+            : incubating
+          : uninfected
+        : dead
+
+      targetList.push({
+        x: point.position.x,
+        y: point.position.y,
+      })
+    }
+
+    let sampleCircles: any[] = []
+
+    sampleCircles.push(...uninfected.map((item) => {
+      return {
+        ...item,
+        color: [85, 85, 85],
+      }
+    }))
+
+
+    sampleCircles.push(...incubating.map((item) => {
+      return {
+        ...item,
+        color: [219/255,157/255,11/255],
+      }
+    }))
+
+    sampleCircles.push(...symptotic.map((item) => {
+      return {
+        ...item,
+        color: [219/255,46/255,11/255],
+      }
+    }))
+
+    sampleCircles.push(...recovered.map((item) => {
+      return {
+        ...item,
+        color: [85/255, 85/255, 85/255],
+      }
+    }))
+
+    sampleCircles.push(...dead.map((item) => {
+      return {
+        ...item,
+        color: [0, 0, 0],
+      }
+    }))
+
+    // let sampleCircles = [];
+
+    // Here's where we call the routine that builds all the
+    // objects we'll be drawing.
+    const buffers = initBuffers(sampleCircles, [-1, -1, 1, 1])
+
+    // Draw the scene
+    drawScene(gl, programInfo, buffers)
   }
 
   handleResize() {
@@ -183,12 +407,12 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     const canvas = this.canvasRef
     canvas.width = document.body.clientWidth * devicePixelRatio
     canvas.height = window.innerHeight * devicePixelRatio
-    this.draw()
+    this.drawGl()
   }
 
   handleScroll() {
     const percentScrolled = window.scrollY / window.innerHeight
-    const opacity = (1 - percentScrolled * 15)
+    const opacity = 1 - percentScrolled * 15
 
     if (
       opacity < 0.01 &&
@@ -200,7 +424,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
       this.toggleAnimation()
     }
 
-    this.lastPercentScrolled = percentScrolled;
+    this.lastPercentScrolled = percentScrolled
 
     this.setState({
       opacity,
@@ -297,7 +521,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
               lineHeight: 0,
               marginBottom: 0,
               opacity: this.state.opacity,
-              textShadow: "0 0 20px #0b0231"
+              textShadow: "0 0 20px #0b0231",
             }}
             className={viralVizStyles.percentIndicator}
           >
@@ -312,8 +536,9 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
               width: "100vw",
               height: "100vh",
               transition: "opacity ease-out 200ms",
-              opacity: 0.6 * this.state.opacity * (this.state.animating ? 1 : 0.5),
-              // zIndex: 1,
+              opacity: 1,
+              // 0.6 * this.state.opacity * (this.state.animating ? 1 : 0.5),
+              zIndex: 100000000,
               verticalAlign: "bottom",
             }}
           />

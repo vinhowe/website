@@ -119,7 +119,7 @@ class ShowStopsLayout extends React.Component<
               <span
                 style={{
                   opacity: this.getElapsed() > 200 ? 1 : 0,
-                  zIndex: -1000,
+                  // zIndex: -1000,
                 }}
               >
                 The Show
@@ -131,7 +131,7 @@ class ShowStopsLayout extends React.Component<
                     fontWeight: "normal",
                     transition: "none",
                     opacity: this.state.vizInitialAnimation ? 0 : 1,
-                    zIndex: -1000,
+                    // zIndex: -1000,
                   }}
                   className={
                     !this.state.vizAnimating
