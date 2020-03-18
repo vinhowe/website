@@ -125,7 +125,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
 
       if (
         this.state.initialAnimation &&
-        new Date().getTime() - this.state.startTimestamp > 2000
+        new Date().getTime() - this.state.startTimestamp > 3000
       ) {
         this.toggleAnimation()
       }
@@ -285,6 +285,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
             className={viralVizStyles.playPauseButton + " material-icons"}
             style={{
               // Slight adjustment to make play button line up with pause button
+              zIndex: -1000,
               transform: !this.state.animating ? "translateX(-3px)" : "",
             }}
           >
@@ -295,7 +296,8 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
               color: this.state.animating ? "#DB9D0B" : "white",
               lineHeight: 0,
               marginBottom: 0,
-              opacity: this.state.opacity
+              opacity: this.state.opacity,
+              textShadow: "0 0 20px #0b0231"
             }}
             className={viralVizStyles.percentIndicator}
           >

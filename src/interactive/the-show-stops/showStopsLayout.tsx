@@ -91,8 +91,10 @@ class ShowStopsLayout extends React.Component<
           marginLeft: `auto`,
           marginRight: `auto`,
           maxWidth: "600px",
+          maxHeight: "100vh",
           padding: `${rhythm(3 / 4)} ${rhythm(3 / 4)} ${rhythm(1.5)}`,
           color: "white",
+          background: "linear-gradient(transparent, rgba(11, 2, 49, 0.25), rgba(11,2,49,1))",
         }}
         className={showStopsStyles.theShowStops}
       >
@@ -117,6 +119,7 @@ class ShowStopsLayout extends React.Component<
               <span
                 style={{
                   opacity: this.getElapsed() > 200 ? 1 : 0,
+                  zIndex: -1000,
                 }}
               >
                 The Show
@@ -127,7 +130,8 @@ class ShowStopsLayout extends React.Component<
                   style={{
                     fontWeight: "normal",
                     transition: "none",
-                    opacity: this.state.vizInitialAnimation ? 0 : 1
+                    opacity: this.state.vizInitialAnimation ? 0 : 1,
+                    zIndex: -1000,
                   }}
                   className={
                     !this.state.vizAnimating
