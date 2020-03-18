@@ -1,5 +1,8 @@
 {
-  "plugins": ["@babel/plugin-proposal-optional-chaining", "@babel/plugin-syntax-import-meta"],
+  "plugins": [
+    "@babel/plugin-proposal-optional-chaining",
+    "@babel/plugin-syntax-import-meta"
+  ],
   "presets": [
     [
       "babel-preset-gatsby",

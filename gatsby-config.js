@@ -58,12 +58,12 @@ module.exports = {
         name: `currentlyReading`,
       },
     },
-    {
-      resolve: "gatsby-plugin-netlify-cms",
-      options: {
-        modulePath: `${__dirname}/src/cms/cms.ts`,
-      },
-    },
+    // {
+    //   resolve: "gatsby-plugin-netlify-cms",
+    //   options: {
+    //     modulePath: `${__dirname}/src/cms/cms.ts`,
+    //   },
+    // },
     `gatsby-transformer-yaml`,
     `gatsby-transformer-remark`,
     {
@@ -154,5 +154,6 @@ module.exports = {
         },
       },
     },
+    "gatsby-plugin-css-modules-typings",
   ],
 }

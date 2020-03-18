@@ -1,9 +1,0 @@
-.point-cloud-container {
-  position: fixed;
-}
-
-@media only screen and (min-width: 600px) {
-  .point-cloud-container {
-    position: fixed;
-  }
-}

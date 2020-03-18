@@ -5,8 +5,9 @@ import { MDXRenderer } from "gatsby-plugin-mdx"
 import SEO from "../../components/seo"
 import { rhythm, scale } from "../../utils/typography"
 import Nav from "../../components/nav"
-import "./showStops.css"
+import showStopsStyles from "./showStops.module.css"
 import ViralViz from "./viralViz"
+import ViralVizLegend from "./viralVizLegend"
 
 interface ShowStopsLayoutProps {
   data: BlogPostData
@@ -16,6 +17,9 @@ interface ShowStopsLayoutProps {
 
 interface ShowStopsLayoutState {
   vizAnimating: boolean
+  vizInitialAnimation: boolean
+  startTime: number
+  time: number
 }
 
 class ShowStopsLayout extends React.Component<
@@ -23,30 +27,62 @@ class ShowStopsLayout extends React.Component<
   ShowStopsLayoutState
 > {
   lastBackgroundColor = ""
+  requestFrameFun: any
 
   constructor(props: any) {
     super(props)
-    this.lastBackgroundColor = document.body.style.backgroundColor
+    const startTime = (new Date()).getTime()
     this.state = {
       vizAnimating: true,
+      vizInitialAnimation: true,
+      startTime,
+      time: startTime
     }
     this.onVizToggle = this.onVizToggle.bind(this)
-    document.body.style.backgroundColor = "black"
+    this.getElapsed = this.getElapsed.bind(this)
+    this.updateTitleAnimation = this.updateTitleAnimation.bind(this)
+  }
+
+  componentDidMount(): void {
+    this.lastBackgroundColor = document.body.style.backgroundColor
+    document.body.style.backgroundColor = "#0b0231"
+
+    this.requestFrameFun = requestAnimationFrame(this.updateTitleAnimation)
+    // window.onload = (_) => requestAnimationFrame(this.updateTitleAnimation)
+  }
+
+  getElapsed = () => this.state.time - this.state.startTime
+
+  updateTitleAnimation(time: number) {
+    this.setState({
+      time: (new Date()).getTime(),
+    })
+    // 5 seconds to give the last part time to animate
+    if (this.getElapsed() < 5000) {
+      requestAnimationFrame(this.updateTitleAnimation)
+    }
   }
 
   componentWillUnmount(): void {
     document.body.style.backgroundColor = this.lastBackgroundColor
+    cancelAnimationFrame(this.requestFrameFun)
+    const startTime = (new Date()).getTime()
+    this.setState({
+      startTime,
+      time: startTime
+    })
   }
 
   onVizToggle(animating: boolean): void {
     this.setState({
       vizAnimating: animating,
+      vizInitialAnimation: false,
     })
   }
 
   render() {
     const post = this.props.data.mdx
-    const siteTitle = this.props.data.site.siteMetadata.title
+    // const siteTitle = this.props.data.site.siteMetadata.title
     const { previous, next } = this.props.pageContext
 
     return (
@@ -58,7 +94,7 @@ class ShowStopsLayout extends React.Component<
           padding: `${rhythm(3 / 4)} ${rhythm(3 / 4)} ${rhythm(1.5)}`,
           color: "white",
         }}
-        className={"the-show-stops-wasm"}
+        className={showStopsStyles.theShowStops}
       >
         <SEO
           title={post.frontmatter.title}
@@ -69,22 +105,34 @@ class ShowStopsLayout extends React.Component<
           <header>
             <h1
               style={{
-                marginTop: rhythm(1),
-                marginBottom: rhythm(1),
+                marginTop: rhythm(1.5),
+                marginBottom: rhythm(2),
                 fontWeight: "lighter",
                 display: "flex",
                 justifyContent: "center",
                 flexWrap: "wrap",
               }}
-              className={"feature-title"}
+              className={showStopsStyles.featureTitle}
             >
-              The Show
+              <span
+                style={{
+                  opacity: this.getElapsed() > 200 ? 1 : 0,
+                }}
+              >
+                The Show
+              </span>
               <span style={{ display: "flex", textAlign: "center" }}>
                 <ViralViz onToggle={this.onVizToggle} />{" "}
                 <span
-                  style={{ fontWeight: "normal" }}
+                  style={{
+                    fontWeight: "normal",
+                    transition: "none",
+                    opacity: this.state.vizInitialAnimation ? 0 : 1
+                  }}
                   className={
-                    !this.state.vizAnimating ? "feature-title-outline" : ""
+                    !this.state.vizAnimating
+                      ? showStopsStyles.featureTitleOutline
+                      : ""
                   }
                 >
                   Stops
@@ -100,6 +148,7 @@ class ShowStopsLayout extends React.Component<
             >
               {post.frontmatter.date}
             </p>
+            <ViralVizLegend/>
           </header>
           <MDXRenderer>{post.body}</MDXRenderer>
 

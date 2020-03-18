@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 
 interface PointCloudLegendElementArgs {
   name: string
@@ -38,7 +38,30 @@ const PointCloudLegendItem = ({
   )
 }
 
-const ViralVizLegend = () => {
+const ViralVizLegend: React.FC = () => {
+  const [collapsed, setCollapsed] = useState(false)
+
+  function handleScroll() {
+    const percentScrolled = window.scrollY / window.innerHeight
+    const percentHeight = Math.min(Math.max(percentScrolled * 10, 0), 1)
+
+    console.log(percentHeight)
+
+    if (!collapsed && percentHeight >= 1) {
+      setCollapsed(true)
+    } else if (collapsed && percentHeight < 1) {
+      setCollapsed(false)
+    }
+  }
+
+  useEffect(() => {
+    return function cleanup() {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  })
+
+  window.addEventListener("scroll", handleScroll)
+
   return (
     <div
       style={{
@@ -46,6 +69,11 @@ const ViralVizLegend = () => {
         flexWrap: "wrap",
         marginLeft: -5,
         marginRight: -5,
+        marginBottom: collapsed ? -28 : 0,
+        overflow: "hidden",
+        height: collapsed ? 0 : "50px",
+        opacity: collapsed ? 0 : 1,
+        transition: "all 150ms",
       }}
     >
       <PointCloudLegendItem name={"Uninfected"} color={"#555555"} />

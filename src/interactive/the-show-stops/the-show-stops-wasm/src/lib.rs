@@ -1,19 +1,16 @@
-// mod utils;
 extern crate js_sys;
 
 use js_sys::Math::random;
 
 use wasm_bindgen::prelude::*;
 use std::cmp::{max, min};
-// use rand::Rng;
-// use rand::rngs::OsRng;
 
 
-// // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
-// // allocator.
-// #[cfg(feature = "wee_alloc")]
-// #[global_allocator]
-// static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+// When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
+// allocator.
+#[cfg(feature = "wee_alloc")]
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
 extern {
@@ -161,7 +158,7 @@ impl Population {
         let last_percent_infected: f32 = self.percent_infected;
         let mut total_infected: i32 = 0;
         let performance_coeff = (self.individual_count as f64).powf(-0.1);
-        let infection_dist = (self.individual_count as f64).powf(-0.53);
+        let infection_dist = (self.individual_count as f64).powf(-0.515);
 
         for i in 0..self.individual_count {
             let mut individual = self.individual_at_index(i);
@@ -251,7 +248,7 @@ impl Population {
                         continue;
                     }
 
-                    if dist < infection_dist && random() < 0.5 {
+                    if dist < infection_dist && random() < 0.8 {
                         individual.days_infected = 1.0;
                         break;
                     }

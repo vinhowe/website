@@ -1,10 +1,12 @@
 import React from "react"
-import "./viralViz.css"
+import viralVizStyles from "./viralViz.module.css"
 import init, { Population } from "./the-show-stops-wasm/pkg"
+import showStopsStyles from "./showStops.module.css"
 
 export interface ViralVizState {
   lastTime: number
   lastDeltas: number[]
+  startTimestamp: number
   population: Population
   animating: boolean
   opacity: number
@@ -15,7 +17,7 @@ export interface ViralVizProps {
   onToggle?: (animating: boolean) => void
 }
 
-const defaultPopulationSize = 2000
+const defaultPopulationSize = 1000
 
 const deltaReloadThresholdCount = 10
 const deltaReloadThresholdFrameLength = 60
@@ -25,20 +27,23 @@ const deltaReloadThresholdMinPopulationSize = defaultPopulationSize / 2 ** 4
 class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
   canvasRef: HTMLCanvasElement
   requestFrameFun: any
+  lastPercentScrolled: number
 
   constructor(props: any) {
     super(props)
     this.handleResize = this.handleResize.bind(this)
+    this.handleSpacebar = this.handleSpacebar.bind(this)
     this.handleScroll = this.handleScroll.bind(this)
     this.toggleAnimation = this.toggleAnimation.bind(this)
     this.updateAnimationState = this.updateAnimationState.bind(this)
     this.initPopulation = this.initPopulation.bind(this)
     this.state = {
       lastTime: 0,
+      startTimestamp: -1,
       lastDeltas: [],
       population: null,
       animating: true,
-      opacity: 0.35,
+      opacity: 0.6,
       initialAnimation: true,
     }
     this.init()
@@ -116,7 +121,12 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
 
       population.tick(delta)
 
-      if (this.state.initialAnimation && population.percent_infected > 0.2) {
+      this.draw()
+
+      if (
+        this.state.initialAnimation &&
+        new Date().getTime() - this.state.startTimestamp > 2000
+      ) {
         this.toggleAnimation()
       }
     }
@@ -126,16 +136,12 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     this.requestFrameFun = requestAnimationFrame(this.updateAnimationState)
   }
 
-  componentDidUpdate(
-    prevProps: Readonly<{}>,
-    prevState: Readonly<ViralVizState>,
-    snapshot?: any
-  ): void {
-    this.draw()
-  }
-
   draw() {
-    if (!this.canvasRef || !this.state.population) {
+    if (
+      !this.canvasRef ||
+      !this.state.population ||
+      this.state.opacity < 0.01
+    ) {
       return
     }
     const canvas = this.canvasRef
@@ -149,15 +155,6 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
       const radius = 3
       const pointX = canvas.width * point.position.x
       const pointY = canvas.height * point.position.y
-
-      // for (let touch of point.touches) {
-      //   const touchX = canvas.width * touch.position.x
-      //   const touchY = canvas.height * touch.position.y
-      //   context.beginPath()
-      //   context.arc(touchX, touchY, radius, 0, 2 * Math.PI, false)
-      //   context.fillStyle = `rgba(245,245,245, ${touch.percentMicrobesAlive})`
-      //   context.fill()
-      // }
 
       context.beginPath()
       context.arc(pointX, pointY, radius, 0, 2 * Math.PI, false)
@@ -180,7 +177,6 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
   }
 
   handleResize() {
-    this.setState(prevState => prevState)
     if (!this.canvasRef) {
       return
     }
@@ -191,11 +187,21 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
   }
 
   handleScroll() {
-    const percentWindowScrolled = window.scrollY / window.innerHeight
-    const opacity = 0.35 * (1 - percentWindowScrolled * 2)
-    if (opacity < 0.01 && this.state.animating) {
+    const percentScrolled = window.scrollY / window.innerHeight
+    const opacity = 0.6 * (1 - percentScrolled * 10)
+
+    if (
+      opacity < 0.01 &&
+      this.state.animating &&
+      this.lastPercentScrolled &&
+      // Only handle opacity animation toggle if going down
+      percentScrolled > this.lastPercentScrolled
+    ) {
       this.toggleAnimation()
     }
+
+    this.lastPercentScrolled = percentScrolled;
+
     this.setState({
       opacity,
     })
@@ -206,6 +212,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     if (!animating) {
       cancelAnimationFrame(this.requestFrameFun)
     } else {
+      window.scrollTo({ top: 0, behavior: "smooth" })
       this.requestFrameFun = requestAnimationFrame(this.updateAnimationState)
     }
     this.setState({
@@ -222,60 +229,88 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     }
   }
 
+  handleSpacebar(event: KeyboardEvent): void {
+    if (event.key == " ") {
+      event.preventDefault()
+      this.toggleAnimation()
+    }
+  }
+
   componentDidMount(): void {
     window.addEventListener("resize", this.handleResize)
     window.addEventListener("scroll", this.handleScroll)
+    this.setState({
+      startTimestamp: new Date().getTime(),
+    })
     this.requestFrameFun = requestAnimationFrame(this.updateAnimationState)
+
+    document.addEventListener("keypress", this.handleSpacebar)
   }
 
   componentWillUnmount(): void {
     window.removeEventListener("resize", this.handleResize)
     window.removeEventListener("scroll", this.handleScroll)
+    this.setState({
+      startTimestamp: new Date().getTime(),
+    })
     cancelAnimationFrame(this.requestFrameFun)
+
+    document.removeEventListener("keypress", this.handleSpacebar)
   }
 
   render() {
+    let percentInfected = 0
+    if (this.state.population) {
+      percentInfected = Math.round(this.state.population.percent_infected * 100)
+    }
+
     return (
       <div>
         <span
-          className={!this.state.animating ? "feature-title-outline" : ""}
+          className={
+            !this.state.animating ? showStopsStyles.featureTitleOutline : ""
+          }
           style={{
-            marginLeft: 10,
-            marginRight: 10,
             cursor: "pointer",
             userSelect: "none",
+            lineHeight: 0,
+            marginBottom: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
           onClick={() => this.toggleAnimation()}
         >
           <i
-            className="material-icons"
+            className={viralVizStyles.playPauseButton + " material-icons"}
             style={{
-              fontSize: 80,
+              // Slight adjustment to make play button line up with pause button
+              transform: !this.state.animating ? "translateX(-3px)" : "",
             }}
           >
             {this.state.animating ? "pause" : "play_arrow"}
           </i>
+          <div
+            style={{
+              color: this.state.animating ? "#DB9D0B" : "white",
+              lineHeight: 0,
+              marginBottom: 0,
+            }}
+            className={viralVizStyles.percentIndicator}
+          >
+            {percentInfected}%
+          </div>
         </span>
 
-        <div
-          style={{
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: -1000,
-          }}
-          className={"point-cloud-container"}
-        >
+        <div className={viralVizStyles.viralVizContainer}>
           <canvas
             ref={this.setCanvasRef}
             style={{
               width: "100vw",
               height: "100vh",
-              transition: "opacity fade-out 500ms",
-              opacity:
-                this.state.opacity + 0.1 * (this.state.animating ? 1 : 0),
-              zIndex: -1000,
+              transition: "opacity ease-out 200ms",
+              opacity: this.state.opacity * (this.state.animating ? 1 : 0.5),
+              // zIndex: 1,
               verticalAlign: "bottom",
             }}
           />

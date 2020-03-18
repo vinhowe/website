@@ -34,33 +34,9 @@ export const onCreateWebpackConfig = ({
           test: /\.js$/,
           loader: require.resolve('@open-wc/webpack-import-meta-loader'),
         },
-        // {
-        //   test: /\.wasm$/,
-        //   type: "webassembly/experimental",
-        //   // include: path.resolve(__dirname, 'src'),
-        //   // use: [{ loader: require.resolve('wasm-loader'), options: {} }]
-        // },
-        // {
-        //   test: /\.wasm$/,
-        //   // loaders: ["base64-loader"],
-        //   type: "javascript/auto",
-        // },
       ],
-      // noParse: /\.wasm$/
     },
-    // experiments: {
-    //   asyncWebAssembly: true,
-    //   importAwait: true,
-    // },
     plugins: [
-      // new WasmPackPlugin({
-      //   crateDirectory: path.resolve(
-      //     __dirname,
-      //     "interactive",
-      //     "the-show-stops-wasm",
-      //     "the-show-stops-wasm-wasm",
-      //   ),
-      // }),
       plugins.define({
         __DEVELOPMENT__: stage === `develop` || stage === `develop-html`,
       }),
