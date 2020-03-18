@@ -13,7 +13,7 @@ I'm going to try to sell you on Flutter without getting into the specifics. I'm 
 
 From [Flutter’s website](https://flutter.dev):﻿
 
-“Flutter is **Google’s UI toolkit** for building **beautiful**, **natively compiled** applications for **mobile**, **web**, and **desktop** from a **single codebase**." (my emphasis)
+“Flutter is **Google’s UI toolkit** for building **beautiful**, **natively compiled** applications for **mobile**, **web**, and **desktop** from a **single codebase**." (emphasis mine)
 
 The Flutter team at Google is trying to create a fast, truly cross-platform development toolkit. As of today, Flutter for the web and desktop are still far from production-ready, so we’ll be focusing on mobile.
 
