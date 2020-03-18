@@ -55,12 +55,14 @@ const ViralVizLegend: React.FC = () => {
   }
 
   useEffect(() => {
+
+    window.addEventListener("scroll", handleScroll)
+
     return function cleanup() {
       window.removeEventListener("scroll", handleScroll)
     }
   })
 
-  window.addEventListener("scroll", handleScroll)
 
   return (
     <div
