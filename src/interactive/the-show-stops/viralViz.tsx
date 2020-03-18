@@ -43,7 +43,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
       lastDeltas: [],
       population: null,
       animating: true,
-      opacity: 0.6,
+      opacity: 1,
       initialAnimation: true,
     }
     this.init()
@@ -188,7 +188,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
 
   handleScroll() {
     const percentScrolled = window.scrollY / window.innerHeight
-    const opacity = 0.6 * (1 - percentScrolled * 10)
+    const opacity = (1 - percentScrolled * 15)
 
     if (
       opacity < 0.01 &&
@@ -295,6 +295,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
               color: this.state.animating ? "#DB9D0B" : "white",
               lineHeight: 0,
               marginBottom: 0,
+              opacity: this.state.opacity
             }}
             className={viralVizStyles.percentIndicator}
           >
@@ -309,7 +310,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
               width: "100vw",
               height: "100vh",
               transition: "opacity ease-out 200ms",
-              opacity: this.state.opacity * (this.state.animating ? 1 : 0.5),
+              opacity: 0.6 * this.state.opacity * (this.state.animating ? 1 : 0.5),
               // zIndex: 1,
               verticalAlign: "bottom",
             }}

@@ -139,6 +139,7 @@ class ShowStopsLayout extends React.Component<
                 </span>
               </span>
             </h1>
+            <ViralVizLegend/>
             <p
               style={{
                 ...scale(-1 / 15),
@@ -148,10 +149,8 @@ class ShowStopsLayout extends React.Component<
             >
               {post.frontmatter.date}
             </p>
-            <ViralVizLegend/>
           </header>
           <MDXRenderer>{post.body}</MDXRenderer>
-
           <footer>
             <p>vin</p>
           </footer>

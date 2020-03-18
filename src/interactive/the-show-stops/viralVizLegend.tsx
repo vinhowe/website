@@ -43,7 +43,7 @@ const ViralVizLegend: React.FC = () => {
 
   function handleScroll() {
     const percentScrolled = window.scrollY / window.innerHeight
-    const percentHeight = Math.min(Math.max(percentScrolled * 10, 0), 1)
+    const percentHeight = Math.min(Math.max(percentScrolled * 15, 0), 1)
 
     console.log(percentHeight)
 
@@ -71,18 +71,18 @@ const ViralVizLegend: React.FC = () => {
         flexWrap: "wrap",
         marginLeft: -5,
         marginRight: -5,
-        marginBottom: collapsed ? -28 : 0,
+        marginBottom: collapsed ? -28 : 28,
         overflow: "hidden",
         height: collapsed ? 0 : "50px",
         opacity: collapsed ? 0 : 1,
         transition: "all 150ms",
       }}
     >
-      <PointCloudLegendItem name={"Uninfected"} color={"#555555"} />
+      <PointCloudLegendItem name={"Uninfected"} color={"#888"} />
       <PointCloudLegendItem name={"Incubating"} color={"#DB9D0B"} />
       <PointCloudLegendItem name={"Symptomatic"} color={"#DB2E0B"} />
       <PointCloudLegendItem name={"Recovered"} color={"green"} />
-      <PointCloudLegendItem name={"Dead"} color={"#555555"} stroke={true} />
+      <PointCloudLegendItem name={"Dead"} color={"#888"} stroke={true} />
     </div>
   )
 }
