@@ -196,21 +196,23 @@ impl Population {
         Population::new_with_size(POPULATION_SIZE as u32)
     }
 
-    pub fn first_n(&mut self, n: i32) -> Population {
-        let mut new_individuals: Vec<Individual> = Vec::with_capacity(n as usize);
+    pub fn first_n(&mut self, population_size: i32) -> Population {
+        let mut new_individuals: Vec<Individual> = Vec::with_capacity(population_size as usize);
 
-        for i in 0..n {
+        for i in 0..population_size {
             new_individuals.push(self.individuals[i as usize]);
         }
 
+        let performance_coeff = (population_size as f32).powf(-0.1);
+        let infection_dist = (population_size as f32).powf(-0.515);
         Population {
             individuals: new_individuals,
-            individual_count: n,
+            individual_count: population_size,
             // ticks: self.ticks,
             // Not completely accurate but should update on the next tick
             percent_infected: self.percent_infected,
-            performance_coeff: self.performance_coeff,
-            infection_dist: self.infection_dist,
+            performance_coeff,
+            infection_dist
         }
     }
 
@@ -327,7 +329,7 @@ impl Population {
                         continue;
                     }
 
-                    if dist < self.infection_dist && random() < 0.25 {
+                    if dist < self.infection_dist && random() < 0.5 {
                         individual.days_infected = 1.0;
                     }
                 }
