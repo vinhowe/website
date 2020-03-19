@@ -70,17 +70,17 @@ pub struct Pos {
 #[wasm_bindgen]
 #[derive(Debug, Copy, Clone)]
 pub struct Individual {
-    pub incubation_period: i32,
-    pub days_to_recover: i32,
-    pub age: i32,
-    pub is_alive: bool,
-    pub days_infected: f32,
-    pub percent_infected_quarantine_threshold: f32,
+    incubation_period: u8,
+    days_to_recover: u8,
+    age: u8,
+    is_alive: bool,
+    days_infected: f32,
+    percent_infected_quarantine_threshold: f32,
+    velocity: Pos,
     pub position: Pos,
-    pub velocity: Pos,
 }
 
-const POPULATION_SIZE: i16 = 500;
+const POPULATION_SIZE: u16 = 500;
 
 #[wasm_bindgen]
 #[derive(Debug, Clone)]
@@ -94,25 +94,59 @@ pub struct Population {
 }
 
 #[wasm_bindgen]
+#[repr(u8)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum IndividualState {
+    Dead = 0,
+    Uninfected = 1,
+    Incubating = 2,
+    Symptomatic = 3,
+    Recovered = 4
+}
+
+#[wasm_bindgen]
+impl Individual {
+    pub fn state(&mut self) -> IndividualState {
+        if !self.is_alive {
+            return IndividualState::Dead;
+        }
+
+        if self.days_infected == 0.0 {
+            return IndividualState::Uninfected;
+        }
+
+        if self.days_infected <= self.incubation_period as f32 {
+            return IndividualState::Incubating;
+        }
+
+        if self.days_infected <= self.days_to_recover as f32 {
+            return IndividualState::Symptomatic;
+        }
+
+        return IndividualState::Recovered;
+    }
+}
+
+#[wasm_bindgen]
 impl Population {
-    pub fn new_with_size(population_size: i32) -> Population {
+    pub fn new_with_size(population_size: u32) -> Population {
         let mut individuals = Vec::with_capacity(population_size as usize);
 
-        for i in 0i32..population_size as i32 {
+        for i in 0u32..population_size {
             let is_infected: bool = i == 0;
-            let days_to_recover: i32;
+            let days_to_recover: u8;
 
             if is_infected {
                 days_to_recover = 100;
             } else {
-                days_to_recover = rand_range(4, 24) as i32
+                days_to_recover = rand_range(4, 24) as u8
             }
 
-            let age: i32;
+            let age: u8;
             if is_infected {
                 age = 18;
             } else {
-                age = rand_range(0, 90) as i32
+                age = rand_range(0, 90) as u8
             }
 
             let mut days_infected = 0.0;
@@ -130,7 +164,7 @@ impl Population {
             }
 
             let individual: Individual = Individual {
-                incubation_period: rand_range(4, 20) as i32,
+                incubation_period: rand_range(4, 20) as u8,
                 days_to_recover,
                 age,
                 is_alive: true,
@@ -159,7 +193,7 @@ impl Population {
     }
 
     pub fn new() -> Population {
-        Population::new_with_size(POPULATION_SIZE as i32)
+        Population::new_with_size(POPULATION_SIZE as u32)
     }
 
     pub fn first_n(&mut self, n: i32) -> Population {

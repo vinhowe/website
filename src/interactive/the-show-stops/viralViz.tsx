@@ -1,6 +1,6 @@
 import React from "react"
 import viralVizStyles from "./viralViz.module.css"
-import init, { Population } from "./the-show-stops-wasm/pkg"
+import init, { IndividualState, Population } from "./the-show-stops-wasm/pkg"
 import showStopsStyles from "./showStops.module.css"
 
 export interface ViralVizState {
@@ -20,8 +20,20 @@ interface DrawCachedIndividual {
     x: number
     y: number
   }
-  state: number
+  state: IndividualState
 }
+
+interface IndividualDrawStyle {
+  fill?: string
+  stroke?: string
+}
+
+const stateStyleMap: IndividualDrawStyle[] = []
+stateStyleMap[IndividualState.Dead] = { stroke: "#555555" }
+stateStyleMap[IndividualState.Uninfected] = { fill: "#555555" }
+stateStyleMap[IndividualState.Incubating] = { fill: "#DB9D0B" }
+stateStyleMap[IndividualState.Symptomatic] = { fill: "#DB2E0B" }
+stateStyleMap[IndividualState.Recovered] = { fill: "#00EE00" }
 
 const defaultPopulationSize = 2000
 
@@ -33,6 +45,7 @@ const deltaReloadThresholdMinPopulationSize = defaultPopulationSize / 2 ** 8
 
 class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
   canvasRef: HTMLCanvasElement
+  canvasContext: CanvasRenderingContext2D
   requestFrameFun: any
   lastPercentScrolled: number
   lastTime: number
@@ -118,7 +131,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
           const average =
             this.lastDeltas.reduce((a, b) => a + b, 0) / this.lastDeltas.length
 
-          console.log(`${average} ${this.state.population.individual_count}`);
+          console.log(`${average} ${this.state.population.individual_count}`)
 
           if (
             average > deltaReloadThresholdFrameLength &&
@@ -149,7 +162,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     // time in ms per frame
     if (lastStateUpdateDelta > 200) {
       this.setState({})
-      this.lastStateUpdateTime = time;
+      this.lastStateUpdateTime = time
     }
 
     this.lastTime = time
@@ -164,34 +177,124 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     ) {
       return
     }
-    const canvas = this.canvasRef
-    const context = canvas.getContext("2d")
+    const populationSize = this.state.population.individual_count
 
-    canvas.width = document.body.clientWidth
-    canvas.height = window.innerHeight
+    let cacheInvalid = this.populationDrawCache.length != populationSize
 
-    for (let i = 0; i < this.state.population.individual_count; i++) {
-      const point = this.state.population.individual_at_index(i)
-      const radius = 3
-      const pointX = canvas.width * point.position.x
-      const pointY = canvas.height * point.position.y
+    if (this.canvasRef.width != document.body.clientWidth) {
+      cacheInvalid = true
+      this.canvasRef.width = document.body.clientWidth
+    }
 
-      context.beginPath()
-      context.arc(pointX, pointY, radius, 0, 2 * Math.PI, false)
-      if (point.is_alive) {
-        context.fillStyle =
-          point.days_infected > 0
-            ? point.days_infected > point.incubation_period
-              ? point.days_infected > point.days_to_recover
-                ? "green"
-                : "#DB2E0B"
-              : "#DB9D0B"
-            : "#555555"
-        context.fill()
-      } else {
-        context.strokeStyle = "#555555"
-        context.lineWidth = 2
-        context.stroke()
+    if (this.canvasRef.height != window.innerHeight) {
+      cacheInvalid = true
+      this.canvasRef.height = window.innerHeight
+    }
+
+    const radius = 3
+
+    // if (cacheInvalid) {
+    //   this.populationDrawCache = []
+    // }
+
+    let drawingGroups: DrawCachedIndividual[][] = []
+    for (const stateKey of Object.keys(IndividualState)) {
+      const stateValue: number = (IndividualState[
+        stateKey as any
+      ] as unknown) as number
+      drawingGroups[stateValue] = []
+    }
+
+    for (let i = 0; i < populationSize; i++) {
+      const individual = this.state.population.individual_at_index(i)
+
+      const cacheCandidate: DrawCachedIndividual = {
+        position: {
+          x: individual.position.x * document.body.clientWidth,
+          y: individual.position.y * window.innerHeight,
+        },
+        state: individual.state(),
+      }
+
+      const cachedIndividual = this.populationDrawCache[i]
+
+      if (!cacheInvalid) {
+        // Check if cached individual is similar to this version--it might be
+        // better to do this in Rust?
+
+        if (cacheCandidate.state == cachedIndividual.state) {
+          // TODO: Move this into a class-level constant
+          const maxCacheDifferenceDistance = 0.001
+          if (
+            Math.abs(cacheCandidate.position.x - cachedIndividual.position.x) <
+              maxCacheDifferenceDistance &&
+            Math.abs(cacheCandidate.position.y - cachedIndividual.position.y) <
+              maxCacheDifferenceDistance
+          ) {
+            continue
+          }
+        }
+      }
+
+      // Cached individual was not similar enough to skip drawing
+      this.populationDrawCache[i] = cacheCandidate
+
+      if (cachedIndividual) {
+        this.canvasContext.clearRect(
+          cachedIndividual.position.x - radius,
+          cachedIndividual.position.y - radius,
+          2 * radius,
+          2 * radius
+        )
+      }
+
+      drawingGroups[cacheCandidate.state].push(cacheCandidate)
+    }
+
+    let lastStyle: IndividualDrawStyle
+
+    this.canvasContext.lineWidth = 2
+
+    for (const stateNum in drawingGroups) {
+      const drawingGroup = drawingGroups[stateNum]
+
+      if (drawingGroup.length == 0) {
+        continue
+      }
+
+      const newStyle = stateStyleMap[stateNum]
+
+      if (lastStyle) {
+        if (!newStyle.fill && lastStyle.fill) {
+          this.canvasContext.fillStyle = ""
+        }
+        if (!newStyle.stroke && lastStyle.stroke) {
+          this.canvasContext.strokeStyle = ""
+        }
+      }
+
+      if (newStyle.stroke) {
+        this.canvasContext.strokeStyle = newStyle.stroke
+      }
+
+      if (newStyle.fill) {
+        this.canvasContext.fillStyle = newStyle.fill
+      }
+
+      lastStyle = newStyle
+
+      for (const individual of drawingGroup) {
+        const pointX = individual.position.x
+        const pointY = individual.position.y
+
+        this.canvasContext.beginPath()
+        this.canvasContext.arc(pointX, pointY, radius, 0, 2 * Math.PI, false)
+        if (newStyle.fill) {
+          this.canvasContext.fill()
+        }
+        if (newStyle.stroke) {
+          this.canvasContext.stroke()
+        }
       }
     }
   }
@@ -265,6 +368,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     this.requestFrameFun = requestAnimationFrame(this.updateAnimationState)
 
     document.addEventListener("keypress", this.handleSpacebar)
+    this.canvasContext = this.canvasRef.getContext("2d")
   }
 
   componentWillUnmount(): void {
