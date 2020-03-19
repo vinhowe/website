@@ -15,7 +15,7 @@ export interface ViralVizProps {
   onToggle?: (animating: boolean) => void
 }
 
-interface DrawCachedIndividual {
+interface DrawIndividual {
   position: {
     x: number
     y: number
@@ -35,7 +35,7 @@ stateStyleMap[IndividualState.Incubating] = { fill: "#DB9D0B" }
 stateStyleMap[IndividualState.Symptomatic] = { fill: "#DB2E0B" }
 stateStyleMap[IndividualState.Recovered] = { fill: "#00EE00" }
 
-const defaultPopulationSize = 2000
+const defaultPopulationSize = 1000
 
 const deltaReloadThresholdCount = 100
 // 16ms frame length is 60 FPS so 20ms is slightly below that at 50fps
@@ -51,7 +51,8 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
   lastTime: number
   lastStateUpdateTime: number
   lastDeltas: number[]
-  populationDrawCache: DrawCachedIndividual[]
+  canvasWidth: number
+  canvasHeight: number
 
   constructor(props: any) {
     super(props)
@@ -65,7 +66,8 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     this.lastTime = 0
     this.lastStateUpdateTime = 0
     this.lastDeltas = []
-    this.populationDrawCache = []
+    this.canvasWidth = 0
+    this.canvasHeight = 0
     this.state = {
       startTimestamp: -1,
       population: null,
@@ -131,15 +133,16 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
           const average =
             this.lastDeltas.reduce((a, b) => a + b, 0) / this.lastDeltas.length
 
-          console.log(`${average} ${this.state.population.individual_count}`)
+          // console.log(`${average} ${this.state.population.individual_count}`)
 
           if (
             average > deltaReloadThresholdFrameLength &&
             this.state.population
           ) {
-            this.lastDeltas = []
             this.adjustPopulation(this.state.population.individual_count / 2)
           }
+
+          this.lastDeltas = []
         }
 
         this.lastDeltas.unshift(delta)
@@ -157,7 +160,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
       }
     }
 
-    // State needs to update so that percent indicator updates
+    // State needs to update so that percent indicator updates regularly
     // but we don't want to do it so often that it regularly increases the
     // time in ms per frame
     if (lastStateUpdateDelta > 200) {
@@ -179,25 +182,16 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     }
     const populationSize = this.state.population.individual_count
 
-    let cacheInvalid = this.populationDrawCache.length != populationSize
+    this.canvasContext.clearRect(
+      0,
+      0,
+      this.canvasRef.width,
+      this.canvasRef.height
+    )
 
-    if (this.canvasRef.width != document.body.clientWidth) {
-      cacheInvalid = true
-      this.canvasRef.width = document.body.clientWidth
-    }
+    const radius = 3 * devicePixelRatio
 
-    if (this.canvasRef.height != window.innerHeight) {
-      cacheInvalid = true
-      this.canvasRef.height = window.innerHeight
-    }
-
-    const radius = 3
-
-    // if (cacheInvalid) {
-    //   this.populationDrawCache = []
-    // }
-
-    let drawingGroups: DrawCachedIndividual[][] = []
+    let drawingGroups: DrawIndividual[][] = []
     for (const stateKey of Object.keys(IndividualState)) {
       const stateValue: number = (IndividualState[
         stateKey as any
@@ -208,52 +202,20 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     for (let i = 0; i < populationSize; i++) {
       const individual = this.state.population.individual_at_index(i)
 
-      const cacheCandidate: DrawCachedIndividual = {
+      const drawIndividual: DrawIndividual = {
         position: {
-          x: individual.position.x * document.body.clientWidth,
-          y: individual.position.y * window.innerHeight,
+          x: individual.position.x * this.canvasWidth,
+          y: individual.position.y * this.canvasHeight,
         },
         state: individual.state(),
       }
 
-      const cachedIndividual = this.populationDrawCache[i]
-
-      if (!cacheInvalid) {
-        // Check if cached individual is similar to this version--it might be
-        // better to do this in Rust?
-
-        if (cacheCandidate.state == cachedIndividual.state) {
-          // TODO: Move this into a class-level constant
-          const maxCacheDifferenceDistance = 0.001
-          if (
-            Math.abs(cacheCandidate.position.x - cachedIndividual.position.x) <
-              maxCacheDifferenceDistance &&
-            Math.abs(cacheCandidate.position.y - cachedIndividual.position.y) <
-              maxCacheDifferenceDistance
-          ) {
-            continue
-          }
-        }
-      }
-
-      // Cached individual was not similar enough to skip drawing
-      this.populationDrawCache[i] = cacheCandidate
-
-      if (cachedIndividual) {
-        this.canvasContext.clearRect(
-          cachedIndividual.position.x - radius,
-          cachedIndividual.position.y - radius,
-          2 * radius,
-          2 * radius
-        )
-      }
-
-      drawingGroups[cacheCandidate.state].push(cacheCandidate)
+      drawingGroups[drawIndividual.state].push(drawIndividual)
     }
 
     let lastStyle: IndividualDrawStyle
 
-    this.canvasContext.lineWidth = 2
+    this.canvasContext.lineWidth = 2 * devicePixelRatio
 
     for (const stateNum in drawingGroups) {
       const drawingGroup = drawingGroups[stateNum]
@@ -304,8 +266,10 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
       return
     }
     const canvas = this.canvasRef
-    canvas.width = document.body.clientWidth * devicePixelRatio
-    canvas.height = window.innerHeight * devicePixelRatio
+    this.canvasWidth = document.body.clientWidth * devicePixelRatio
+    this.canvasHeight = window.innerHeight * devicePixelRatio
+    canvas.width = this.canvasWidth
+    canvas.height = this.canvasHeight
     this.draw()
   }
 
@@ -365,6 +329,9 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     this.setState({
       startTimestamp: new Date().getTime(),
     })
+    // Set canvas width and height to be used in draw function
+    this.handleResize();
+
     this.requestFrameFun = requestAnimationFrame(this.updateAnimationState)
 
     document.addEventListener("keypress", this.handleSpacebar)

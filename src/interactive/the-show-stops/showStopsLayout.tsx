@@ -76,8 +76,8 @@ class ShowStopsLayout extends React.Component<
     //     stops: [true, this.state.stops[1]]
     //   })
     // }
-
-    requestAnimationFrame(this.updateTitleAnimation)
+    //
+    this.requestFrameFun = requestAnimationFrame(this.updateTitleAnimation)
   }
 
   componentWillUnmount(): void {

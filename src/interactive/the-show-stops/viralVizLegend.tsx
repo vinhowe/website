@@ -45,8 +45,6 @@ const ViralVizLegend: React.FC = () => {
     const percentScrolled = window.scrollY / window.innerHeight
     const percentHeight = Math.min(Math.max(percentScrolled * 15, 0), 1)
 
-    console.log(percentHeight)
-
     if (!collapsed && percentHeight >= 1) {
       setCollapsed(true)
     } else if (collapsed && percentHeight < 1) {
