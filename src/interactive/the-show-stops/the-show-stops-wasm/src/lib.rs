@@ -1,10 +1,28 @@
 extern crate js_sys;
+extern crate web_sys;
+
+use web_sys::console;
 
 use js_sys::Math::random;
 
 use wasm_bindgen::prelude::*;
-// use std::cmp::{max, min};
 
+pub struct Timer<'a> {
+    name: &'a str,
+}
+
+impl<'a> Timer<'a> {
+    pub fn new(name: &'a str) -> Timer<'a> {
+        console::time_with_label(name);
+        Timer { name }
+    }
+}
+
+impl<'a> Drop for Timer<'a> {
+    fn drop(&mut self) {
+        console::time_end_with_label(self.name);
+    }
+}
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -25,17 +43,17 @@ pub fn init_panic_hook() {
 }
 
 pub fn rand_range(low: i64, high: i64) -> i64 {
-    return low + (random() * (high - low) as f64) as i64;
+    return low + ((random() as f32) * (high - low) as f32) as i64;
 }
 
-fn max_f(a: f64, b: f64) -> f64 {
+fn max_f(a: f32, b: f32) -> f32 {
     match a > b {
         true => a,
         false => b
     }
 }
 
-fn min_f(a: f64, b: f64) -> f64 {
+fn min_f(a: f32, b: f32) -> f32 {
     match a < b {
         true => a,
         false => b
@@ -45,8 +63,8 @@ fn min_f(a: f64, b: f64) -> f64 {
 #[wasm_bindgen]
 #[derive(Debug, Copy, Clone)]
 pub struct Pos {
-    pub x: f64,
-    pub y: f64,
+    pub x: f32,
+    pub y: f32,
 }
 
 #[wasm_bindgen]
@@ -56,8 +74,8 @@ pub struct Individual {
     pub days_to_recover: i32,
     pub age: i32,
     pub is_alive: bool,
-    pub days_infected: f64,
-    pub percent_infected_quarantine_threshold: f64,
+    pub days_infected: f32,
+    pub percent_infected_quarantine_threshold: f32,
     pub position: Pos,
     pub velocity: Pos,
 }
@@ -67,16 +85,18 @@ const POPULATION_SIZE: i16 = 500;
 #[wasm_bindgen]
 #[derive(Debug, Clone)]
 pub struct Population {
-    individuals: Vec<Individual>,
     pub individual_count: i32,
-    pub ticks: i32,
-    pub percent_infected: f64,
+    // pub ticks: i32,
+    pub percent_infected: f32,
+    performance_coeff: f32,
+    infection_dist: f32,
+    individuals: Vec<Individual>,
 }
 
 #[wasm_bindgen]
 impl Population {
     pub fn new_with_size(population_size: i32) -> Population {
-        let mut individuals: Vec<Individual> = Vec::new();
+        let mut individuals = Vec::with_capacity(population_size as usize);
 
         for i in 0i32..population_size as i32 {
             let is_infected: bool = i == 0;
@@ -104,9 +124,9 @@ impl Population {
             let percent_infected_quarantine_threshold;
 
             if random() < 0.25 {
-                percent_infected_quarantine_threshold = 1.0 - (rand_range(0, 8) as f64 / 10.0);
+                percent_infected_quarantine_threshold = 1.0 - (rand_range(0, 8) as f32 / 10.0);
             } else {
-                percent_infected_quarantine_threshold = 1.0 - (rand_range(0, 5) as f64 / 10.0);
+                percent_infected_quarantine_threshold = 1.0 - (rand_range(0, 5) as f32 / 10.0);
             }
 
             let individual: Individual = Individual {
@@ -116,19 +136,24 @@ impl Population {
                 is_alive: true,
                 days_infected,
                 percent_infected_quarantine_threshold,
-                position: Pos { x: random(), y: random() },
+                position: Pos { x: random() as f32, y: random() as f32 },
                 velocity: Pos {
-                    x: rand_range(-10, 20) as f64 / 100f64,
-                    y: rand_range(-10, 20) as f64 / 100f64,
+                    x: rand_range(-10, 20) as f32 / 100f32,
+                    y: rand_range(-10, 20) as f32 / 100f32,
                 },
             };
             individuals.push(individual);
         }
 
+        let performance_coeff = (population_size as f32).powf(-0.1);
+        let infection_dist = (population_size as f32).powf(-0.515);
+
         Population {
             individuals,
             individual_count: population_size as i32,
-            ticks: 0,
+            performance_coeff,
+            infection_dist,
+            // ticks: 0,
             percent_infected: 0.0,
         }
     }
@@ -138,7 +163,7 @@ impl Population {
     }
 
     pub fn first_n(&mut self, n: i32) -> Population {
-        let mut new_individuals: Vec<Individual> = Vec::new();
+        let mut new_individuals: Vec<Individual> = Vec::with_capacity(n as usize);
 
         for i in 0..n {
             new_individuals.push(self.individuals[i as usize]);
@@ -147,32 +172,35 @@ impl Population {
         Population {
             individuals: new_individuals,
             individual_count: n,
-            ticks: self.ticks,
+            // ticks: self.ticks,
             // Not completely accurate but should update on the next tick
             percent_infected: self.percent_infected,
+            performance_coeff: self.performance_coeff,
+            infection_dist: self.infection_dist,
         }
     }
 
-    pub fn tick(&mut self, delta: f64) {
-        let percent_second: f64 = delta / 1000.0;
-        let last_percent_infected: f64 = self.percent_infected;
-        let mut total_infected: i32 = 0;
-        let performance_coeff = (self.individual_count as f64).powf(-0.1);
+    pub fn tick(&mut self, delta: f32) {
+        // let _timer = Timer::new("Population::tick");
+        let percent_second: f32 = delta / 1000.0;
 
-        let infection_dist = (self.individual_count as f64).powf(-0.515);
         let move_probability = 0.01 * (1.0 - self.percent_infected.powf(1.0 / 5.0));
+        let last_percent_infected: f32 = self.percent_infected;
+
+        let mut total_infected: i32 = 0;
 
         let velocity_mag_coeff = 0.05 * (1.0 - (last_percent_infected * 0.75));
-        let velocity_friction_coeff = (1.0 - (0.5 * percent_second)) as f64;
-
+        let velocity_friction_coeff = (1.0 - (0.5 * percent_second)) as f32;
 
         for i in 0..self.individual_count {
             let mut individual = self.individual_at_index(i);
-            let showing_symptoms =
-                individual.days_infected > individual.incubation_period as f64 &&
-                    individual.days_infected < individual.days_to_recover as f64;
 
             if individual.is_alive {
+
+                let showing_symptoms =
+                    individual.days_infected > individual.incubation_period as f32 &&
+                        individual.days_infected < individual.days_to_recover as f32;
+
                 individual.position.x += individual.velocity.x * percent_second;
                 individual.position.y += individual.velocity.y * percent_second;
 
@@ -194,12 +222,14 @@ impl Population {
 
                 if random() < move_probability as f64 &&
                     !showing_symptoms &&
-                    (last_percent_infected < individual.percent_infected_quarantine_threshold || random() < 0.01)
+                    // Leave some probability that an individual will move even in quarantine
+                    (last_percent_infected < individual.percent_infected_quarantine_threshold ||
+                        random() < 0.05)
                 {
                     individual.velocity.x +=
-                        ((random() * 2.0) - 1.0) * velocity_mag_coeff;
+                        ((random() as f32 * 2.0) - 1.0) * velocity_mag_coeff;
                     individual.velocity.y +=
-                        ((random() * 2.0) - 1.0) * velocity_mag_coeff;
+                        ((random() as f32 * 2.0) - 1.0) * velocity_mag_coeff;
                 }
             }
 
@@ -207,13 +237,13 @@ impl Population {
                 total_infected += 1;
                 individual.days_infected += percent_second;
 
-                if individual.days_infected < individual.days_to_recover as f64 {
+                if individual.days_infected < individual.days_to_recover as f32 {
                     if individual.age > 60 {
-                        if random() < 0.02 / individual.days_to_recover as f64 {
+                        if (random() as f32) < (0.02 / individual.days_to_recover as f32) {
                             individual.is_alive = false
                         }
                     } else {
-                        if random() < 0.001 / individual.days_to_recover as f64 {
+                        if (random() as f32) < (0.001 / individual.days_to_recover as f32) {
                             individual.is_alive = false
                         }
                     }
@@ -222,24 +252,31 @@ impl Population {
 
             // Make costly distance calculations increasingly less as n increases to increase
             // performance
-            if random() < performance_coeff {
+            if (random() as f32) < self.performance_coeff {
                 for j in 0..self.individual_count {
                     if i == j {
                         continue;
                     }
                     let other_individual = self.individuals[j as usize];
+
                     if other_individual.days_infected == 0.0 ||
-                        other_individual.days_infected > other_individual.days_to_recover as f64 ||
+                        other_individual.days_infected > other_individual.days_to_recover as f32 ||
                         !other_individual.is_alive {
                         continue;
                     }
+
                     let dist_x = individual.position.x - other_individual.position.x;
                     let dist_y = individual.position.y - other_individual.position.y;
+
+                    if dist_x.abs() > self.infection_dist || dist_y.abs() > self.infection_dist {
+                        continue;
+                    }
+
                     let dist = (dist_x.powi(2) + dist_y.powi(2)).sqrt();
 
                     // NOTE: Skip gravity calculation for now
-                    // if individual.days_infected < individual.incubation_period as f64 &&
-                    //     other_individual.days_infected > other_individual.incubation_period as f64 &&
+                    // if individual.days_infected < individual.incubation_period as f32 &&
+                    //     other_individual.days_infected > other_individual.incubation_period as f32 &&
                     //     last_percent_infected < individual.percent_infected_quarantine_threshold &&
                     //     dist < 0.01 {
                     //     // http://exploratoria.github.io/exhibits/astronomy/gravitating-system/
@@ -256,7 +293,7 @@ impl Population {
                         continue;
                     }
 
-                    if dist < infection_dist && random() < 0.8 {
+                    if dist < self.infection_dist && random() < 0.8 {
                         individual.days_infected = 1.0;
                         // break;
                     }
@@ -271,7 +308,7 @@ impl Population {
             self.individuals[i as usize] = individual;
         }
 
-        self.percent_infected = total_infected as f64 / self.individual_count as f64;
+        self.percent_infected = total_infected as f32 / self.individual_count as f32;
     }
 
     pub fn individual_at_index(&mut self, i: i32) -> Individual {

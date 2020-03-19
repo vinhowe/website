@@ -4,8 +4,6 @@ import init, { Population } from "./the-show-stops-wasm/pkg"
 import showStopsStyles from "./showStops.module.css"
 
 export interface ViralVizState {
-  lastTime: number
-  lastDeltas: number[]
   startTimestamp: number
   population: Population
   animating: boolean
@@ -19,15 +17,18 @@ export interface ViralVizProps {
 
 const defaultPopulationSize = 1000
 
-const deltaReloadThresholdCount = 10
-const deltaReloadThresholdFrameLength = 60
+const deltaReloadThresholdCount = 100
+// 16ms frame length is 60 FPS so 20ms is slightly below that at 50fps
+const deltaReloadThresholdFrameLength = 20
 
-const deltaReloadThresholdMinPopulationSize = defaultPopulationSize / 2 ** 4
+const deltaReloadThresholdMinPopulationSize = defaultPopulationSize / 2 ** 8
 
 class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
   canvasRef: HTMLCanvasElement
   requestFrameFun: any
   lastPercentScrolled: number
+  lastTime: number
+  lastDeltas: number[]
 
   constructor(props: any) {
     super(props)
@@ -37,10 +38,10 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     this.toggleAnimation = this.toggleAnimation.bind(this)
     this.updateAnimationState = this.updateAnimationState.bind(this)
     this.initPopulation = this.initPopulation.bind(this)
+    this.lastTime = 0
+    this.lastDeltas = []
     this.state = {
-      lastTime: 0,
       startTimestamp: -1,
-      lastDeltas: [],
       population: null,
       animating: true,
       opacity: 1,
@@ -77,7 +78,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
   }
 
   updateAnimationState(time: number) {
-    let delta = this.state.lastTime == 0 ? 0 : time - this.state.lastTime
+    let delta = this.lastTime == 0 ? 0 : time - this.lastTime
 
     if (delta > 1000) {
       // Handle sudden time jumps (like leaving the tab)
@@ -90,33 +91,31 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
         this.state.population.individual_count >
         deltaReloadThresholdMinPopulationSize
       ) {
-        while (this.state.lastDeltas.length > deltaReloadThresholdCount) {
-          this.state.lastDeltas.pop()
+        while (this.lastDeltas.length > deltaReloadThresholdCount) {
+          this.lastDeltas.pop()
         }
 
         // console.log(delta);
         // console.log(this.state.lastDeltas);
         // console.log(this.state.lastDeltas.length);
 
-        if (this.state.lastDeltas.length == deltaReloadThresholdCount) {
+        if (this.lastDeltas.length == deltaReloadThresholdCount) {
           const average =
-            this.state.lastDeltas.reduce((a, b) => a + b, 0) /
-            this.state.lastDeltas.length
+            this.lastDeltas.reduce((a, b) => a + b, 0) /
+            this.lastDeltas.length
 
-          // console.log(average);
+          // console.log(`${average} ${this.state.population.individual_count}`);
 
           if (
             average > deltaReloadThresholdFrameLength &&
             this.state.population
           ) {
-            this.setState({
-              lastDeltas: [],
-            })
+            this.lastDeltas = []
             this.adjustPopulation(this.state.population.individual_count / 2)
           }
         }
 
-        this.state.lastDeltas.unshift(delta)
+        this.lastDeltas.unshift(delta)
       }
 
       population.tick(delta)
@@ -130,9 +129,11 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
         this.toggleAnimation()
       }
     }
-    this.setState(prevState => ({
-      lastTime: time,
-    }))
+    // console.log('drawing')
+    // this.setState(prevState => ({
+    //   lastTime: time,
+    // }))
+    this.lastTime = time
     this.requestFrameFun = requestAnimationFrame(this.updateAnimationState)
   }
 
@@ -162,10 +163,10 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
         context.fillStyle =
           point.days_infected > 0
             ? point.days_infected > point.incubation_period
-              ? point.days_infected > point.days_to_recover
-                ? "green"
-                : "#DB2E0B"
-              : "#DB9D0B"
+            ? point.days_infected > point.days_to_recover
+              ? "green"
+              : "#DB2E0B"
+            : "#DB9D0B"
             : "#555555"
         context.fill()
       } else {
@@ -200,7 +201,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
       this.toggleAnimation()
     }
 
-    this.lastPercentScrolled = percentScrolled;
+    this.lastPercentScrolled = percentScrolled
 
     this.setState({
       opacity,
@@ -215,13 +216,13 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
       window.scrollTo({ top: 0, behavior: "smooth" })
       this.requestFrameFun = requestAnimationFrame(this.updateAnimationState)
     }
+    this.lastTime = 0
+    this.lastDeltas = []
     this.setState({
       animating: !this.state.animating,
       // Cancels initial animation if it is running
       initialAnimation: false,
       // Need to get rid of these
-      lastDeltas: [],
-      lastTime: 0,
     })
 
     if (this.props.onToggle) {
@@ -297,7 +298,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
               lineHeight: 0,
               marginBottom: 0,
               opacity: this.state.opacity,
-              textShadow: "0 0 20px #0b0231"
+              textShadow: "0 0 20px #0b0231",
             }}
             className={viralVizStyles.percentIndicator}
           >

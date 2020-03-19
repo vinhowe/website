@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Link, graphql } from "gatsby"
+import { graphql, Link } from "gatsby"
 
 import { MDXRenderer } from "gatsby-plugin-mdx"
 import SEO from "../../components/seo"
@@ -18,8 +18,7 @@ interface ShowStopsLayoutProps {
 interface ShowStopsLayoutState {
   vizAnimating: boolean
   vizInitialAnimation: boolean
-  startTime: number
-  time: number
+  stops: boolean[]
 }
 
 class ShowStopsLayout extends React.Component<
@@ -28,6 +27,8 @@ class ShowStopsLayout extends React.Component<
 > {
   lastBackgroundColor = ""
   requestFrameFun: any
+  time: number
+  startTime: number
 
   constructor(props: any) {
     super(props)
@@ -35,9 +36,10 @@ class ShowStopsLayout extends React.Component<
     this.state = {
       vizAnimating: true,
       vizInitialAnimation: true,
-      startTime,
-      time: startTime
+      stops: [false, false]
     }
+    this.time = startTime
+    this.startTime = startTime
     this.onVizToggle = this.onVizToggle.bind(this)
     this.getElapsed = this.getElapsed.bind(this)
     this.updateTitleAnimation = this.updateTitleAnimation.bind(this)
@@ -48,28 +50,43 @@ class ShowStopsLayout extends React.Component<
     document.body.style.backgroundColor = "#0b0231"
 
     this.requestFrameFun = requestAnimationFrame(this.updateTitleAnimation)
-    // window.onload = (_) => requestAnimationFrame(this.updateTitleAnimation)
   }
 
-  getElapsed = () => this.state.time - this.state.startTime
+  getElapsed = () => this.time - this.startTime
 
   updateTitleAnimation(time: number) {
-    this.setState({
-      time: (new Date()).getTime(),
-    })
-    // 5 seconds to give the last part time to animate
-    if (this.getElapsed() < 5000) {
-      requestAnimationFrame(this.updateTitleAnimation)
+    // this.setState({
+    //   time: (new Date()).getTime(),
+    // })
+    this.time = (new Date()).getTime()
+
+    if (this.getElapsed() > 800) {
+      return
     }
+
+    // Super simple animation stuff
+    if (this.getElapsed() >= 500 && !this.state.stops[0]) {
+      this.setState({
+        stops: [true, this.state.stops[1]]
+      })
+    }
+
+    // if (this.getElapsed() >= 2000 && !this.state.stops[0]) {
+    //   this.setState({
+    //     stops: [true, this.state.stops[1]]
+    //   })
+    // }
+
+    requestAnimationFrame(this.updateTitleAnimation)
   }
 
   componentWillUnmount(): void {
     document.body.style.backgroundColor = this.lastBackgroundColor
     cancelAnimationFrame(this.requestFrameFun)
-    const startTime = (new Date()).getTime()
+
+    this.startTime = (new Date()).getTime()
     this.setState({
-      startTime,
-      time: startTime
+      stops: [false]
     })
   }
 
@@ -118,7 +135,7 @@ class ShowStopsLayout extends React.Component<
             >
               <span
                 style={{
-                  opacity: this.getElapsed() > 200 ? 1 : 0,
+                  opacity: this.state.stops[0] ? 1 : 0,
                   zIndex: -1000,
                 }}
               >
