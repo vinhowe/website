@@ -154,7 +154,8 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
 
       if (
         this.state.initialAnimation &&
-        new Date().getTime() - this.state.startTimestamp > 3000
+        new Date().getTime() - this.state.startTimestamp > 2000
+        // this.state.population.percent_infected > 0.2
       ) {
         this.toggleAnimation()
       }

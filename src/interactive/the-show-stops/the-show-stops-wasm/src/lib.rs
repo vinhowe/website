@@ -101,7 +101,7 @@ pub enum IndividualState {
     Uninfected = 1,
     Incubating = 2,
     Symptomatic = 3,
-    Recovered = 4
+    Recovered = 4,
 }
 
 #[wasm_bindgen]
@@ -133,13 +133,15 @@ impl Population {
         let mut individuals = Vec::with_capacity(population_size as usize);
 
         for i in 0u32..population_size {
-            let is_infected: bool = i == 0;
+            // Infect first n so that we can get the ball rolling
+            let is_infected: bool = i < 50;
             let days_to_recover: u8;
+            let incubation_period = rand_range(4, 20) as u8;
 
             if is_infected {
                 days_to_recover = 100;
             } else {
-                days_to_recover = rand_range(4, 24) as u8
+                days_to_recover = incubation_period + (rand_range(4, 24) as u8);
             }
 
             let age: u8;
@@ -204,7 +206,7 @@ impl Population {
         }
 
         let performance_coeff = (population_size as f32).powf(-0.1);
-        let infection_dist = (population_size as f32).powf(-0.515);
+        let infection_dist = (population_size as f32).powf(-0.5);
         Population {
             individuals: new_individuals,
             individual_count: population_size,
@@ -212,7 +214,7 @@ impl Population {
             // Not completely accurate but should update on the next tick
             percent_infected: self.percent_infected,
             performance_coeff,
-            infection_dist
+            infection_dist,
         }
     }
 
@@ -231,12 +233,11 @@ impl Population {
         for i in 0..self.individual_count {
             let mut individual = self.individual_at_index(i);
 
+            let showing_symptoms =
+                individual.days_infected > individual.incubation_period as f32 &&
+                    individual.days_infected < individual.days_to_recover as f32;
+
             if individual.is_alive {
-
-                let showing_symptoms =
-                    individual.days_infected > individual.incubation_period as f32 &&
-                        individual.days_infected < individual.days_to_recover as f32;
-
                 individual.position.x += individual.velocity.x * percent_second;
                 individual.position.y += individual.velocity.y * percent_second;
 
@@ -275,11 +276,11 @@ impl Population {
 
                 if individual.days_infected < individual.days_to_recover as f32 {
                     if individual.age > 60 {
-                        if (random() as f32) < (0.02 / individual.days_to_recover as f32) {
+                        if (random() as f32) < (0.02 * percent_second) {
                             individual.is_alive = false
                         }
                     } else {
-                        if (random() as f32) < (0.001 / individual.days_to_recover as f32) {
+                        if (random() as f32) < (0.001 * percent_second) {
                             individual.is_alive = false
                         }
                     }
@@ -311,7 +312,7 @@ impl Population {
                     let dist = (dist_x.powi(2) + dist_y.powi(2)).sqrt();
 
                     // NOTE: Remove this if it is determined to be a performance burden
-                    if individual.days_infected < individual.incubation_period as f32 &&
+                    if !showing_symptoms &&
                         other_individual.days_infected > other_individual.incubation_period as f32 &&
                         /* last_percent_infected < individual.percent_infected_quarantine_threshold *&&*/
                         dist < 1.0 {
@@ -329,7 +330,9 @@ impl Population {
                         continue;
                     }
 
-                    if dist < self.infection_dist && random() < 0.5 {
+                    // 80% chance of catching disease after being near another individual for half a
+                    // second
+                    if dist < self.infection_dist && random() < (0.8 * (percent_second)) as f64 {
                         individual.days_infected = 1.0;
                     }
                 }

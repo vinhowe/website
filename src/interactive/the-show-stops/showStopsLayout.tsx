@@ -60,7 +60,7 @@ class ShowStopsLayout extends React.Component<
     // })
     this.time = (new Date()).getTime()
 
-    if (this.getElapsed() > 800) {
+    if (this.getElapsed() > 1500) {
       return
     }
 
@@ -71,12 +71,12 @@ class ShowStopsLayout extends React.Component<
       })
     }
 
-    // if (this.getElapsed() >= 2000 && !this.state.stops[0]) {
-    //   this.setState({
-    //     stops: [true, this.state.stops[1]]
-    //   })
-    // }
-    //
+    if (this.getElapsed() >= 1200 && !this.state.stops[1]) {
+      this.setState({
+        stops: [this.state.stops[0], true]
+      })
+    }
+
     this.requestFrameFun = requestAnimationFrame(this.updateTitleAnimation)
   }
 
@@ -147,7 +147,7 @@ class ShowStopsLayout extends React.Component<
                   style={{
                     fontWeight: "normal",
                     transition: "none",
-                    opacity: this.state.vizInitialAnimation ? 0 : 1,
+                    opacity: this.state.stops[1] ? 1 : 0,
                     zIndex: -1000,
                   }}
                   className={
