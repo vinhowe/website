@@ -15,7 +15,15 @@ export interface ViralVizProps {
   onToggle?: (animating: boolean) => void
 }
 
-const defaultPopulationSize = 1000
+interface DrawCachedIndividual {
+  position: {
+    x: number
+    y: number
+  }
+  state: number
+}
+
+const defaultPopulationSize = 2000
 
 const deltaReloadThresholdCount = 100
 // 16ms frame length is 60 FPS so 20ms is slightly below that at 50fps
@@ -28,7 +36,9 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
   requestFrameFun: any
   lastPercentScrolled: number
   lastTime: number
+  lastStateUpdateTime: number
   lastDeltas: number[]
+  populationDrawCache: DrawCachedIndividual[]
 
   constructor(props: any) {
     super(props)
@@ -38,8 +48,11 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     this.toggleAnimation = this.toggleAnimation.bind(this)
     this.updateAnimationState = this.updateAnimationState.bind(this)
     this.initPopulation = this.initPopulation.bind(this)
+
     this.lastTime = 0
+    this.lastStateUpdateTime = 0
     this.lastDeltas = []
+    this.populationDrawCache = []
     this.state = {
       startTimestamp: -1,
       population: null,
@@ -79,6 +92,8 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
 
   updateAnimationState(time: number) {
     let delta = this.lastTime == 0 ? 0 : time - this.lastTime
+    let lastStateUpdateDelta =
+      this.lastStateUpdateTime == 0 ? 1000 : time - this.lastStateUpdateTime
 
     if (delta > 1000) {
       // Handle sudden time jumps (like leaving the tab)
@@ -101,10 +116,9 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
 
         if (this.lastDeltas.length == deltaReloadThresholdCount) {
           const average =
-            this.lastDeltas.reduce((a, b) => a + b, 0) /
-            this.lastDeltas.length
+            this.lastDeltas.reduce((a, b) => a + b, 0) / this.lastDeltas.length
 
-          // console.log(`${average} ${this.state.population.individual_count}`);
+          console.log(`${average} ${this.state.population.individual_count}`);
 
           if (
             average > deltaReloadThresholdFrameLength &&
@@ -129,10 +143,15 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
         this.toggleAnimation()
       }
     }
-    // console.log('drawing')
-    // this.setState(prevState => ({
-    //   lastTime: time,
-    // }))
+
+    // State needs to update so that percent indicator updates
+    // but we don't want to do it so often that it regularly increases the
+    // time in ms per frame
+    if (lastStateUpdateDelta > 200) {
+      this.setState({})
+      this.lastStateUpdateTime = time;
+    }
+
     this.lastTime = time
     this.requestFrameFun = requestAnimationFrame(this.updateAnimationState)
   }
@@ -163,10 +182,10 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
         context.fillStyle =
           point.days_infected > 0
             ? point.days_infected > point.incubation_period
-            ? point.days_infected > point.days_to_recover
-              ? "green"
-              : "#DB2E0B"
-            : "#DB9D0B"
+              ? point.days_infected > point.days_to_recover
+                ? "green"
+                : "#DB2E0B"
+              : "#DB9D0B"
             : "#555555"
         context.fill()
       } else {
@@ -189,7 +208,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
 
   handleScroll() {
     const percentScrolled = window.scrollY / window.innerHeight
-    const opacity = (1 - percentScrolled * 15)
+    const opacity = 1 - percentScrolled * 15
 
     if (
       opacity < 0.01 &&
@@ -313,7 +332,8 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
               width: "100vw",
               height: "100vh",
               transition: "opacity ease-out 200ms",
-              opacity: 0.6 * this.state.opacity * (this.state.animating ? 1 : 0.5),
+              opacity:
+                0.6 * this.state.opacity * (this.state.animating ? 1 : 0.5),
               // zIndex: 1,
               verticalAlign: "bottom",
             }}
