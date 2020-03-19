@@ -308,28 +308,27 @@ impl Population {
 
                     let dist = (dist_x.powi(2) + dist_y.powi(2)).sqrt();
 
-                    // NOTE: Skip gravity calculation for now
-                    // if individual.days_infected < individual.incubation_period as f32 &&
-                    //     other_individual.days_infected > other_individual.incubation_period as f32 &&
-                    //     last_percent_infected < individual.percent_infected_quarantine_threshold &&
-                    //     dist < 0.01 {
-                    //     // http://exploratoria.github.io/exhibits/astronomy/gravitating-system/
-                    //     // 100 is our minimum distance so things don't get too crazy
-                    //
-                    //     let d2 = max_f(dist.powi(2), 0.001);
-                    //     let magnitude = 6.67e-11 / d2 / d2.sqrt();
-                    //
-                    //     individual.velocity.x += magnitude * dist_x * 1000.0;
-                    //     individual.velocity.y += magnitude * dist_y * 1000.0;
-                    // }
+                    // NOTE: Remove this if it is determined to be a performance burden
+                    if individual.days_infected < individual.incubation_period as f32 &&
+                        other_individual.days_infected > other_individual.incubation_period as f32 &&
+                        /* last_percent_infected < individual.percent_infected_quarantine_threshold *&&*/
+                        dist < 1.0 {
+                        // http://exploratoria.github.io/exhibits/astronomy/gravitating-system/
+                        // 100 is our minimum distance so things don't get too crazy
+
+                        let d2 = max_f(dist.powi(2), 0.0001);
+                        let magnitude = 6.67e-11 / d2 / d2.sqrt();
+
+                        individual.velocity.x += magnitude * dist_x * 5000.0;
+                        individual.velocity.y += magnitude * dist_y * 5000.0;
+                    }
 
                     if individual.days_infected > 0.0 {
                         continue;
                     }
 
-                    if dist < self.infection_dist && random() < 0.8 {
+                    if dist < self.infection_dist && random() < 0.25 {
                         individual.days_infected = 1.0;
-                        // break;
                     }
                 }
             }
