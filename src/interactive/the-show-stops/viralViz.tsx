@@ -59,6 +59,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     this.handleResize = this.handleResize.bind(this)
     this.handleSpacebar = this.handleSpacebar.bind(this)
     this.handleScroll = this.handleScroll.bind(this)
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this)
     this.toggleAnimation = this.toggleAnimation.bind(this)
     this.updateAnimationState = this.updateAnimationState.bind(this)
     this.initPopulation = this.initPopulation.bind(this)
@@ -117,10 +118,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
 
     let population = this.state.population
     if (population && this.state.animating) {
-      if (
-        this.state.population.individual_count >
-        deltaReloadThresholdMinPopulationSize
-      ) {
+      if (this.state.population.size > deltaReloadThresholdMinPopulationSize) {
         while (this.lastDeltas.length > deltaReloadThresholdCount) {
           this.lastDeltas.pop()
         }
@@ -139,7 +137,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
             average > deltaReloadThresholdFrameLength &&
             this.state.population
           ) {
-            this.adjustPopulation(this.state.population.individual_count / 2)
+            this.adjustPopulation(this.state.population.size / 2)
           }
 
           this.lastDeltas = []
@@ -181,7 +179,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     ) {
       return
     }
-    const populationSize = this.state.population.individual_count
+    const populationSize = this.state.population.size
 
     this.canvasContext.clearRect(
       0,
@@ -295,6 +293,17 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
     })
   }
 
+  // Thanks https://scotch.io/tutorials/get-to-know-the-page-visibility-api
+  handleVisibilityChange() {
+    if (!document.hidden) {
+      return
+    }
+
+    if (this.state.animating) {
+      this.toggleAnimation()
+    }
+  }
+
   toggleAnimation() {
     const animating = !this.state.animating
     if (!animating) {
@@ -327,11 +336,12 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
   componentDidMount(): void {
     window.addEventListener("resize", this.handleResize)
     window.addEventListener("scroll", this.handleScroll)
+    document.addEventListener("visibilitychange", this.handleVisibilityChange)
     this.setState({
       startTimestamp: new Date().getTime(),
     })
     // Set canvas width and height to be used in draw function
-    this.handleResize();
+    this.handleResize()
 
     this.requestFrameFun = requestAnimationFrame(this.updateAnimationState)
 
@@ -342,6 +352,7 @@ class ViralViz extends React.Component<ViralVizProps, ViralVizState> {
   componentWillUnmount(): void {
     window.removeEventListener("resize", this.handleResize)
     window.removeEventListener("scroll", this.handleScroll)
+    document.removeEventListener("visibilitychange", this.handleVisibilityChange)
     this.setState({
       startTimestamp: new Date().getTime(),
     })

@@ -31,32 +31,52 @@ impl<'a> Drop for Timer<'a> {
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
-extern {
+extern "C" {
     fn alert(s: &str);
 }
 
 #[wasm_bindgen]
 pub fn init_panic_hook() {
     #[cfg(feature = "console_error_panic_hook")]
-        console_error_panic_hook::set_once();
+    console_error_panic_hook::set_once();
     // alert("yes!");
 }
 
-pub fn rand_range(low: i64, high: i64) -> i64 {
-    return low + ((random() as f32) * (high - low) as f32) as i64;
+pub fn rand_range_f32(low: f32, high: f32) -> f32 {
+    return low + ((random() as f32) * (high - low) as f32);
+}
+
+pub fn rand_range_t_f32(tuple: (f32, f32)) -> f32 {
+    return rand_range_f32(tuple.0, tuple.1);
+}
+
+pub fn rand_range_i32(low: i32, high: i32) -> i32 {
+    return low + ((random() as i32) * (high - low) as i32) as i32;
+}
+
+pub fn rand_range_t_i32(tuple: (i32, i32)) -> i32 {
+    return rand_range_i32(tuple.0, tuple.1);
+}
+
+pub fn rand_range_u8(low: u8, high: u8) -> u8 {
+    return low + ((random() as u8) * (high - low) as u8) as u8;
+}
+
+pub fn rand_range_t_u8(tuple: (u8, u8)) -> u8 {
+    return rand_range_u8(tuple.0, tuple.1);
 }
 
 fn max_f(a: f32, b: f32) -> f32 {
     match a > b {
         true => a,
-        false => b
+        false => b,
     }
 }
 
 fn min_f(a: f32, b: f32) -> f32 {
     match a < b {
         true => a,
-        false => b
+        false => b,
     }
 }
 
@@ -85,8 +105,7 @@ const POPULATION_SIZE: u16 = 500;
 #[wasm_bindgen]
 #[derive(Debug, Clone)]
 pub struct Population {
-    pub individual_count: i32,
-    // pub ticks: i32,
+    pub size: u32,
     pub percent_infected: f32,
     performance_coeff: f32,
     infection_dist: f32,
@@ -127,29 +146,59 @@ impl Individual {
     }
 }
 
+//
+// Individual variable ranges
+//
+
+const INITIAL_INFECTED_COUNT: u8 = 50;
+const INCUBATION_LENGTH_RANGE: (u8, u8) = (4, 20);
+const RECOVERY_LENGTH_RANGE: (u8, u8) = (4, 20);
+const AGE_RANGE: (u8, u8) = (1, 90);
+const QUARANTINE_THRESHOLD_PERCENT_RANGE: (u8, u8) = (0, 80);
+const MAX_NEW_IMPULSE: f32 = 0.1;
+
+//
+// Tick constants
+//
+
+const DAY_TRANSMISSION_PROBABILITY: f32 = 0.8;
+// Decrease infection radius as population size n increases
+// n^(INFECTION_DIST_POW)
+const INFECTION_DIST_POW: f32 = -0.5;
+// As population size n increases, we randomly skip checking proximity with all other individuals
+// in a tick with probability 1 - n^(SPEED_SLOP_POW)
+const SPEED_SLOP_POW: f32 = -0.1;
+const DAY_BASE_NEW_MOVEMENT_PROBABILITY: f32 = 0.5;
+
+// The effect P, the proportion of population infected, has on the probability of an individual
+// making a new movement in a tick
+const P_MOVEMENT_PROBABILITY_COEFF_POW: f32 = 1.0 / 5.0;
+fn p_movement_probability_coeff(p: f32) -> f32 {
+    return 1.0 - p.powf(P_MOVEMENT_PROBABILITY_COEFF_POW);
+}
+
+// The effect P, the proportion of population infected, has on the magnitude of new movements by an
+// individual in a tick
+const P_IMPULSE_SIZE_COEFF_MAX_EFFECT: f32 = 0.75;
+fn p_impulse_size_coeff(p: f32) -> f32 {
+    return 1.0 - (p * P_IMPULSE_SIZE_COEFF_MAX_EFFECT);
+}
+
+const DAY_VELOCITY_DECAY: f32 = 0.8;
+const MOVE_IN_QUARANTINE_PROBABILITY: f32 = 0.05;
+
 #[wasm_bindgen]
 impl Population {
-    pub fn new_with_size(population_size: u32) -> Population {
-        let mut individuals = Vec::with_capacity(population_size as usize);
+    pub fn new_with_size(size: u32) -> Population {
+        let mut individuals = Vec::with_capacity(size as usize);
 
-        for i in 0u32..population_size {
+        for i in 0u32..size {
             // Infect first n so that we can get the ball rolling
-            let is_infected: bool = i < 50;
-            let days_to_recover: u8;
-            let incubation_period = rand_range(4, 20) as u8;
+            let is_infected: bool = i < INITIAL_INFECTED_COUNT as u32;
+            let incubation_period = rand_range_t_u8(INCUBATION_LENGTH_RANGE);
 
-            if is_infected {
-                days_to_recover = 100;
-            } else {
-                days_to_recover = incubation_period + (rand_range(4, 24) as u8);
-            }
-
-            let age: u8;
-            if is_infected {
-                age = 18;
-            } else {
-                age = rand_range(0, 90) as u8
-            }
+            let days_to_recover: u8 = incubation_period + (rand_range_t_u8(RECOVERY_LENGTH_RANGE));
+            let age: u8 = rand_range_t_u8(AGE_RANGE);
 
             let mut days_infected = 0.0;
 
@@ -157,39 +206,36 @@ impl Population {
                 days_infected = 1.0;
             }
 
-            let percent_infected_quarantine_threshold;
-
-            if random() < 0.25 {
-                percent_infected_quarantine_threshold = 1.0 - (rand_range(0, 8) as f32 / 10.0);
-            } else {
-                percent_infected_quarantine_threshold = 1.0 - (rand_range(0, 5) as f32 / 10.0);
-            }
+            let percent_infected_quarantine_threshold =
+                1.0 - (rand_range_t_u8(QUARANTINE_THRESHOLD_PERCENT_RANGE) as f32 / 100.0);
 
             let individual: Individual = Individual {
-                incubation_period: rand_range(4, 20) as u8,
+                incubation_period,
                 days_to_recover,
                 age,
                 is_alive: true,
                 days_infected,
                 percent_infected_quarantine_threshold,
-                position: Pos { x: random() as f32, y: random() as f32 },
+                position: Pos {
+                    x: random() as f32,
+                    y: random() as f32,
+                },
                 velocity: Pos {
-                    x: rand_range(-10, 20) as f32 / 100f32,
-                    y: rand_range(-10, 20) as f32 / 100f32,
+                    x: rand_range_f32(-MAX_NEW_IMPULSE, MAX_NEW_IMPULSE),
+                    y: rand_range_f32(-MAX_NEW_IMPULSE, MAX_NEW_IMPULSE),
                 },
             };
             individuals.push(individual);
         }
 
-        let performance_coeff = (population_size as f32).powf(-0.1);
-        let infection_dist = (population_size as f32).powf(-0.515);
+        let infection_dist = (size as f32).powf(INFECTION_DIST_POW);
+        let performance_coeff = (size as f32).powf(SPEED_SLOP_POW);
 
         Population {
             individuals,
-            individual_count: population_size as i32,
+            size,
             performance_coeff,
             infection_dist,
-            // ticks: 0,
             percent_infected: 0.0,
         }
     }
@@ -198,44 +244,46 @@ impl Population {
         Population::new_with_size(POPULATION_SIZE as u32)
     }
 
-    pub fn first_n(&mut self, population_size: i32) -> Population {
-        let mut new_individuals: Vec<Individual> = Vec::with_capacity(population_size as usize);
+    pub fn first_n(&mut self, size: u32) -> Population {
+        let mut new_individuals: Vec<Individual> = Vec::with_capacity(size as usize);
 
-        for i in 0..population_size {
+        for i in 0..size {
             new_individuals.push(self.individuals[i as usize]);
         }
 
-        let performance_coeff = (population_size as f32).powf(-0.1);
-        let infection_dist = (population_size as f32).powf(-0.5);
+        let infection_dist = (size as f32).powf(INFECTION_DIST_POW);
+        let performance_coeff = (size as f32).powf(SPEED_SLOP_POW);
+
         Population {
             individuals: new_individuals,
-            individual_count: population_size,
-            // ticks: self.ticks,
-            // Not completely accurate but should update on the next tick
-            percent_infected: self.percent_infected,
+            size,
             performance_coeff,
             infection_dist,
+            // Not completely accurate but should be better on the next tick
+            percent_infected: self.percent_infected,
         }
     }
 
     pub fn tick(&mut self, delta: f32) {
         // let _timer = Timer::new("Population::tick");
+
+        // We treat one second as one day
         let percent_second: f32 = delta / 1000.0;
 
-        let move_probability = 0.01 * (1.0 - self.percent_infected.powf(1.0 / 5.0));
-        let last_percent_infected: f32 = self.percent_infected;
+        let move_probability = DAY_BASE_NEW_MOVEMENT_PROBABILITY
+            * p_movement_probability_coeff(self.percent_infected)
+            * percent_second;
+        let velocity_mag_coeff = p_impulse_size_coeff(self.percent_infected);
 
         let mut total_infected: i32 = 0;
 
-        let velocity_mag_coeff = 0.05 * (1.0 - (last_percent_infected * 0.75));
-        let velocity_friction_coeff = (1.0 - (0.5 * percent_second)) as f32;
+        let velocity_friction_coeff = 1.0 - (DAY_VELOCITY_DECAY * percent_second);
 
-        for i in 0..self.individual_count {
+        for i in 0..self.size {
             let mut individual = self.individual_at_index(i);
 
-            let showing_symptoms =
-                individual.days_infected > individual.incubation_period as f32 &&
-                    individual.days_infected < individual.days_to_recover as f32;
+            let showing_symptoms = individual.days_infected > individual.incubation_period as f32
+                && individual.days_infected < individual.days_to_recover as f32;
 
             if individual.is_alive {
                 individual.position.x += individual.velocity.x * percent_second;
@@ -260,21 +308,20 @@ impl Population {
                 if random() < move_probability as f64 &&
                     !showing_symptoms &&
                     // Leave some probability that an individual will move even in quarantine
-                    (last_percent_infected < individual.percent_infected_quarantine_threshold ||
-                        random() < 0.05)
+                    (self.percent_infected < individual.percent_infected_quarantine_threshold ||
+                        (random() as f32) < MOVE_IN_QUARANTINE_PROBABILITY)
                 {
                     individual.velocity.x +=
-                        ((random() as f32 * 2.0) - 1.0) * velocity_mag_coeff;
+                        rand_range_f32(-MAX_NEW_IMPULSE, MAX_NEW_IMPULSE) * velocity_mag_coeff;
                     individual.velocity.y +=
-                        ((random() as f32 * 2.0) - 1.0) * velocity_mag_coeff;
+                        rand_range_f32(-MAX_NEW_IMPULSE, MAX_NEW_IMPULSE) * velocity_mag_coeff;
                 }
             }
 
             if individual.days_infected > 0.0 {
                 total_infected += 1;
                 individual.days_infected += percent_second;
-
-                if individual.days_infected < individual.days_to_recover as f32 {
+                if showing_symptoms {
                     if individual.age > 60 {
                         if (random() as f32) < (0.02 * percent_second) {
                             individual.is_alive = false
@@ -289,50 +336,45 @@ impl Population {
 
             // Make costly distance calculations increasingly less as n increases to increase
             // performance
-            if (random() as f32) < self.performance_coeff {
-                for j in 0..self.individual_count {
+            // Note that we can skip this if the individual has been infected once because we're
+            // not doing the gravity simulation
+            if (random() as f32) < self.performance_coeff && individual.days_infected == 0.0 {
+                // Check individual against every other individual to determine if it is
+                // close enough to a vector to have the possibility of being infected
+                for j in 0..self.size {
+                    // Don't check individual against itself-
                     if i == j {
                         continue;
                     }
+
                     let other_individual = self.individuals[j as usize];
 
-                    if other_individual.days_infected == 0.0 ||
-                        other_individual.days_infected > other_individual.days_to_recover as f32 ||
-                        !other_individual.is_alive {
+                    if other_individual.days_infected == 0.0
+                        || other_individual.days_infected > other_individual.days_to_recover as f32
+                        || !other_individual.is_alive
+                    {
                         continue;
                     }
 
                     let dist_x = individual.position.x - other_individual.position.x;
                     let dist_y = individual.position.y - other_individual.position.y;
 
+                    // If the other point isn't within a box of width 2*self.infection_dist around this individual,
+                    // it's not going to be within a circle r = self.infection_dist
+
+                    // TODO: Determine whether this check actually provides any frame rendering
+                    // time savings
                     if dist_x.abs() > self.infection_dist || dist_y.abs() > self.infection_dist {
                         continue;
                     }
 
                     let dist = (dist_x.powi(2) + dist_y.powi(2)).sqrt();
 
-                    // NOTE: Remove this if it is determined to be a performance burden
-                    if !showing_symptoms &&
-                        other_individual.days_infected > other_individual.incubation_period as f32 &&
-                        /* last_percent_infected < individual.percent_infected_quarantine_threshold *&&*/
-                        dist < 1.0 {
-                        // http://exploratoria.github.io/exhibits/astronomy/gravitating-system/
-                        // 100 is our minimum distance so things don't get too crazy
-
-                        let d2 = max_f(dist.powi(2), 0.0001);
-                        let magnitude = 6.67e-11 / d2 / d2.sqrt();
-
-                        individual.velocity.x += magnitude * dist_x * 5000.0;
-                        individual.velocity.y += magnitude * dist_y * 5000.0;
-                    }
-
-                    if individual.days_infected > 0.0 {
-                        continue;
-                    }
-
                     // 80% chance of catching disease after being near another individual for half a
                     // second
-                    if dist < self.infection_dist && random() < (0.8 * (percent_second)) as f64 {
+                    if dist < self.infection_dist
+                        && random() < (DAY_TRANSMISSION_PROBABILITY * (percent_second)) as f64
+                    {
                         individual.days_infected = 1.0;
                     }
                 }
@@ -346,18 +388,10 @@ impl Population {
             self.individuals[i as usize] = individual;
         }
 
-        self.percent_infected = total_infected as f32 / self.individual_count as f32;
+        self.percent_infected = total_infected as f32 / self.size as f32;
     }
 
-    pub fn individual_at_index(&mut self, i: i32) -> Individual {
+    pub fn individual_at_index(&mut self, i: u32) -> Individual {
         return self.individuals[i as usize];
     }
 }
-
-
-// #[wasm_bindgen]
-// pub fn greet() -> String {
-//     return "Hello, the-show-stops-wasm-wasm!";
-// }
-//
-
