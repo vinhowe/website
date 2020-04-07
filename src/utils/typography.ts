@@ -15,6 +15,10 @@ const typography = new Typography({
       name: "Lato",
       styles: ["400", "400i", "700"],
     },
+    {
+      name: "Material Icons",
+      styles: ["400"]
+    }
   ],
   headerFontFamily: ["forma-djr-display", "Arial", "sans-serif"],
   bodyFontFamily: ["miller-text", "Georgia", "serif"],

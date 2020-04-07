@@ -7,6 +7,8 @@ import { MDXConnection, SiteNode } from "../queries"
 import HeroImage from "../components/heroImage"
 import CurrentlyReading from "../components/currentlyReading"
 
+import "../shared.css"
+
 class BlogIndex extends React.Component<BlogIndexProps, {}> {
   render() {
     const { data } = this.props
