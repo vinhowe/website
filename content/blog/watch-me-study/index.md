@@ -1,6 +1,6 @@
 ---
-title: Watch me study
-description: Or, "study with me"
+title: Study with me
+description: Or, "watch me study"
 author: "vin"
 date: 2020-04-07T05:14:44.187623
 ---
