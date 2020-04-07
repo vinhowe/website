@@ -6,6 +6,7 @@ import { graphql, useStaticQuery } from "gatsby"
 import { CSSProperties, ReactNode, ReactPropTypes } from "react"
 import { SocialNode } from "../queries"
 
+import "../shared.css"
 
 interface LayoutProps {
   location: Location

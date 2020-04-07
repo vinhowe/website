@@ -1,5 +1,4 @@
 const accentColor = `#00AD50`
-const accentColorDark = `#30f288`
 
 module.exports = {
   siteMetadata: {
@@ -8,7 +7,6 @@ module.exports = {
     description: `The personal blog of Vin Howe`,
     siteUrl: `https://howe.vin/`,
     accentColor: accentColor,
-    accentColorDark: accentColorDark,
     social: [
       {
         name: `GitHub`,
@@ -23,7 +21,6 @@ module.exports = {
     ],
   },
   plugins: [
-    `gatsby-plugin-twitter`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -59,12 +56,12 @@ module.exports = {
         name: `currentlyReading`,
       },
     },
-    // {
-    //   resolve: "gatsby-plugin-netlify-cms",
-    //   options: {
-    //     modulePath: `${__dirname}/src/cms/cms.ts`,
-    //   },
-    // },
+    {
+      resolve: "gatsby-plugin-netlify-cms",
+      options: {
+        modulePath: `${__dirname}/src/cms/cms.ts`,
+      },
+    },
     `gatsby-transformer-yaml`,
     `gatsby-transformer-remark`,
     {
@@ -155,6 +152,5 @@ module.exports = {
         },
       },
     },
-    "gatsby-plugin-css-modules-typings",
   ],
 }

@@ -19,7 +19,6 @@ export interface MdxNode {
     title?: string
     date?: string
     description?: string
-    layoutPath?: string
   }
 }
 

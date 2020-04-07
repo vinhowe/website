@@ -1,47 +1,10 @@
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
-import {
-  CreateNodeArgs,
-  CreatePagesArgs,
-  CreateWebpackConfigArgs,
-} from "gatsby"
+import { CreateNodeArgs, CreatePagesArgs } from "gatsby"
 import { Edge, MDXConnection, MdxNode } from "./queries"
 
 interface CreatePageQuery {
   allMdx: MDXConnection
-}
-
-export const onCreateWebpackConfig = ({
-                                        stage,
-                                        rules,
-                                        loaders,
-                                        plugins,
-                                        actions,
-                                      }: CreateWebpackConfigArgs) => {
-  actions.setWebpackConfig({
-    module: {
-      rules: [
-        {
-          test: /\.wasm$/i,
-          type: "javascript/auto",
-          use: [
-            {
-              loader: 'file-loader',
-            },
-          ],
-        },
-        {
-          test: /\.js$/,
-          loader: require.resolve('@open-wc/webpack-import-meta-loader'),
-        },
-      ],
-    },
-    plugins: [
-      plugins.define({
-        __DEVELOPMENT__: stage === `develop` || stage === `develop-html`,
-      }),
-    ],
-  })
 }
 
 export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
@@ -49,21 +12,23 @@ export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
 
   const blogPost = path.resolve(`./src/templates/blogPost.tsx`)
   const result = await graphql<CreatePageQuery, any>(`
-    {
-      allMdx(sort: { fields: [frontmatter___date], order: DESC }, limit: 1000) {
-        edges {
-          node {
-            fields {
-              slug
-            }
-            frontmatter {
-              title
-              layoutPath
-            }
+      {
+          allMdx(
+              sort: { fields: [frontmatter___date], order: DESC }
+              limit: 1000
+          ) {
+              edges {
+                  node {
+                      fields {
+                          slug
+                      }
+                      frontmatter {
+                          title
+                      }
+                  }
+              }
           }
-        }
       }
-    }
   `)
 
   if (result.errors) {
@@ -77,12 +42,9 @@ export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
     const previous = index === posts.length - 1 ? null : posts[index + 1].node
     const next = index === 0 ? null : posts[index - 1].node
 
-    const layout = post.node.frontmatter.layoutPath
-      ? path.resolve(post.node.frontmatter.layoutPath)
-      : blogPost
     createPage({
       path: post.node.fields.slug,
-      component: layout,
+      component: blogPost,
       context: {
         slug: post.node.fields.slug,
         previous,
@@ -92,7 +54,7 @@ export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
   })
 }
 
-export const onCreateNode = ({ node, actions, getNode }: CreateNodeArgs) => {
+exports.onCreateNode = ({ node, actions, getNode }: CreateNodeArgs) => {
   const { createNodeField } = actions
 
   if (node.internal.type === `Mdx`) {
