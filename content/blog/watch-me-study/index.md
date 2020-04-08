@@ -5,7 +5,7 @@ author: "vin"
 date: 2020-04-07T05:14:44.187623
 ---
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/MyE7Mik0I5A" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/live_stream?channel=UCqeIxZ1uYi3vgYZs55KcSPw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 With finals week at BYU fast approaching, I'm stuck at my apartment trying to be productive, so I'm trying something new.
 
