@@ -17,7 +17,7 @@
 .resume h4,
 .resume h5,
 .resume h6 {
-  font-family: "Lato", "Source Sans Pro", Roboto, "San Francisco", "Segoe UI",
+  font-family: "forma-djr-display", "Lato", "Source Sans Pro", Roboto, "San Francisco", "Segoe UI",
     sans-serif;
 }
 
@@ -268,16 +268,65 @@
   margin-bottom: 4px;
 }
 
+.resume .section-header select {
+  font-size: 16px;
+  font-family: "forma-djr-display", "Lato", "Source Sans Pro", sans-serif;
+  font-weight: 700;
+  display: block;
+  color: #444;
+  /* padding: .6em 1.4em .5em .8em; */
+  padding: 0 6px 0 20px;
+  box-sizing: border-box;
+  margin: 0 -6px 0 -20px;
+  border: none;
+  border-radius: .5em;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E"), none;
+  background-color: #fff;
+  background-repeat: no-repeat, repeat;
+  background-position: left 0 top 50%, 0 0;
+  overflow: visible;
+  background-size: 1.2em auto, 100%;
+}
+
+@media print {
+  .resume .section-header select {
+    background: none;
+  }
+}
+
+.resume .section-header select::-ms-expand {
+	display: none;
+}
+
+.resume .section-header select:hover {
+	color: #888;
+  cursor: pointer;
+}
+
+.resume .section-header select:active {
+  color: #212121;
+	outline: none;
+}
+
+.resume .section-header select>option {
+	font-weight: bold;
+    padding: 10px;
+}
+    
 .resume .skills-list {
   display: flex;
   flex-wrap: wrap;
+  font-size: 8pt;
   align-content: space-between;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "jetbrains-mono", "IBM Plex Mono", monospace;
   line-height: calc(100% + 4px);
 }
 
 .resume .skills-list > span {
-  border: 1px solid #aaaaaa;
+  border: 1px solid #212121;
   border-radius: 2px;
   padding: 2px 6px;
   margin: 2px 2px;
@@ -285,8 +334,17 @@
 }
 
 .resume .skills-list .skills-legend {
-  background-color: #e1e1e1;
-  border-color: #e1e1e1;
+  /* background-color: #e1e1e1; */
+  border-color: transparent;
+  padding-left: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 6px;
+  font-size: 10pt;
+  font-family: "forma-djr-display", "Lato", "Source Sans Pro", sans;
+  font-weight: 700;
 }
 
 .resume .show-mobile {
@@ -297,7 +355,7 @@
 .resume .technologies {
   margin-left: 2px;
   margin-bottom: 1px;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "jetbrains-mono", "IBM Plex Mono", monospace;
   font-size: 0.6rem;
   display: flex;
   flex-wrap: wrap;

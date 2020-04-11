@@ -1,6 +1,6 @@
 ---
 info:
-  lastUpdated: "1/13/2020"
+  lastUpdated: "4/11/2020"
 
 bio:
   name: "Vin Howe"
@@ -37,7 +37,7 @@ education:
         name: "Calculus 1"
       - code: "math 113"
         name: "Calculus 2"
-      - code: "stats 121"
+      - code: "stat 121"
         name: "Principles of Statistics"
       - code: "wrtg 150"
         name: "Intro to Writing"
@@ -46,6 +46,18 @@ education:
 #  - name: "test university"
 
 work:
+  - name: "Perception, Control and Cognition Lab"
+    url: "https://pcc.cs.byu.edu/"
+    featured: true
+    location: "Provo, UT"
+    address: "Computer Science Department 3361 TMCB, Provo, UT 84602, US"
+    position: "Research assistant"
+    bullets:
+      - "bullet 1"
+      - "bullet 2"
+    dateRange:
+      startDate: "Jan 2020"
+      current: true
   - name: "The Church of Jesus Christ of Latter-day Saints"
     url: "https://www.churchofjesuschrist.org"
     featured: true
@@ -69,8 +81,8 @@ projects:
       current: false
     bullets:
       - "Recognized a potential to use technology as a solution to help local producers market and sell their products."
-      - "Conducted market research project consisting of in-person interviews conducted with farmers."
-      - "Created pencil-and-paper wireframes and built Android app and then Flutter app with cross-platform support for iOS"
+      - "Conducted market research project consisting of in-person interviews with farmers."
+      - "Created pencil-and-paper wireframes and built Android app, then Flutter app with cross-platform support for iOS"
       - "Firebase products (Cloud Firestore, Cloud Storage, Authentication, Cloud Functions, and Cloud Messaging) were used on the backend."
     technologies:
       - "Android"
@@ -125,6 +137,35 @@ projects:
       - "Java"
       - "GLSL"
       - "LibGDX"
+  - name: "StudySpots"
+    featured: false
+    url: "https://studyspots.app"
+    dateRange:
+      startDate: "Dec 2019"
+      current: false
+    bullets:
+      - "Scraped a BYU website in Jupyter using BeautifulSoup to get information about when classrooms are scheduled during the week."
+      - "Using Pandas, combined this data with another dataset that included information about which classrooms have pianos."
+      - "Built simple PHP page served with Google App Engine on <a href='https://studyspots.app'>https://studyspots.app</a>."
+      - "It also comes with a 360° pannable view of every classroom, which I think is pretty cool."
+    technologies:
+      - "Python"
+      - "Jupyter Notebooks"
+      - "PHP"
+      - "Google App Engine"
+  - name: "thattracks-basic pixel tracking server"
+    featured: false
+    url: "https://github.com/vinhowe/thattracks"
+    dateRange:
+      startDate: "Dec 2019"
+      current: false
+    bullets:
+      - "Built a Flask server that serves 1x1 pixel with a given ID and sends a SMS push using Twilio configuration defined in JSON file."
+    technologies:
+      - "Python"
+      - "Flask"
+      - "Google App Engine"
+      - "Twilio"
   - name: "Ordo⁠—memory training mobile app"
     featured: true
     url: "https://github.com/vinhowe/ordo"
@@ -142,10 +183,13 @@ projects:
     url: "https://github.com/vinhowe/website"
     dateRange:
       startDate: "Dec 2019"
-      endDate: "Jan 2020"
-      current: false
+      current: true
     bullets:
       - "Generated this résumé from YAML data with Gatsby static React site generator into a responsive HTML layout using CSS flex."
+    technologies:
+      - "TypeScript"
+      - "React"
+      - "Gatsby"
 
 skills:
   proficient:

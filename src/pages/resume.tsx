@@ -19,8 +19,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons"
 import { faClock, faGlobe, faStar } from "@fortawesome/free-solid-svg-icons"
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons"
+import { ChangeEvent } from "react"
 
-class Resume extends React.Component<ResumeProps, {}> {
+class Resume extends React.Component<ResumeProps, ResumeState> {
+  constructor(props: ResumeProps) {
+    super(props)
+    this.state = {
+      projectsVisibilityState: "selected",
+    }
+  }
   render() {
     const { data } = this.props
 
@@ -33,7 +40,9 @@ class Resume extends React.Component<ResumeProps, {}> {
 
         const additionalInfoElements = additionalInfo.map(
           additionalInfoItem => {
-            return <li>{additionalInfoItem}</li>
+            return (
+              <li dangerouslySetInnerHTML={{ __html: additionalInfoItem }} />
+            )
           }
         )
 
@@ -148,7 +157,7 @@ class Resume extends React.Component<ResumeProps, {}> {
       socialElements.push(
         <p>
           <FontAwesomeIcon icon={faGlobe} className={"icon"} />{" "}
-          <a href={"https://"+bio.social.website}>{bio.social.website}</a>
+          <a href={"https://" + bio.social.website}>{bio.social.website}</a>
         </p>
       )
     }
@@ -156,43 +165,46 @@ class Resume extends React.Component<ResumeProps, {}> {
     const workElements = work
       .filter(workItem => workItem.featured)
       .map((workItem, index) => {
-        let workName = workItem.name;
+        let workName = workItem.name
 
         if (workItem.position) {
           workName = `${workItem.position}, ${workName}`
         }
 
-        return <div key={index} className="resume-item">
-          <div className="flex-row">
-            <div className="flex-1">
-              <p className="dates-description">
-                {workItem.dateRange.startDate}
-                {(workItem.dateRange.endDate ||
-                  workItem.dateRange.current) && <span>&ndash;</span>}
-                {workItem.dateRange.endDate}
-              </p>
-              <h3 className="project-title">{workItem.url ? (
-                <a href={workItem.url}>
-                  {workName}
-                </a>
-              ) : (
-                workName
-              )}</h3>
+        return (
+          <div key={index} className="resume-item">
+            <div className="flex-row">
+              <div className="flex-1">
+                <p className="dates-description">
+                  {workItem.dateRange.startDate}
+                  {(workItem.dateRange.endDate ||
+                    workItem.dateRange.current) && <span>&ndash;</span>}
+                  {workItem.dateRange.endDate}
+                </p>
+                <h3 className="project-title">
+                  {workItem.url ? (
+                    <a href={workItem.url}>{workName}</a>
+                  ) : (
+                    workName
+                  )}
+                </h3>
+              </div>
+              <div className="text-right">
+                <p>{workItem.location}</p>
+              </div>
             </div>
-            <div className="text-right">
-              <p>{workItem.location}</p>
+            <div className="project-title-technologies">
+              <h3 className="project-title"></h3>
             </div>
           </div>
-            <div className="project-title-technologies">
-              <h3 className="project-title">
-
-              </h3>
-            </div>
-        </div>
+        )
       })
 
     const projectElements = projects
-      .filter(project => project.featured)
+      .filter(
+        project =>
+          this.state.projectsVisibilityState == "all" || project.featured
+      )
       .map((project, index) => {
         return (
           <div key={index} className="resume-item">
@@ -207,9 +219,7 @@ class Resume extends React.Component<ResumeProps, {}> {
               <div className="project-title-technologies">
                 <h3 className="project-title">
                   {project.url ? (
-                    <a href={project.url}>
-                      {project.name}
-                    </a>
+                    <a href={project.url}>{project.name}</a>
                   ) : (
                     project.name
                   )}
@@ -225,7 +235,12 @@ class Resume extends React.Component<ResumeProps, {}> {
             </div>
             <ul>
               {project.bullets.map((bullet, index) => {
-                return <li key={index}>{bullet}</li>
+                return (
+                  <li
+                    key={index}
+                    dangerouslySetInnerHTML={{ __html: bullet }}
+                  />
+                )
               })}
             </ul>
           </div>
@@ -284,7 +299,14 @@ class Resume extends React.Component<ResumeProps, {}> {
               </section>
               <section id="projects">
                 <div className="section-header flex-row">
-                  <h2>Selected projects</h2>
+                  <select
+                    value={this.state.projectsVisibilityState}
+                    onChange={this.handleProjectsVisibilitySelectChange}
+                    className="projects-visibility-select"
+                  >
+                    <option value="selected">Selected projects</option>
+                    <option value="all">All projects</option>
+                  </select>
                   <div className="section-header-line flex-1" />
                 </div>
 
@@ -297,14 +319,14 @@ class Resume extends React.Component<ResumeProps, {}> {
                 </div>
                 <div className="skills-list resume-item">
                   <span className="skills-legend">
-                    <FontAwesomeIcon icon={faStar} /> Proficient
+                    {/*<FontAwesomeIcon icon={faStar} />*/} Proficient:
                   </span>
                   {proficientSkillElements}
                 </div>
                 <div className="skills-list resume-item">
                   {" "}
                   <span className="skills-legend">
-                    <FontAwesomeIcon icon={faStarRegular} /> Familiar
+                    {/*<FontAwesomeIcon icon={faStarRegular} />*/} Familiar:
                   </span>
                   {familiarSkillElements}
                 </div>
@@ -323,9 +345,20 @@ class Resume extends React.Component<ResumeProps, {}> {
   ): JSX.Element => {
     return (
       <span key={index}>
-        <FontAwesomeIcon icon={starType} /> {skill}
+        {/*<FontAwesomeIcon icon={starType} />*/} {skill}
       </span>
     )
+  }
+
+  handleProjectsVisibilitySelectChange = (
+    event: ChangeEvent<HTMLSelectElement>
+  ): void => {
+    if (!(event.target.value == "selected" || event.target.value == "all")) {
+      return
+    }
+    this.setState({
+      projectsVisibilityState: event.target.value,
+    })
   }
 }
 
@@ -343,6 +376,10 @@ interface ResumeProps {
     }
   }
   location: Location
+}
+
+interface ResumeState {
+  projectsVisibilityState: "selected" | "all"
 }
 
 export const pageQuery = graphql`
@@ -394,9 +431,9 @@ export const pageQuery = graphql`
         position
         url
         dateRange {
-            startDate
-            endDate
-            current
+          startDate
+          endDate
+          current
         }
       }
       projects {

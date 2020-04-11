@@ -6,6 +6,7 @@ import { rhythm } from "../utils/typography"
 import { MDXConnection, SiteNode } from "../queries"
 import HeroImage from "../components/heroImage"
 import CurrentlyReading from "../components/currentlyReading"
+import "./font-faces.css"
 
 class BlogIndex extends React.Component<BlogIndexProps, {}> {
   render() {
