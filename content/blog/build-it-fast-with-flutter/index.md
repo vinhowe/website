@@ -1,4 +1,4 @@
----
+/--
 title: Build It Fast With Flutter
 date: 2020-03-14T04:35:00.000Z
 description: Brought to you by COVID-19
@@ -29,7 +29,7 @@ Changes in UI can be applied virtually instantly with Flutter’s [hot reload](h
 
 ![](/images/flutter-design-demo.png)
 
-Out-of-the-box, Flutter provides:
+Out of the box, Flutter provides:
 
 * An amazing selection of styled UI components--"widgets"--to match the styles of [Android](https://flutter.dev/docs/development/ui/widgets/material) and [iOS](https://flutter.dev/docs/development/ui/widgets/cupertino)
 * Everything you need to create an app that looks exactly what you want (check out Flutter's extensive [widget catalog](https://flutter.dev/docs/development/ui/widgets))
