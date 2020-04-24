@@ -271,7 +271,7 @@ class Resume extends React.Component<ResumeProps, ResumeState> {
                     generated {Intl.DateTimeFormat().format(new Date())}, last
                     updated {info.lastUpdated}
                   </span>
-                  <h1 className="name">{bio.name}</h1>
+                  <a href={"https://" + bio.social.website}><h1 className="name">{bio.name}</h1></a>
                   {contactElements.length > 0 && <p>{contactElements}</p>}
                 </div>
                 {(bio.social !== {} || bio.social) && (

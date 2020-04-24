@@ -7,7 +7,8 @@
 }
 
 .resume *,
-.resume h1 {
+.resume h1,
+.resume a {
   line-height: initial;
 }
 
@@ -63,15 +64,14 @@
     padding: 0;
     display: block;
   }
+  
+  .resume a {
+    color: #212121;
+  }
 
   .resume .content {
     max-width: 100%;
     padding: 0 2px;
-  }
-
-  /* Prevent purple links when printing to PDF */
-  .resume a:visited {
-    color: blue !important;
   }
 
   .resume .project-title a {
@@ -390,7 +390,7 @@
   font-size: 0.6rem;
   font-weight: bold;
   padding: 0;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "jetbrains-mono", "IBM Plex Mono", monospace;
 }
 
 .resume .project-header {
