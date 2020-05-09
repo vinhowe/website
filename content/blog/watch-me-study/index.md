@@ -5,9 +5,7 @@ author: "vin"
 date: 2020-04-07T05:14:44.187623
 ---
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/live_stream?channel=UCqeIxZ1uYi3vgYZs55KcSPw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-_If the stream above doesn't work, it's because I'm not live. [Subscribe](https://www.youtube.com/user/OfficalThomasHowe?sub_confirmation=1) to get notifications when I am._
+**Update (5/9/2020): School is over and I'm not doing this any more.**
 
 With finals week at BYU fast approaching, I'm stuck at my apartment trying to be productive, so I'm trying something new.
 
