@@ -305,7 +305,7 @@ class Resume extends React.Component<ResumeProps, ResumeState> {
                     className="projects-visibility-select"
                   >
                     <option value="selected">Selected projects</option>
-                    <option value="all">All projects</option>
+                    <option value="all">More projects</option>
                   </select>
                   <div className="section-header-line flex-1" />
                 </div>
