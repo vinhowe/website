@@ -1,6 +1,6 @@
 ---
 info:
-  lastUpdated: "4/11/2020"
+  lastUpdated: "5/12/2020"
 
 bio:
   name: "Vin Howe"
@@ -26,8 +26,8 @@ education:
       endDate: "Apr 2025"
       current: true
     gpaInfo:
-      gpa: "4.00"
-      lastUpdated: "12/30/2019"
+      gpa: "3.96"
+      lastUpdated: "5/12/2020"
     relevantCoursework:
       - code: "cs 142"
         name: "Intro to Computer Programming"
@@ -76,7 +76,7 @@ projects:
   - name: "Valley⁠—producer mobile app"
     featured: true
     dateRange:
-      startDate: "Aug 2019"
+      startDate: "Aug 2015"
       endDate: "Feb 2019"
       current: false
     bullets:
