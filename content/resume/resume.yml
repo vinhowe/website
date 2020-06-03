@@ -153,7 +153,7 @@ projects:
       - "Jupyter Notebooks"
       - "PHP"
       - "Google App Engine"
-  - name: "thattracks-basic pixel tracking server"
+  - name: "thattracks—basic pixel tracking server"
     featured: false
     url: "https://github.com/vinhowe/thattracks"
     dateRange:
@@ -166,7 +166,7 @@ projects:
       - "Flask"
       - "Google App Engine"
       - "Twilio"
-  - name: "Ordo⁠—memory training mobile app"
+  - name: "Ordo—memory training mobile app"
     featured: true
     url: "https://github.com/vinhowe/ordo"
     dateRange:
