@@ -20,7 +20,7 @@ class BlogIndex extends React.Component<BlogIndexProps, {}> {
       <Layout location={this.props.location} title={siteTitle}>
         <SEO title={rootTitle}/>
         <HeroImage />
-        <CurrentlyReading />
+        {/* <CurrentlyReading /> */}
         {posts.map(({ node }) => {
           const title = node.frontmatter.title || node.fields.slug
           // Hack because description is a required field in Netlify CMS

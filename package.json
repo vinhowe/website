@@ -69,7 +69,8 @@
     "babel-preset-gatsby": "^0.2.36",
     "base64-loader": "^1.0.0",
     "gatsby": "^2.19.45",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "webpack": "^4.43.0"
   },
   "homepage": "https://howe.vin",
   "license": "MIT",
