@@ -1,23 +1,19 @@
 import * as React from "react"
-import { Link, graphql } from "gatsby"
+import { graphql } from "gatsby"
 
-// import Layout from "../components/layout"
 import SEO from "../components/seo"
-// import { rhythm } from "../utils/typography"
 import {
-  MDXConnection,
   ResumeBio,
   ResumeEducationItem,
   ResumeInfo,
   ResumeProjectItem,
   ResumeSkills,
   ResumeWorkItem,
-  SiteNode,
 } from "../queries"
 import "./resume.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons"
-import { faClock, faGlobe, faStar } from "@fortawesome/free-solid-svg-icons"
+import { faGlobe, faStar } from "@fortawesome/free-solid-svg-icons"
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons"
 import { ChangeEvent } from "react"
 
