@@ -1,5 +1,5 @@
 import * as React from "react"
-import { graphql } from "gatsby"
+import { graphql, Link } from "gatsby"
 
 import SEO from "../components/seo"
 import {
@@ -24,6 +24,7 @@ class Resume extends React.Component<ResumeProps, ResumeState> {
       projectsVisibilityState: "selected",
     }
   }
+
   render() {
     const { data } = this.props
 
@@ -267,7 +268,13 @@ class Resume extends React.Component<ResumeProps, ResumeState> {
                     generated {Intl.DateTimeFormat().format(new Date())}, last
                     updated {info.lastUpdated}
                   </span>
-                  <a href={"https://" + bio.social.website}><h1 className="name">{bio.name}</h1></a>
+                  <h1 className="name">
+                    <Link
+                      to={`/`}
+                    >
+                      {bio.name}
+                    </Link>
+                  </h1>
                   {contactElements.length > 0 && <p>{contactElements}</p>}
                 </div>
                 {(bio.social !== {} || bio.social) && (
