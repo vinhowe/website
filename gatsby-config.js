@@ -55,6 +55,13 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
+        path: `${__dirname}/content/timeline`,
+        name: `timeline`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
         path: `${__dirname}/content/currentlyReading`,
         name: `currentlyReading`,
       },
