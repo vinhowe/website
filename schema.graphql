@@ -229,9 +229,11 @@ type File implements Node {
     ): Date!
     childCurrentlyReadingYaml: CurrentlyReadingYaml
     childImageSharp: ImageSharp
+    childMarkdownRemark: MarkdownRemark
     childMdx: Mdx
     childResumeYaml: ResumeYaml
     children: [Node!]!
+    childrenTimelineYaml: [TimelineYaml]
     ctime(
         "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
         difference: String,
@@ -389,26 +391,26 @@ type ImageSharpEdge {
 type ImageSharpFixed {
     aspectRatio: Float
     base64: String
-    height: Float
+    height: Float!
     originalName: String
-    src: String
-    srcSet: String
+    src: String!
+    srcSet: String!
     srcSetWebp: String
     srcWebp: String
     tracedSVG: String
-    width: Float
+    width: Float!
 }
 
 type ImageSharpFluid {
-    aspectRatio: Float
+    aspectRatio: Float!
     base64: String
     originalImg: String
     originalName: String
     presentationHeight: Int
     presentationWidth: Int
-    sizes: String
-    src: String
-    srcSet: String
+    sizes: String!
+    src: String!
+    srcSet: String!
     srcSetWebp: String
     srcWebp: String
     tracedSVG: String
@@ -441,26 +443,26 @@ type ImageSharpResize {
 type ImageSharpResolutions {
     aspectRatio: Float
     base64: String
-    height: Float
+    height: Float!
     originalName: String
-    src: String
-    srcSet: String
+    src: String!
+    srcSet: String!
     srcSetWebp: String
     srcWebp: String
     tracedSVG: String
-    width: Float
+    width: Float!
 }
 
 type ImageSharpSizes {
-    aspectRatio: Float
+    aspectRatio: Float!
     base64: String
     originalImg: String
     originalName: String
     presentationHeight: Int
     presentationWidth: Int
-    sizes: String
-    src: String
-    srcSet: String
+    sizes: String!
+    src: String!
+    srcSet: String!
     srcSetWebp: String
     srcWebp: String
     tracedSVG: String
@@ -486,12 +488,15 @@ type MarkdownRemark implements Node {
     children: [Node!]!
     excerpt(format: MarkdownExcerptFormats = PLAIN, pruneLength: Int = 140, truncate: Boolean = false): String
     excerptAst(pruneLength: Int = 140, truncate: Boolean = false): JSON
+    fileAbsolutePath: String
+    frontmatter: MarkdownRemarkFrontmatter
     headings(depth: MarkdownHeadingLevels): [MarkdownHeading]
     html: String
     htmlAst: JSON
     id: ID!
     internal: Internal!
     parent: Node
+    rawMarkdownBody: String
     tableOfContents(absolute: Boolean = true, heading: String, maxDepth: Int, pathToSlugField: String = "fields.slug"): String
     timeToRead: Int
     wordCount: MarkdownWordCount
@@ -510,6 +515,22 @@ type MarkdownRemarkEdge {
     next: MarkdownRemark
     node: MarkdownRemark!
     previous: MarkdownRemark
+}
+
+type MarkdownRemarkFrontmatter {
+    author: String
+    date(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    description: String
+    title: String
 }
 
 type MarkdownRemarkGroupConnection {
@@ -578,6 +599,7 @@ type MdxFrontmatter {
         locale: String
     ): Date
     description: String
+    layoutPath: String
     title: String!
 }
 
@@ -619,18 +641,22 @@ type Query {
     allMdx(filter: MdxFilterInput, limit: Int, skip: Int, sort: MdxSortInput): MdxConnection!
     allResumeYaml(filter: ResumeYamlFilterInput, limit: Int, skip: Int, sort: ResumeYamlSortInput): ResumeYamlConnection!
     allSite(filter: SiteFilterInput, limit: Int, skip: Int, sort: SiteSortInput): SiteConnection!
+    allSiteBuildMetadata(filter: SiteBuildMetadataFilterInput, limit: Int, skip: Int, sort: SiteBuildMetadataSortInput): SiteBuildMetadataConnection!
     allSitePage(filter: SitePageFilterInput, limit: Int, skip: Int, sort: SitePageSortInput): SitePageConnection!
     allSitePlugin(filter: SitePluginFilterInput, limit: Int, skip: Int, sort: SitePluginSortInput): SitePluginConnection!
+    allTimelineYaml(filter: TimelineYamlFilterInput, limit: Int, skip: Int, sort: TimelineYamlSortInput): TimelineYamlConnection!
     currentlyReadingYaml(children: NodeFilterListInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, reading: CurrentlyReadingYamlReadingFilterListInput): CurrentlyReadingYaml
     directory(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): Directory
-    file(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, childCurrentlyReadingYaml: CurrentlyReadingYamlFilterInput, childImageSharp: ImageSharpFilterInput, childMdx: MdxFilterInput, childResumeYaml: ResumeYamlFilterInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, publicURL: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): File
+    file(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, childCurrentlyReadingYaml: CurrentlyReadingYamlFilterInput, childImageSharp: ImageSharpFilterInput, childMarkdownRemark: MarkdownRemarkFilterInput, childMdx: MdxFilterInput, childResumeYaml: ResumeYamlFilterInput, children: NodeFilterListInput, childrenTimelineYaml: TimelineYamlFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, publicURL: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): File
     imageSharp(children: NodeFilterListInput, fixed: ImageSharpFixedFilterInput, fluid: ImageSharpFluidFilterInput, id: StringQueryOperatorInput, internal: InternalFilterInput, original: ImageSharpOriginalFilterInput, parent: NodeFilterInput, resize: ImageSharpResizeFilterInput, resolutions: ImageSharpResolutionsFilterInput, sizes: ImageSharpSizesFilterInput): ImageSharp
-    markdownRemark(children: NodeFilterListInput, excerpt: StringQueryOperatorInput, excerptAst: JSONQueryOperatorInput, headings: MarkdownHeadingFilterListInput, html: StringQueryOperatorInput, htmlAst: JSONQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, tableOfContents: StringQueryOperatorInput, timeToRead: IntQueryOperatorInput, wordCount: MarkdownWordCountFilterInput): MarkdownRemark
+    markdownRemark(children: NodeFilterListInput, excerpt: StringQueryOperatorInput, excerptAst: JSONQueryOperatorInput, fileAbsolutePath: StringQueryOperatorInput, frontmatter: MarkdownRemarkFrontmatterFilterInput, headings: MarkdownHeadingFilterListInput, html: StringQueryOperatorInput, htmlAst: JSONQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, rawMarkdownBody: StringQueryOperatorInput, tableOfContents: StringQueryOperatorInput, timeToRead: IntQueryOperatorInput, wordCount: MarkdownWordCountFilterInput): MarkdownRemark
     mdx(body: StringQueryOperatorInput, children: NodeFilterListInput, excerpt: StringQueryOperatorInput, fields: MdxFieldsFilterInput, fileAbsolutePath: StringQueryOperatorInput, frontmatter: MdxFrontmatterFilterInput, headings: MdxHeadingMdxFilterListInput, html: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, mdxAST: JSONQueryOperatorInput, parent: NodeFilterInput, rawBody: StringQueryOperatorInput, tableOfContents: JSONQueryOperatorInput, timeToRead: IntQueryOperatorInput, wordCount: MdxWordCountFilterInput): Mdx
     resumeYaml(bio: ResumeYamlBioFilterInput, children: NodeFilterListInput, education: ResumeYamlEducationFilterListInput, id: StringQueryOperatorInput, info: ResumeYamlInfoFilterInput, internal: InternalFilterInput, parent: NodeFilterInput, projects: ResumeYamlProjectsFilterListInput, skills: ResumeYamlSkillsFilterInput, work: ResumeYamlWorkFilterListInput): ResumeYaml
     site(buildTime: DateQueryOperatorInput, children: NodeFilterListInput, host: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, pathPrefix: StringQueryOperatorInput, polyfill: BooleanQueryOperatorInput, port: IntQueryOperatorInput, siteMetadata: SiteSiteMetadataFilterInput): Site
-    sitePage(children: NodeFilterListInput, component: StringQueryOperatorInput, componentChunkName: StringQueryOperatorInput, componentPath: StringQueryOperatorInput, context: SitePageContextFilterInput, id: StringQueryOperatorInput, internal: InternalFilterInput, internalComponentName: StringQueryOperatorInput, isCreatedByStatefulCreatePages: BooleanQueryOperatorInput, parent: NodeFilterInput, path: StringQueryOperatorInput, pluginCreator: SitePluginFilterInput, pluginCreatorId: StringQueryOperatorInput): SitePage
+    siteBuildMetadata(buildTime: DateQueryOperatorInput, children: NodeFilterListInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput): SiteBuildMetadata
+    sitePage(children: NodeFilterListInput, component: StringQueryOperatorInput, componentChunkName: StringQueryOperatorInput, componentPath: StringQueryOperatorInput, context: SitePageContextFilterInput, id: StringQueryOperatorInput, internal: InternalFilterInput, internalComponentName: StringQueryOperatorInput, isCreatedByStatefulCreatePages: BooleanQueryOperatorInput, matchPath: StringQueryOperatorInput, parent: NodeFilterInput, path: StringQueryOperatorInput, pluginCreator: SitePluginFilterInput, pluginCreatorId: StringQueryOperatorInput): SitePage
     sitePlugin(browserAPIs: StringQueryOperatorInput, children: NodeFilterListInput, id: StringQueryOperatorInput, internal: InternalFilterInput, name: StringQueryOperatorInput, nodeAPIs: StringQueryOperatorInput, packageJson: SitePluginPackageJsonFilterInput, parent: NodeFilterInput, pluginFilepath: StringQueryOperatorInput, pluginOptions: SitePluginPluginOptionsFilterInput, resolve: StringQueryOperatorInput, ssrAPIs: StringQueryOperatorInput, version: StringQueryOperatorInput): SitePlugin
+    timelineYaml(children: NodeFilterListInput, description: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput): TimelineYaml
 }
 
 type ResumeYaml implements Node {
@@ -790,6 +816,47 @@ type Site implements Node {
     siteMetadata: SiteSiteMetadata
 }
 
+type SiteBuildMetadata implements Node {
+    buildTime(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    children: [Node!]!
+    id: ID!
+    internal: Internal!
+    parent: Node
+}
+
+type SiteBuildMetadataConnection {
+    distinct(field: SiteBuildMetadataFieldsEnum!): [String!]!
+    edges: [SiteBuildMetadataEdge!]!
+    group(field: SiteBuildMetadataFieldsEnum!, limit: Int, skip: Int): [SiteBuildMetadataGroupConnection!]!
+    nodes: [SiteBuildMetadata!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type SiteBuildMetadataEdge {
+    next: SiteBuildMetadata
+    node: SiteBuildMetadata!
+    previous: SiteBuildMetadata
+}
+
+type SiteBuildMetadataGroupConnection {
+    edges: [SiteBuildMetadataEdge!]!
+    field: String!
+    fieldValue: String
+    nodes: [SiteBuildMetadata!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
 type SiteConnection {
     distinct(field: SiteFieldsEnum!): [String!]!
     edges: [SiteEdge!]!
@@ -816,16 +883,17 @@ type SiteGroupConnection {
 
 type SitePage implements Node {
     children: [Node!]!
-    component: String
-    componentChunkName: String
+    component: String!
+    componentChunkName: String!
     componentPath: String
     context: SitePageContext
     id: ID!
     internal: Internal!
-    internalComponentName: String
+    internalComponentName: String!
     isCreatedByStatefulCreatePages: Boolean
+    matchPath: String
     parent: Node
-    path: String
+    path: String!
     pluginCreator: SitePlugin
     pluginCreatorId: String
 }
@@ -855,6 +923,7 @@ type SitePageContextNextFields {
 }
 
 type SitePageContextNextFrontmatter {
+    layoutPath: String
     title: String
 }
 
@@ -956,8 +1025,8 @@ type SitePluginPackageJsonPeerDependencies {
 type SitePluginPluginOptions {
     background_color: String
     display: String
+    extensions: [String]
     maxWidth: Int
-    modulePath: String
     name: String
     path: String
     pathCheck: Boolean
@@ -978,7 +1047,6 @@ type SitePluginPluginOptionsPlugins {
     pluginFilepath: String
     pluginOptions: SitePluginPluginOptionsPluginsPluginOptions
     resolve: String
-    ssrAPIs: [String]
     version: String
 }
 
@@ -993,6 +1061,7 @@ type SitePluginPluginOptionsTypekit {
 
 type SiteSiteMetadata {
     accentColor: String
+    accentColorDark: String
     author: String
     description: String
     siteUrl: String
@@ -1004,6 +1073,38 @@ type SiteSiteMetadataSocial {
     name: String
     url: String
     username: String
+}
+
+type TimelineYaml implements Node {
+    children: [Node!]!
+    description: String
+    id: ID!
+    internal: Internal!
+    parent: Node
+}
+
+type TimelineYamlConnection {
+    distinct(field: TimelineYamlFieldsEnum!): [String!]!
+    edges: [TimelineYamlEdge!]!
+    group(field: TimelineYamlFieldsEnum!, limit: Int, skip: Int): [TimelineYamlGroupConnection!]!
+    nodes: [TimelineYaml!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type TimelineYamlEdge {
+    next: TimelineYaml
+    node: TimelineYaml!
+    previous: TimelineYaml
+}
+
+type TimelineYamlGroupConnection {
+    edges: [TimelineYamlEdge!]!
+    field: String!
+    fieldValue: String
+    nodes: [TimelineYaml!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
 }
 
 enum CurrentlyReadingYamlFieldsEnum {
@@ -1370,6 +1471,62 @@ enum FileFieldsEnum {
     childImageSharp___sizes___srcSetWebp @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     childImageSharp___sizes___srcWebp @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     childImageSharp___sizes___tracedSVG @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___children___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___children___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___internal___content @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___internal___contentDigest @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___internal___description @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___internal___fieldOwners @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___internal___ignoreType @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___internal___mediaType @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___internal___owner @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___internal___type @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___parent___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___children___parent___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___excerpt @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___excerptAst @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___fileAbsolutePath @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___frontmatter___author
+    childMarkdownRemark___frontmatter___date
+    childMarkdownRemark___frontmatter___description
+    childMarkdownRemark___frontmatter___title
+    childMarkdownRemark___headings @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___headings___depth @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___headings___value @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___html @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___htmlAst @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___id
+    childMarkdownRemark___internal___content @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___internal___contentDigest @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___internal___description @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___internal___fieldOwners @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___internal___ignoreType @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___internal___mediaType @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___internal___owner @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___internal___type @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___children___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___children___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___internal___content @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___internal___contentDigest @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___internal___description @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___internal___fieldOwners @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___internal___ignoreType @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___internal___mediaType @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___internal___owner @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___internal___type @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___parent___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___parent___parent___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___rawMarkdownBody @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___tableOfContents @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___timeToRead @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___wordCount___paragraphs @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___wordCount___sentences @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    childMarkdownRemark___wordCount___words @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     childMdx___body
     childMdx___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     childMdx___children___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
@@ -1392,6 +1549,7 @@ enum FileFieldsEnum {
     childMdx___frontmatter___author
     childMdx___frontmatter___date
     childMdx___frontmatter___description
+    childMdx___frontmatter___layoutPath
     childMdx___frontmatter___title
     childMdx___headings @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     childMdx___headings___depth @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
@@ -1516,6 +1674,46 @@ enum FileFieldsEnum {
     childResumeYaml___work___position
     childResumeYaml___work___url
     children
+    childrenTimelineYaml
+    childrenTimelineYaml___children
+    childrenTimelineYaml___children___children
+    childrenTimelineYaml___children___children___children
+    childrenTimelineYaml___children___children___id
+    childrenTimelineYaml___children___id
+    childrenTimelineYaml___children___internal___content
+    childrenTimelineYaml___children___internal___contentDigest
+    childrenTimelineYaml___children___internal___description
+    childrenTimelineYaml___children___internal___fieldOwners
+    childrenTimelineYaml___children___internal___ignoreType
+    childrenTimelineYaml___children___internal___mediaType
+    childrenTimelineYaml___children___internal___owner
+    childrenTimelineYaml___children___internal___type
+    childrenTimelineYaml___children___parent___children
+    childrenTimelineYaml___children___parent___id
+    childrenTimelineYaml___description
+    childrenTimelineYaml___id
+    childrenTimelineYaml___internal___content
+    childrenTimelineYaml___internal___contentDigest
+    childrenTimelineYaml___internal___description
+    childrenTimelineYaml___internal___fieldOwners
+    childrenTimelineYaml___internal___ignoreType
+    childrenTimelineYaml___internal___mediaType
+    childrenTimelineYaml___internal___owner
+    childrenTimelineYaml___internal___type
+    childrenTimelineYaml___parent___children
+    childrenTimelineYaml___parent___children___children
+    childrenTimelineYaml___parent___children___id
+    childrenTimelineYaml___parent___id
+    childrenTimelineYaml___parent___internal___content
+    childrenTimelineYaml___parent___internal___contentDigest
+    childrenTimelineYaml___parent___internal___description
+    childrenTimelineYaml___parent___internal___fieldOwners
+    childrenTimelineYaml___parent___internal___ignoreType
+    childrenTimelineYaml___parent___internal___mediaType
+    childrenTimelineYaml___parent___internal___owner
+    childrenTimelineYaml___parent___internal___type
+    childrenTimelineYaml___parent___parent___children
+    childrenTimelineYaml___parent___parent___id
     children___children
     children___children___children
     children___children___children___children
@@ -1653,6 +1851,8 @@ enum ImageFit {
     CONTAIN
     COVER
     FILL
+    INSIDE
+    OUTSIDE
 }
 
 enum ImageFormat {
@@ -1861,11 +2061,16 @@ enum MarkdownRemarkFieldsEnum {
     children___parent___parent___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     excerpt @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     excerptAst @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    fileAbsolutePath @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    frontmatter___author
+    frontmatter___date
+    frontmatter___description
+    frontmatter___title
     headings @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     headings___depth @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     headings___value @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
-    html
-    htmlAst
+    html @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    htmlAst @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     id
     internal___content @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     internal___contentDigest @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
@@ -1913,6 +2118,7 @@ enum MarkdownRemarkFieldsEnum {
     parent___parent___internal___type @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     parent___parent___parent___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     parent___parent___parent___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    rawMarkdownBody @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     tableOfContents @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     timeToRead @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     wordCount___paragraphs @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
@@ -1967,6 +2173,7 @@ enum MdxFieldsEnum {
     frontmatter___author
     frontmatter___date
     frontmatter___description
+    frontmatter___layoutPath
     frontmatter___title
     headings @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
     headings___depth @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
@@ -2176,6 +2383,96 @@ enum ResumeYamlFieldsEnum {
     work___url
 }
 
+enum SiteBuildMetadataFieldsEnum {
+    buildTime
+    children
+    children___children
+    children___children___children
+    children___children___children___children
+    children___children___children___id
+    children___children___id
+    children___children___internal___content
+    children___children___internal___contentDigest
+    children___children___internal___description
+    children___children___internal___fieldOwners
+    children___children___internal___ignoreType
+    children___children___internal___mediaType
+    children___children___internal___owner
+    children___children___internal___type
+    children___children___parent___children
+    children___children___parent___id
+    children___id
+    children___internal___content
+    children___internal___contentDigest
+    children___internal___description
+    children___internal___fieldOwners
+    children___internal___ignoreType
+    children___internal___mediaType
+    children___internal___owner
+    children___internal___type
+    children___parent___children
+    children___parent___children___children
+    children___parent___children___id
+    children___parent___id
+    children___parent___internal___content
+    children___parent___internal___contentDigest
+    children___parent___internal___description
+    children___parent___internal___fieldOwners
+    children___parent___internal___ignoreType
+    children___parent___internal___mediaType
+    children___parent___internal___owner
+    children___parent___internal___type
+    children___parent___parent___children
+    children___parent___parent___id
+    id
+    internal___content
+    internal___contentDigest
+    internal___description
+    internal___fieldOwners
+    internal___ignoreType
+    internal___mediaType
+    internal___owner
+    internal___type
+    parent___children
+    parent___children___children
+    parent___children___children___children
+    parent___children___children___id
+    parent___children___id
+    parent___children___internal___content
+    parent___children___internal___contentDigest
+    parent___children___internal___description
+    parent___children___internal___fieldOwners
+    parent___children___internal___ignoreType
+    parent___children___internal___mediaType
+    parent___children___internal___owner
+    parent___children___internal___type
+    parent___children___parent___children
+    parent___children___parent___id
+    parent___id
+    parent___internal___content
+    parent___internal___contentDigest
+    parent___internal___description
+    parent___internal___fieldOwners
+    parent___internal___ignoreType
+    parent___internal___mediaType
+    parent___internal___owner
+    parent___internal___type
+    parent___parent___children
+    parent___parent___children___children
+    parent___parent___children___id
+    parent___parent___id
+    parent___parent___internal___content
+    parent___parent___internal___contentDigest
+    parent___parent___internal___description
+    parent___parent___internal___fieldOwners
+    parent___parent___internal___ignoreType
+    parent___parent___internal___mediaType
+    parent___parent___internal___owner
+    parent___parent___internal___type
+    parent___parent___parent___children
+    parent___parent___parent___id
+}
+
 enum SiteFieldsEnum {
     buildTime
     children
@@ -2269,6 +2566,7 @@ enum SiteFieldsEnum {
     polyfill
     port
     siteMetadata___accentColor
+    siteMetadata___accentColorDark
     siteMetadata___author
     siteMetadata___description
     siteMetadata___siteUrl
@@ -2323,6 +2621,7 @@ enum SitePageFieldsEnum {
     componentChunkName
     componentPath
     context___next___fields___slug
+    context___next___frontmatter___layoutPath
     context___next___frontmatter___title
     context___previous___fields___slug
     context___previous___frontmatter___title
@@ -2338,6 +2637,7 @@ enum SitePageFieldsEnum {
     internal___owner
     internal___type
     isCreatedByStatefulCreatePages
+    matchPath
     parent___children
     parent___children___children
     parent___children___children___children
@@ -2437,8 +2737,8 @@ enum SitePageFieldsEnum {
     pluginCreator___pluginFilepath
     pluginCreator___pluginOptions___background_color
     pluginCreator___pluginOptions___display
+    pluginCreator___pluginOptions___extensions
     pluginCreator___pluginOptions___maxWidth
-    pluginCreator___pluginOptions___modulePath
     pluginCreator___pluginOptions___name
     pluginCreator___pluginOptions___path
     pluginCreator___pluginOptions___pathCheck
@@ -2449,7 +2749,6 @@ enum SitePageFieldsEnum {
     pluginCreator___pluginOptions___plugins___name
     pluginCreator___pluginOptions___plugins___pluginFilepath
     pluginCreator___pluginOptions___plugins___resolve
-    pluginCreator___pluginOptions___plugins___ssrAPIs
     pluginCreator___pluginOptions___plugins___version
     pluginCreator___pluginOptions___short_name
     pluginCreator___pluginOptions___start_url
@@ -2570,8 +2869,8 @@ enum SitePluginFieldsEnum {
     pluginFilepath
     pluginOptions___background_color
     pluginOptions___display
+    pluginOptions___extensions
     pluginOptions___maxWidth
-    pluginOptions___modulePath
     pluginOptions___name
     pluginOptions___path
     pluginOptions___pathCheck
@@ -2584,7 +2883,6 @@ enum SitePluginFieldsEnum {
     pluginOptions___plugins___pluginOptions___maxWidth
     pluginOptions___plugins___pluginOptions___wrapperStyle
     pluginOptions___plugins___resolve
-    pluginOptions___plugins___ssrAPIs
     pluginOptions___plugins___version
     pluginOptions___short_name
     pluginOptions___start_url
@@ -2600,6 +2898,96 @@ enum SitePluginFieldsEnum {
 enum SortOrderEnum {
     ASC
     DESC
+}
+
+enum TimelineYamlFieldsEnum {
+    children
+    children___children
+    children___children___children
+    children___children___children___children
+    children___children___children___id
+    children___children___id
+    children___children___internal___content
+    children___children___internal___contentDigest
+    children___children___internal___description
+    children___children___internal___fieldOwners
+    children___children___internal___ignoreType
+    children___children___internal___mediaType
+    children___children___internal___owner
+    children___children___internal___type
+    children___children___parent___children
+    children___children___parent___id
+    children___id
+    children___internal___content
+    children___internal___contentDigest
+    children___internal___description
+    children___internal___fieldOwners
+    children___internal___ignoreType
+    children___internal___mediaType
+    children___internal___owner
+    children___internal___type
+    children___parent___children
+    children___parent___children___children
+    children___parent___children___id
+    children___parent___id
+    children___parent___internal___content
+    children___parent___internal___contentDigest
+    children___parent___internal___description
+    children___parent___internal___fieldOwners
+    children___parent___internal___ignoreType
+    children___parent___internal___mediaType
+    children___parent___internal___owner
+    children___parent___internal___type
+    children___parent___parent___children
+    children___parent___parent___id
+    description
+    id
+    internal___content
+    internal___contentDigest
+    internal___description
+    internal___fieldOwners
+    internal___ignoreType
+    internal___mediaType
+    internal___owner
+    internal___type
+    parent___children
+    parent___children___children
+    parent___children___children___children
+    parent___children___children___id
+    parent___children___id
+    parent___children___internal___content
+    parent___children___internal___contentDigest
+    parent___children___internal___description
+    parent___children___internal___fieldOwners
+    parent___children___internal___ignoreType
+    parent___children___internal___mediaType
+    parent___children___internal___owner
+    parent___children___internal___type
+    parent___children___parent___children
+    parent___children___parent___id
+    parent___id
+    parent___internal___content
+    parent___internal___contentDigest
+    parent___internal___description
+    parent___internal___fieldOwners
+    parent___internal___ignoreType
+    parent___internal___mediaType
+    parent___internal___owner
+    parent___internal___type
+    parent___parent___children
+    parent___parent___children___children
+    parent___parent___children___id
+    parent___parent___id
+    parent___parent___internal___content
+    parent___parent___internal___contentDigest
+    parent___parent___internal___description
+    parent___parent___internal___fieldOwners
+    parent___parent___internal___ignoreType
+    parent___parent___internal___mediaType
+    parent___parent___internal___owner
+    parent___parent___internal___type
+    parent___parent___parent___children
+    parent___parent___parent___id
 }
 
 input BooleanQueryOperatorInput {
@@ -2710,9 +3098,11 @@ input FileFilterInput {
     changeTime: DateQueryOperatorInput
     childCurrentlyReadingYaml: CurrentlyReadingYamlFilterInput
     childImageSharp: ImageSharpFilterInput
+    childMarkdownRemark: MarkdownRemarkFilterInput
     childMdx: MdxFilterInput
     childResumeYaml: ResumeYamlFilterInput
     children: NodeFilterListInput
+    childrenTimelineYaml: TimelineYamlFilterListInput
     ctime: DateQueryOperatorInput
     ctimeMs: FloatQueryOperatorInput
     dev: IntQueryOperatorInput
@@ -2890,15 +3280,25 @@ input MarkdownRemarkFilterInput {
     children: NodeFilterListInput
     excerpt: StringQueryOperatorInput
     excerptAst: JSONQueryOperatorInput
+    fileAbsolutePath: StringQueryOperatorInput
+    frontmatter: MarkdownRemarkFrontmatterFilterInput
     headings: MarkdownHeadingFilterListInput
     html: StringQueryOperatorInput
     htmlAst: JSONQueryOperatorInput
     id: StringQueryOperatorInput
     internal: InternalFilterInput
     parent: NodeFilterInput
+    rawMarkdownBody: StringQueryOperatorInput
     tableOfContents: StringQueryOperatorInput
     timeToRead: IntQueryOperatorInput
     wordCount: MarkdownWordCountFilterInput
+}
+
+input MarkdownRemarkFrontmatterFilterInput {
+    author: StringQueryOperatorInput
+    date: DateQueryOperatorInput
+    description: StringQueryOperatorInput
+    title: StringQueryOperatorInput
 }
 
 input MarkdownRemarkSortInput {
@@ -2939,6 +3339,7 @@ input MdxFrontmatterFilterInput {
     author: StringQueryOperatorInput
     date: DateQueryOperatorInput
     description: StringQueryOperatorInput
+    layoutPath: StringQueryOperatorInput
     title: StringQueryOperatorInput
 }
 
@@ -3125,6 +3526,19 @@ input ResumeYamlWorkFilterListInput {
     elemMatch: ResumeYamlWorkFilterInput
 }
 
+input SiteBuildMetadataFilterInput {
+    buildTime: DateQueryOperatorInput
+    children: NodeFilterListInput
+    id: StringQueryOperatorInput
+    internal: InternalFilterInput
+    parent: NodeFilterInput
+}
+
+input SiteBuildMetadataSortInput {
+    fields: [SiteBuildMetadataFieldsEnum]
+    order: [SortOrderEnum] = [ASC]
+}
+
 input SiteFilterInput {
     buildTime: DateQueryOperatorInput
     children: NodeFilterListInput
@@ -3154,6 +3568,7 @@ input SitePageContextNextFilterInput {
 }
 
 input SitePageContextNextFrontmatterFilterInput {
+    layoutPath: StringQueryOperatorInput
     title: StringQueryOperatorInput
 }
 
@@ -3180,6 +3595,7 @@ input SitePageFilterInput {
     internal: InternalFilterInput
     internalComponentName: StringQueryOperatorInput
     isCreatedByStatefulCreatePages: BooleanQueryOperatorInput
+    matchPath: StringQueryOperatorInput
     parent: NodeFilterInput
     path: StringQueryOperatorInput
     pluginCreator: SitePluginFilterInput
@@ -3249,8 +3665,8 @@ input SitePluginPackageJsonPeerDependenciesFilterListInput {
 input SitePluginPluginOptionsFilterInput {
     background_color: StringQueryOperatorInput
     display: StringQueryOperatorInput
+    extensions: StringQueryOperatorInput
     maxWidth: IntQueryOperatorInput
-    modulePath: StringQueryOperatorInput
     name: StringQueryOperatorInput
     path: StringQueryOperatorInput
     pathCheck: BooleanQueryOperatorInput
@@ -3271,7 +3687,6 @@ input SitePluginPluginOptionsPluginsFilterInput {
     pluginFilepath: StringQueryOperatorInput
     pluginOptions: SitePluginPluginOptionsPluginsPluginOptionsFilterInput
     resolve: StringQueryOperatorInput
-    ssrAPIs: StringQueryOperatorInput
     version: StringQueryOperatorInput
 }
 
@@ -3295,6 +3710,7 @@ input SitePluginSortInput {
 
 input SiteSiteMetadataFilterInput {
     accentColor: StringQueryOperatorInput
+    accentColorDark: StringQueryOperatorInput
     author: StringQueryOperatorInput
     description: StringQueryOperatorInput
     siteUrl: StringQueryOperatorInput
@@ -3324,6 +3740,23 @@ input StringQueryOperatorInput {
     ne: String
     nin: [String]
     regex: String
+}
+
+input TimelineYamlFilterInput {
+    children: NodeFilterListInput
+    description: StringQueryOperatorInput
+    id: StringQueryOperatorInput
+    internal: InternalFilterInput
+    parent: NodeFilterInput
+}
+
+input TimelineYamlFilterListInput {
+    elemMatch: TimelineYamlFilterInput
+}
+
+input TimelineYamlSortInput {
+    fields: [TimelineYamlFieldsEnum]
+    order: [SortOrderEnum] = [ASC]
 }
 
 
