@@ -5,7 +5,7 @@ import SEO, { rootTitle } from "../components/seo"
 import { rhythm } from "../utils/typography"
 import { MDXConnection, SiteNode } from "../queries"
 import HeroImage from "../components/heroImage"
-import CurrentlyReading from "../components/currentlyReading"
+// import CurrentlyReading from "../components/currentlyReading"
 import "./font-faces.css"
 
 import "../shared.css"

@@ -1,23 +1,19 @@
 import * as React from "react"
-import { Link, graphql } from "gatsby"
+import { graphql, Link } from "gatsby"
 
-// import Layout from "../components/layout"
 import SEO from "../components/seo"
-// import { rhythm } from "../utils/typography"
 import {
-  MDXConnection,
   ResumeBio,
   ResumeEducationItem,
   ResumeInfo,
   ResumeProjectItem,
   ResumeSkills,
   ResumeWorkItem,
-  SiteNode,
 } from "../queries"
 import "./resume.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons"
-import { faClock, faGlobe, faStar } from "@fortawesome/free-solid-svg-icons"
+import { faGlobe, faStar } from "@fortawesome/free-solid-svg-icons"
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons"
 import { ChangeEvent } from "react"
 
@@ -28,6 +24,7 @@ class Resume extends React.Component<ResumeProps, ResumeState> {
       projectsVisibilityState: "selected",
     }
   }
+
   render() {
     const { data } = this.props
 
@@ -271,7 +268,13 @@ class Resume extends React.Component<ResumeProps, ResumeState> {
                     generated {Intl.DateTimeFormat().format(new Date())}, last
                     updated {info.lastUpdated}
                   </span>
-                  <a href={"https://" + bio.social.website}><h1 className="name">{bio.name}</h1></a>
+                  <h1 className="name">
+                    <Link
+                      to={`/`}
+                    >
+                      {bio.name}
+                    </Link>
+                  </h1>
                   {contactElements.length > 0 && <p>{contactElements}</p>}
                 </div>
                 {(bio.social !== {} || bio.social) && (
