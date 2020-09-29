@@ -52,10 +52,10 @@ const Nav = ({ accentColor, linkColor }: NavArgs) => {
       name: "resume",
       path: "/resume",
     },
-    // {
-    //   name: "about",
-    //   path: "/about",
-    // },
+    {
+      name: "contact",
+      path: "/contact",
+    },
   ]
 
   const navItemElementList = navItemList.map((item: NavItem, i: number) => {
