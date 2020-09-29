@@ -24,7 +24,7 @@ class Projects extends React.Component<ProjectsProps, {}> {
         <h1>Projects</h1>
         <p>
           This is a list of a bunch of things I've tried over the years&mdash;I use
-          "project" rather liberally. The ordering here is probably wrong.
+          "project" liberally. The ordering here is probably wrong.
         </p>
         <ul>
           {projects.map(({ description, date }, index) => {

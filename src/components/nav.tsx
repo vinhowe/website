@@ -53,6 +53,10 @@ const Nav = ({ accentColor, linkColor }: NavArgs) => {
       path: "/resume",
     },
     {
+      name: "projects",
+      path: "/projects",
+    },
+    {
       name: "contact",
       path: "/contact",
     },
