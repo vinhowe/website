@@ -14,3 +14,6 @@ date: 2020-11-19
   - Using bash: `convert image.jpg PDF:- dragon <(cat)` (though I haven't been
     able to figure out how to add a suffix to command substitution in bash; if
     you know how to do this, please reach out to me and let me know 🙂)
+  - Also note that you can't use dragon's `-x` flag because Fish deletes psub
+    files immediately after they're used. So you will have to manually close the
+    window after you're done.
