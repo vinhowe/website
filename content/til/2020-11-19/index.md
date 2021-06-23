@@ -17,3 +17,4 @@ date: 2020-11-19
   - Also note that you can't use dragon's `-x` flag because Fish deletes psub
     files immediately after they're used. So you will have to manually close the
     window after you're done.
+- https://superuser.com/questions/263405/how-do-we-specify-an-ssh-default-identity
