@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-  font-family: "Inter", monospace, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
