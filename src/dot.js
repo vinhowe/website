@@ -54,16 +54,22 @@ function setupFunDot() {
     dotX += velocityX;
     dotY += velocityY;
     // Take abs of the dot position, multiply by 2, pow by 0.5, multiply by sign, then divide by 2 again
-    dotX = Math.sign(dotX) * Math.pow(Math.abs(dotX) * 2, 0.85) / 2;
-    dotY = Math.sign(dotY) * Math.pow(Math.abs(dotY) * 2, 0.85) / 2;
-    const dotDistance = Math.sqrt(Math.abs(dotX * dotX) * 2 + Math.abs(dotY * dotY) * 2);
+    dotX = (Math.sign(dotX) * Math.pow(Math.abs(dotX) * 2, 0.85)) / 2;
+    dotY = (Math.sign(dotY) * Math.pow(Math.abs(dotY) * 2, 0.85)) / 2;
+    const dotDistance = Math.sqrt(
+      Math.abs(dotX * dotX) * 2 + Math.abs(dotY * dotY) * 2
+    );
 
     // Update the dot position
     funDotElement.style.transform = `translate(${dotX * 20}px, ${dotY * 20}px)`;
     // Update the background blur
-    funDotBgElement.style.filter = `blur(${dotDistance * 3}px) saturate(${1 - (dotDistance * 0.5)})`;
+    funDotBgElement.style.filter = `blur(${dotDistance * 3}px) saturate(${
+      1 - dotDistance * 0.5
+    })`;
     // Update the background position
-    funDotBgElement.style.transform = `translate(${-dotX * 10}px, ${-dotY * 10}px)`;
+    funDotBgElement.style.transform = `translate(${-dotX * 10}px, ${
+      -dotY * 10
+    }px)`;
     requestAnimationFrame(animate);
   }
   animate();
