@@ -4,17 +4,20 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="/src/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/src/dot.js" defer></script>
     <title>Vin Howe</title>
   </head>
   <body class="w-full h-full bg-slate-900">
     <div class="w-full h-full flex justify-center items-start sm:items-center">
       <div
         class="sm:w-[600px] md:w-[700px] p-8 sm:p-16 bg-sky-100 flex outer-box text-slate-700"
+        id="outer-box"
       >
         <div
-          class="w-14 sm:w-24 -ml-8 sm:-ml-16 flex justify-center transform translate-y-[0.06rem] text-base text-slate-700 select-none"
+          class="w-14 sm:w-24 -ml-8 sm:-ml-16 flex justify-center transform translate-y-[0.06rem] text-base text-slate-700 select-none relative"
         >
-          ●
+          <div class="absolute text-blue-500" id="fun-dot-bg">●</div>
+          <div class="absolute mix-blend-difference" id="fun-dot">●</div>
         </div>
         <div class="flex flex-col gap-4 inner-box flex-1">
           <h1 class="font-bold text-xl text-slate-700 mb-10 sm:mb-20">

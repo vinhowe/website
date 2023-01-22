@@ -12,3 +12,10 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+tml, body {
+  overflow-x: hidden;
+}
+body {
+  position: relative
+}
