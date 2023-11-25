@@ -43,21 +43,33 @@ function setupFunDot() {
     mouseMoveHandler(-1, -1);
   });
 
+  let lastTime = 0;
   // Animates the dot
-  function animate() {
+  function animate(time) {
+    const timeDelta = time - lastTime;
+    lastTime = time;
+    // 16ms is 60fps, 16ms should map to 1, 32ms should map to 2, etc.
+    const timeScale = timeDelta / 16;
     // Scale the dot offset
-    velocityX = velocityX * 0.9 + (dotOffsetX - dotX) * 0.1;
-    velocityY = velocityY * 0.9 + (dotOffsetY - dotY) * 0.1;
-    velocityX *= 0.5;
-    velocityY *= 0.5;
+    const minnedTimeScale = Math.min(timeScale, 1);
+    velocityX =
+      (velocityX * 0.9 + (dotOffsetX - dotX) * 0.1) * minnedTimeScale +
+      velocityX * (1 - minnedTimeScale);
+    velocityY =
+      (velocityY * 0.9 + (dotOffsetY - dotY) * 0.1) * minnedTimeScale +
+      velocityY * (1 - minnedTimeScale);
+    velocityX =
+      velocityX * 0.5 * minnedTimeScale + velocityX * (1 - minnedTimeScale);
+    velocityY =
+      velocityY * 0.5 * minnedTimeScale + velocityY * (1 - minnedTimeScale);
     // Update the dot position
-    dotX += velocityX;
-    dotY += velocityY;
+    dotX += velocityX * timeScale;
+    dotY += velocityY * timeScale;
     // Take abs of the dot position, multiply by 2, pow by 0.5, multiply by sign, then divide by 2 again
     dotX = (Math.sign(dotX) * Math.pow(Math.abs(dotX) * 2, 0.85)) / 2;
     dotY = (Math.sign(dotY) * Math.pow(Math.abs(dotY) * 2, 0.85)) / 2;
     const dotDistance = Math.sqrt(
-      Math.abs(dotX * dotX) * 2 + Math.abs(dotY * dotY) * 2
+      Math.abs(dotX * dotX) * 2 + Math.abs(dotY * dotY) * 2,
     );
 
     // Update the dot position
@@ -72,7 +84,7 @@ function setupFunDot() {
     }px)`;
     requestAnimationFrame(animate);
   }
-  animate();
+  animate(0);
 }
 
 window.addEventListener("load", function () {
