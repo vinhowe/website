@@ -63,8 +63,8 @@ function setupFunDot() {
     velocityY =
       velocityY * 0.5 * minnedTimeScale + velocityY * (1 - minnedTimeScale);
     // Update the dot position
-    dotX += velocityX * timeScale;
-    dotY += velocityY * timeScale;
+    dotX += velocityX * minnedTimeScale;
+    dotY += velocityY * minnedTimeScale;
     // Take abs of the dot position, multiply by 2, pow by 0.5, multiply by sign, then divide by 2 again
     dotX = (Math.sign(dotX) * Math.pow(Math.abs(dotX) * 2, 0.85)) / 2;
     dotY = (Math.sign(dotY) * Math.pow(Math.abs(dotY) * 2, 0.85)) / 2;
