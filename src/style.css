@@ -12,6 +12,18 @@
   -webkit-text-size-adjust: 100%;
 }
 
+@font-face {
+  font-family: "Berkeley Mono Variable";
+  src: url("/Berkeley Mono Variable.woff2") format("woff2-variations");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-mono: "Berkeley Mono Variable", monospace;
+}
+
 html,
 body {
   overflow-x: hidden;
