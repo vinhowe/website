@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@plugin "@tailwindcss/typography";
 
 :root {
   font-family: neue-haas-unica, "Helvetica Neue", Helvetica, Arial, sans-serif;
