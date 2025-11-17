@@ -85,7 +85,7 @@ We'll use the inference-focused [Ratchet](https://github.com/huggingface/ratchet
 At this point in `yourtorch`'s development, you know you want a graph-based execution model that plays well with WebGPU. I'll also tell you for free that buffer allocation is quite slow in WebGPU, so you'll want to reuse allocated buffers as much as possible. This is an important performance consideration that I won't really cover in this blog post; see [ratchet/crates/ratchet-core/src/gpu/buffer_allocator/allocator.rs](https://github.com/huggingface/ratchet/blob/136da4d5216910bfd015b27a17b837c21f17163a/crates/ratchet-core/src/gpu/buffer_allocator/allocator.rs) and [ratchet/crates/ratchet-core/src/gpu/pools](https://github.com/huggingface/ratchet/tree/136da4d5216910bfd015b27a17b837c21f17163a/crates/ratchet-core/src/gpu/pools) for details on how Christopher did it—with only minor modifications, this is what I did too. I think, given enough time and tasked with creating an API like PyTorch with WebGPU as a first-class target, you might independently come up with something a lot like Ratchet:
 
 ```typescript
-import { Module, Device, zeros, randn, gpu, cpu } from 'youtorch';
+import { Module, Device, zeros, randn, gpu, cpu } from 'yourtorch';
 
 class SimpleLinear extends Module {
     constructor(inFeatures: number, outFeatures: number, device: Device) {
