@@ -1,0 +1,154 @@
+<div class="w-full h-full flex justify-center items-start bg-slate-400">
+    <div
+      class="max-w-3xl m-3 sm:m-6 p-8 sm:p-14 flex outer-box text-slate-800 bg-slate-100"
+      id="outer-box"
+    >
+      <div class="flex flex-col gap-2 inner-box flex-1 text-justify">
+        <div class="flex flex-col mb-10 gap-1">
+          <h1 class="font-medium text-xl text-slate-900 tracking-tight">
+            Vin Howe
+          </h1>
+          <p>
+            <a
+              class="text-blue-500 hover:text-blue-600"
+              href="https://x.com/vinhowe"
+              >Twitter</a
+            >
+            ·
+            <a
+              class="text-blue-500 hover:text-blue-600"
+              href="https://scholar.google.com/citations?user=nOym4IEAAAAJ"
+              >Google Scholar</a
+            >
+            ·
+            <a
+              class="text-blue-500 hover:text-blue-600"
+              href="https://github.com/vinhowe"
+              >GitHub</a
+            >
+            ·
+            <a
+              class="text-blue-500 hover:text-blue-600"
+              href="https://www.linkedin.com/in/tvinhowe/"
+              >LinkedIn</a
+            >
+            · vin @ this domain
+          </p>
+        </div>
+        <p>
+          I&rsquo;m a Master's student in computer science at Brigham Young
+          University, having recently completed a Bachelor's in BYU's Applied
+          and Computational Mathematics program. I work with David Wingate in
+          his
+          <a
+            class="text-blue-500 hover:text-blue-600"
+            href="https://www.linkedin.com/company/perception-control-and-cognition-lab/"
+            >Perception, Control, and Cognition Lab</a
+          >, where I study language models broadly.
+        </p>
+        <p>
+          I built a chatroom that used large language models to improve
+          polarizing political conversations.
+          <b
+            ><a
+              class="text-blue-500 hover:text-blue-600"
+              href="https://doi.org/10.1073/pnas.2311627120"
+              >My group published a paper about it in PNAS</a
+            ></b
+          >.
+        </p>
+        <h2 class="text-lg font-medium my-1">Research Interests</h2>
+        <p>
+          I&rsquo;m broadly interested in NLP and large language models. Right
+          now, I&rsquo;m studying what kinds of useful inductive biases
+          self-supervision fails to induce even after training on trillions(!)
+          of tokens of natural language data.
+        </p>
+        <h2 class="text-lg font-medium my-1">Publications</h2>
+        <h3
+          class="font-mono text-sm font-bold tracking-wider text-neutral-500 my-1.5"
+        >
+          2024
+        </h3>
+        <p>
+          <a
+            class="font-medium text-blue-500 hover:text-blue-600"
+            href="https://doi.org/10.1073/pnas.2311627120"
+          >
+            <img
+              src="/gsae-preview.png"
+              alt="Diagram of gradient sparse autoencoder (gSAE)"
+              class="md:w-3/4 mb-2 border border-neutral-200"
+            />
+            Features that Make a Difference: Leveraging Gradients for Improved
+            Dictionary Learning</a
+          >
+          <br />
+          Jeffrey Olmo, Jared Wilson, Max Forsey, Bryce Hepner,
+          <b class="font-medium">Thomas V Howe</b>, David Wingate
+          <br />
+          <i>Findings of the Association for Computational Linguistics</i>
+        </p>
+        <h3
+          class="font-mono text-sm font-bold tracking-wider text-neutral-500 my-1.5"
+        >
+          2023
+        </h3>
+        <p>
+          <a
+            class="font-medium text-blue-500 hover:text-blue-600"
+            href="https://doi.org/10.1073/pnas.2311627120"
+          >
+            <img
+              src="/chatroom-preview.png"
+              alt="Preview of chatroom"
+              class="md:w-3/4 mb-2 border border-neutral-200"
+            />
+            Leveraging AI for democratic discourse: Chat interventions can
+            improve online political conversations at scale</a
+          >
+          <br />
+          Lisa P Argyle, Christopher A Bail, Ethan C Busby, Joshua R Gubler,
+          <b class="font-medium">Thomas V Howe</b>, Christopher Rytting,
+          Taylor Sorensen, David Wingate
+          <br />
+          <i>Proceedings of the National Academy of Sciences</i>
+        </p>
+        <h2 class="text-lg font-medium my-1">Projects</h2>
+        <h3
+          class="font-mono text-sm font-bold tracking-wider text-neutral-500 my-1.5"
+        >
+          2025
+        </h3>
+        <p>
+          <a href="https://sequence.toys">
+            <img
+              src="/sequence-toy-preview.png"
+              alt="Preview of Sequence Toy"
+              class="md:w-3/4 mb-2 border border-neutral-200"
+            />
+          </a>
+          <b class="font-medium"
+            >I created
+            <a
+              class="text-blue-500 hover:text-blue-600"
+              href="https://sequence.toys"
+              >Sequence Toy</a
+            ></b
+          >, a web playground for training small language models with WebGPU.
+        </p>
+        <h3
+          class="font-mono text-sm font-bold tracking-wider text-neutral-500 my-1.5"
+        >
+          2021
+        </h3>
+        <p>
+          <b class="font-medium"
+            >I wrote the software the drives &ldquo;The Wall,&rdquo;</b
+          >
+          the floor-to-ceiling interactive display in the lobby of BYU&rsquo;s
+          computer science building.
+        </p>
+      </div>
+    </div>
+  </div>

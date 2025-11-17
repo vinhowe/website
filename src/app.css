@@ -1,0 +1,28 @@
+@import url('https://use.typekit.net/ixr7lrv.css');
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+:root {
+	font-family: neue-haas-unica, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@font-face {
+	font-family: 'Berkeley Mono Variable';
+	src: url('/Berkeley Mono Variable.woff2') format('woff2-variations');
+	font-weight: 400 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@theme {
+	--font-mono: 'Berkeley Mono Variable', monospace;
+}
+
+html,
+body {
+	overflow-x: hidden;
+}
+body {
+	position: relative;
+    @apply bg-slate-400;
+}
