@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import remarkFootnotes from 'remark-footnotes';
+import remarkToc from 'remark-toc';
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 
@@ -33,7 +34,7 @@ const config = {
 					return `{@html \`${html}\` }`;
 				}
 			},
-			remarkPlugins: [remarkGfm, remarkFootnotes],
+			remarkPlugins: [remarkGfm, remarkFootnotes, [remarkToc, { heading: 'contents' }]],
 			rehypePlugins: [rehypeAutolinkHeadings, rehypeSlug]
 		})
 	],
