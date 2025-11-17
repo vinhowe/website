@@ -228,7 +228,7 @@ async function train() {
 
 [^5]: [Qwen3-VL Usage Guide - vLLM Recipes](https://docs.vllm.ai/projects/recipes/en/latest/Qwen/Qwen3-VL.html#qwen3-vl-235b-a22b-instruct)
 
-[^6]: This is not completely true: it might let you scale to two, if your browser can determine that one of them is more powerful: you can tell the browser that you'd like a "high-performance" or "low-power" adapter using [`powerPreference`](https://developer.mozilla.org/en-US/docs/Web/API/GPU/requestAdapter#powerpreference).
+[^6]: This is not completely true—it might let you scale to two, if your browser can determine that one of them is more powerful: you can tell the browser that you'd like a "high-performance" or "low-power" adapter using [`powerPreference`](https://developer.mozilla.org/en-US/docs/Web/API/GPU/requestAdapter#powerpreference).
 
 [^7]: By way of [Ratchet](https://github.com/huggingface/ratchet).
 
