@@ -246,4 +246,4 @@ async function train() {
 
 [^14]: Ratchet has the seeds of this with inplace memory detection.
 
-[^15]: More like CUDAGraphs than XLA. Confirmed that graph-level optimization is out of scope for WebGPU: see [Google Groups discussion](https://groups.google.com/g/dawn-graphics/c/mawmvVqo_GY/m/LYUlEtLbAQAJ). Thanks to David Neto and [inner-daemons](https://github.com/inner-daemons).
+[^15]: More like CUDAGraphs than XLA. I confirmed that graph-level optimization is out of scope for WebGPU: see [Google Groups discussion](https://groups.google.com/g/dawn-graphics/c/mawmvVqo_GY/m/LYUlEtLbAQAJ). Thanks to David Neto and [inner-daemons](https://github.com/inner-daemons).
