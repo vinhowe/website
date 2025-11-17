@@ -216,6 +216,10 @@ async function train() {
 
 </ExpandableBlurb>
 
+---
+
+Thanks to [Grant Pitt](https://twitter.com/grantpitt0) and Luci Sullivan for providing feedback on versions of this post, [David Neto](https://www.dneto.dev/) of Google's Dawn team for answering a WebGPU question, and [Christopher Fleetwood](https://x.com/fleetwood___) for pushing me to write the damn thing.
+
 [^1]: [Dialects for Humans: Sounding Distinct from LLMs - Ben Gubler](https://www.bengubler.com/posts/2025-07-01-dialects-for-humans)
 
 [^2]: [OpenAI o1](https://openai.com/o1/), [DeepSeek R1](https://arxiv.org/abs/2501.12948)
