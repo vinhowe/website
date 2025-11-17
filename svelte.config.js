@@ -35,7 +35,7 @@ const config = {
 				}
 			},
 			remarkPlugins: [remarkGfm, remarkFootnotes, [remarkToc, { heading: 'contents' }]],
-			rehypePlugins: [rehypeAutolinkHeadings, rehypeSlug]
+			rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]
 		})
 	],
 	kit: { adapter: adapter() },
