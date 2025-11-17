@@ -49,23 +49,6 @@
 				what kinds of useful inductive biases self-supervision fails to induce even after training
 				on trillions(!) of tokens of natural language data.
 			</p>
-			{#if posts.length}
-				<h2 class="my-1 text-lg font-medium">Blog</h2>
-				<div class="mb-2 flex flex-col gap-1">
-					{#each posts as post}
-						<p>
-							<a class="font-medium text-blue-500 hover:text-blue-600" href={`/blog/${post.slug}`}
-								>{post.title}</a
-							>
-							{#if post.formattedDate ?? post.date}
-								<span class="text-sm text-neutral-500">
-									· {post.formattedDate ?? post.date}
-								</span>
-							{/if}
-						</p>
-					{/each}
-				</div>
-			{/if}
 			<h2 class="my-1 text-lg font-medium">Publications</h2>
 			<h3 class="my-1.5 font-mono text-sm font-bold tracking-wider text-neutral-500">2024</h3>
 			<p>
