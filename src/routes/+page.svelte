@@ -1,27 +1,19 @@
+<script lang="ts">
+	import VinHeader from '$lib/components/VinHeader.svelte';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
+	const posts = data.posts ?? [];
+</script>
+
+<svelte:head>
+	<title>Vin Howe</title>
+</svelte:head>
+
 <div class="flex h-full w-full items-start justify-center bg-slate-400">
-	<div
-		class="outer-box m-3 flex max-w-3xl bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14"
-		id="outer-box"
-	>
+	<div class="m-3 flex max-w-3xl bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14">
 		<div class="inner-box flex flex-1 flex-col gap-2 text-justify">
-			<div class="mb-10 flex flex-col gap-1">
-				<h1 class="text-xl font-medium tracking-tight text-slate-900">Vin Howe</h1>
-				<p>
-					<a class="text-blue-500 hover:text-blue-600" href="https://x.com/vinhowe">Twitter</a>
-					·
-					<a
-						class="text-blue-500 hover:text-blue-600"
-						href="https://scholar.google.com/citations?user=nOym4IEAAAAJ">Google Scholar</a
-					>
-					·
-					<a class="text-blue-500 hover:text-blue-600" href="https://github.com/vinhowe">GitHub</a>
-					·
-					<a class="text-blue-500 hover:text-blue-600" href="https://www.linkedin.com/in/tvinhowe/"
-						>LinkedIn</a
-					>
-					· vin @ this domain
-				</p>
-			</div>
+			<VinHeader />
 			<p>
 				I&rsquo;m a Master's student in computer science at Brigham Young University, having
 				recently completed a Bachelor's in BYU's Applied and Computational Mathematics program. I
@@ -53,16 +45,16 @@
 				<h2 class="my-1 text-lg font-medium">Blog</h2>
 				<div class="mb-2 flex flex-col gap-1">
 					{#each posts as post}
-						<p>
+						<div class="flex items-baseline gap-4 justify-between">
 							<a class="font-medium text-blue-500 hover:text-blue-600" href={`/blog/${post.slug}`}
 								>{post.title}</a
 							>
-							{#if post.formattedDate ?? post.date}
-								<span class="text-sm text-neutral-500">
-									· {post.formattedDate ?? post.date}
-								</span>
+							{#if post.formattedDate}
+								<span class="font-mono text-xs tracking-wider text-neutral-500 uppercase shrink-0"
+									>{post.formattedDate}</span
+								>
 							{/if}
-						</p>
+						</div>
 					{/each}
 				</div>
 			{/if}

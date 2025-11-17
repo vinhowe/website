@@ -24,5 +24,48 @@ body {
 }
 body {
 	position: relative;
-    @apply bg-slate-400;
+	@apply bg-slate-400;
+}
+
+@layer typography {
+	/* 1. Hide the fake backticks that the typography plugin adds */
+	.prose :where(code):not(:where([class~='not-prose'] *))::before,
+	.prose :where(code):not(:where([class~='not-prose'] *))::after {
+		content: '';
+	}
+
+	/* 2. Inline code as a slightly darker pill */
+	.prose :where(code):not(:where([class~='not-prose'] *)) {
+		@apply bg-slate-300 px-0.5 py-0.25 font-normal;
+	}
+
+	/* 3. Don’t double-style fenced code blocks */
+	.prose :where(pre):not(:where([class~='not-prose'] *)) code {
+		@apply bg-transparent p-0;
+	}
+
+	.prose :where(pre):not(:where([class~='not-prose'] *)) {
+		@apply overflow-x-auto rounded-lg bg-slate-900 p-4;
+	}
+
+	.prose :where(strong):not(:where([class~='not-prose'] *)) {
+		@apply font-medium;
+	}
+
+	.prose :where(h1):not(:where([class~='not-prose'] *)) {
+		@apply text-2xl font-normal;
+	}
+
+	.prose :where(h2):not(:where([class~='not-prose'] *)) {
+		@apply text-xl font-medium;
+	}
+
+	.prose :where(h3):not(:where([class~='not-prose'] *)) {
+		@apply text-lg font-medium;
+	}
+
+	.prose :where(pre):not(:where([class~='not-prose'] *)) {
+		@apply rounded-none;
+		@apply p-3;
+	}
 }

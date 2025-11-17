@@ -1,0 +1,237 @@
+---
+layout: blog
+title: 'You probably shouldn’t train a language model in your browser—here’s how'
+date: '2025-11-17'
+summary: "Why I'm starting this small mdsvex-powered blog."
+---
+
+<script>
+	import ExpandableBlurb from '$lib/components/ExpandableBlurb.svelte';
+</script>
+
+_AI note: this blog post makes generous use of em dashes. Given my target audience, I feel compelled to defend this choice[^1]: I wrote this blog post myself_
+
+I just released [Sequence Toy](https://sequence.toys), a playground for training language models entirely in your browser. I also built Piston, a proof-of-concept WebGPU deep learning library modeled after PyTorch, for the sole purpose of powering Sequence Toy. This blog post is a vehicle for me to talk about the work that went into the combined project by way of a narrative device: what will you want to know when you inevitably build `yourtorch`, your own little WebGPU PyTorch clone? First I'll try to dissuade you by arguing that there's really no extrinsic reason to do this reasonably difficult thing. **You're welcome to skip this first section if you simply can't be dissuaded from building `yourtorch`, but it should at least help you separate bad from good reasons to do it. Also, if you decide to actually refer to this article as you build something, I recommend reading it all the way through first, or you'll end up redoing a few things.**
+
+(more technical details here while not being too redundant)
+
+## Introduction: this exercise almost certainly fails to justify itself
+
+Piston is not the first to implement machine learning or deep learning on the web. In 2013, ConvNetJS by Andrej Karpathy was probably the first to train small models in pure JavaScript—keep in mind that [AlexNet](https://en.wikipedia.org/wiki/AlexNet) came out the year prior, before which neural networks had never really taken off, so this was in very much the primordial soup of the ongoing AI boom. Three years later, inspired by ConvNetJS, we got [A Neural Network Playground](https://playground.tensorflow.org), but it wasn't until 2018 that [TensorFlow.js](https://www.tensorflow.org/js) managed to achieve some limited GPU acceleration by [repurposing WebGL shaders as compute kernels](https://webglfundamentals.org/webgl/lessons/webgl-gpgpu.html). In 2023, [Frank Krueger](https://twitter.com/praeclarum) built [webgpu-torch](https://github.com/praeclarum/webgpu-torch), the project most similar to Piston that I am aware of, so I don't claim to be first (and you can't claim to be second) to build something PyTorchy on top of WebGPU. **But, to my knowledge, Piston is the first project that combines enough compute shaders and WebGPU performance considerations in one place to train something as involved as language models, albeit at a small scale, in a web browser[^2]**.
+
+Still: I'd have to imagine that for most rational agents, being a pioneer isn't enough of a reason to do something like this. You should ideally be able to pay back the opportunity cost you spend working on `yourtorch` by unlocking some amount of practical value, or you might as well figure out how to [run DOOM in TypeScript types](https://www.youtube.com/watch?v=0mCsluv5FXA) instead. The bad news, then, is that the browser is a punishingly impractical place to train a language model. Chatbot language models conversational and capable enough to use every day cost [on the order of 100 million USD](https://www.youtube.com/watch?v=T5cPoNwO7II&t=396s), at least all the way back in 2022, to train across [20K](https://engineering.fb.com/2024/03/12/data-center-engineering/building-metas-genai-infrastructure/)–[100K](https://www.businessinsider.com/mark-zuckerberg-meta-nvidia-h100-chip-cluster-llama-4-2024-10) GPUs—primarily the preserve of only a handful of AI labs—and that was before extensive RL post-training[^13] became an expectation. To put into perspective the difference between training and inference, you can fit some of the most capable recent models[^14] across a mere (!) 8 80GB GPUs[^15].
+
+Some quick math to bring this home: the smallest of the GPT-2 family (cite), released in 2019, was impressive at the time for trying its best: it spouted grammatical text matching the broad style of the input prompt—nonsense nonetheless—after being trained on 40GB, or ~21 billion tokens, of internet text (CHECK). We know precious little about the scale of the GPT 5's of our day, but the recent-as-of-publication open-source [Qwen 3](https://qwenlm.github.io/blog/qwen3/) family of models, the largest of which has 235 billion total parameters, were trained on 36 trillion tokens of text. Simplistically ignoring differences in MOE sparsity and tokenizer vocabulary size, the difference in both parameters and data is roughly 3 orders of magnitude. With Piston, the biggest autoregressive transformer I have successfully fit on the GPU in my 16GB M1 Pro is ~50m parameters, and I couldn't convince WebGPU to use more GPUs even if I had them[^3]. At roughly a step per second on my laptop, with a batch size of 32, it just so happens that I could manage about a billion tokens a year. So it would take 21 years to make my poor [distilgpt2](https://huggingface.co/distilbert/distilgpt2)-wannabe choke down the 21 billion tokens of internet they used to make 2019's best generative model, or slightly more than 31,709 years to show it Qwen 3's curriculum. This should help explain why most in-browser AI investment goes to inference, like [transformers.js](https://huggingface.co/docs/transformers.js/en/index) and [WebLLM](https://webllm.mlc.ai/), and why practically all browser-training projects are demos and toys.
+
+Finally, as if all that weren't enough, this is reasonably involved technical work! If the web platform looked more like the deep learning ecosystem, and especially if WebGPU looked more like CUDA—I'll discuss this later—the activation energy associated with porting over PyTorch might be low enough to ignore the impracticality of the thing. But given the number of web-specific considerations you'll need to implement `yourtorch` (even with this blog post under your belt) it would be sane of you to consider what else you could do with a similar investment of time. In my case, for Sequence Toy and Piston, I'm forced to admit that the value was mostly educational. The same way someone might implement a compiler, [backprop](https://github.com/karpathy/micrograd), [tokenizers](https://github.com/karpathy/minbpe), or [GPT-2](https://github.com/karpathy/build-nanogpt) from scratch to understand what's going on under the hood, I implemented generic encoder, decoder, and encoder-decoder transformer architectures and everything needed to train them on a single GPU. The added value of doing it on the web with WebGPU, despite all of the ways its design choices are a mismatch for deep learning, is that the work I do is not quite as redundant as if, say, I implemented a C++ (or [Rust](https://github.com/huggingface/candle)) deep learning framework with CUDA support. Plus, I can build a fun demo, write a long blog post about it, and claim to be first to something. There are plenty of ways to outdo me when you build `yourtorch`: maybe figure out how to distribute training across browsers in a peer-to-peer way using [DiLoCo](https://www.primeintellect.ai/blog/opendiloco)—that might be the only way you can convince WebGPU to use multiple GPUs! Or engineer an intermediate representation that you can then do optimizations over to achieve things like operator fusion, which we’ll talk about later.
+
+If four paragraphs wasn't enough to deter you, here's a high-level overview of how to build `yourtorch`, along with some hard-earned considerations.
+
+## First, you'll want a tensor
+
+_Given that Piston borrows heavily from PyTorch's choices of abstraction, you might find [ezyang's blog on PyTorch internals](https://blog.ezyang.com/2019/05/pytorch-internals/) to be a useful supplementary resource, especially if your goal is to understand PyTorch better specifically._
+
+The tensor is the core primitive of the modern deep learning framework, in the same way that the ndarray is NumPy's central load-bearing data structure; if you're already the sort of person who thinks about building `yourtorch`, this has probably occurred to you. But it's worth being very clear about what a tensor is, because before anything else, you will build a tensor. So, to recap: a tensor can be described as a handle to $n$-dimensional array data along with metadata that tells you how to interpret and act on that data. Here's the minimum set of such metadata you'll need for `yourtorch.Tensor`:
+
+- `sizes`: an array specifying the tensor's dimensions.
+- `strides`: an array the same length as `sizes`, specifying how the tensor is laid out in memory—see ezyang's section on strides for an introduction.
+- `dtype`: the datatype associated with that tensor. In Piston[^4] I have `f16` and `f32`, which represent 16- and 32-bit floating point types, and `i32`, a 32-bit integer type. PyTorch implements many more.
+- `device`: whether the tensor is in WebGPU memory or in a regular memory buffer, on the CPU.
+
+So far, except for the bit about devices, this is very close to how you might expect to see an ndarray defined, if you're familiar with NumPy. What most cleanly distinguishes these two types of n-dimensional array is that autodifferentiation (and, as we'll discuss later, graph execution) requires us to keep track of the graph of operations performed on tensors. For example, if we want to be able to be able to compute the gradient of `tensor1.add(tensor2)`, its tensor result should record which operation created it—addition—and its inputs—tensor1 and tensor2. This gives us that in PyTorch, Piston, and eventually yourtorch, in the [directed acyclic](https://en.wikipedia.org/wiki/Directed_acyclic_graph) [control-flow graph](https://en.wikipedia.org/wiki/Control-flow_graph) of a tensor program, each tensor object represents its result node as well as, by way of the operation metadata it tracks, graph edges from its inputs. That is, except for the leaf nodes; in our addition example, tensor1 and tensor2 aren't the result of another operation, so they both record a constant-operation with no inputs, where their data was probably supplied by some factory function—`yourtorch.{zeros,full,randn,...}`.
+
+Your first order of business after implementing a basic tensor API is to define WebGPU compute shaders, in WGSL, for every operation you'll need to build a complete forward pass of whatever neural network architecture you're targeting. The default decoder-only Transformer architecture I implemented for Sequence Toy uses N unique operation types out of the K overall I implemented[^5], but my first goal was a faithful implementation of [minGPT](https://github.com/karpathy/mingpt), because I could take a common set of inputs (anything, really) and compare its forward pass with mine, operation by operation, to make sure my shaders checked out numerically. You might find that now is a convenient time to implement a `nn.Module` analog—you could even refer to [module.py](https://github.com/pytorch/pytorch/blob/main/torch/nn/modules/module.py).
+
+But hang on, don't start writing shaders yet. Allow me to point out a few logical groupings:
+- Many operations, like sin, log, square root, and ReLU, are simply elementwise functions of the input. These are **unary** operations.
+- Addition, subtraction, multiplication, and division are all **binary** operations: two inputs and an output, all with the same data type.
+- **Comparison** operations take same-dtype inputs and nominally produce boolean-valued output, but we settle for 32-bit integers. This includes equality, inequality, and greater than and less than—along with their respective non-strict variants.
+- If you get this far, you'll discover that sum, minimum, maximum, argmin, and argmax are all structurally quite similar. These all perform [parallel reduction](https://en.wikipedia.org/wiki/Reduction_operator), so they're called **reduce** operations.
+  You'll have a better time overall writing boilerplate for generating shaders at runtime, especially within these groups, rather than simply attempting to write each by hand.
+
+Finally, it is a matter of grave importance that you write tests for your kernels. For each kernel you write and test you don't, you will accrue a debt with Entropy, and deep neural networks will mysteriously refuse to converge for you. Spare yourself a corrosive existential experience and make a plan to write tests from kernel one. One particularly convenient way to do this, assuming most of the operations you write are also in PyTorch, is to effectively write the tests in Python: you can generate and serialize `(test case label, input, output, acceptable error, operation)` tuples ahead of time and wire up your tests to simply check that for each of these cases, the output of your framework is within an acceptable error of PyTorch's. Once all these tests pass, you should technically have everything you'd need to run a clunky forward pass purely out of tensor operations. If you haven't taken it upon yourself already to implement a `nn.Module` equivalent, by referring to [module.py](https://github.com/pytorch/pytorch/blob/main/torch/nn/modules/module.py), you might find that now is a convenient time to do that. Let's talk about implementing backpropagation next.
+
+## Backward-mode automatic differentiation (or backpropagation)
+
+_At this point, there are many consummate expositions on backpropagation, and it would be worth neither of our time for me to try to compete with those. If you feel shaky about this AI fundamental, follow the footnotes[^8] [^9] [^10] [^11] [^12]._
+
+
+
+As `yourtorch`'s future author, you will need to implement the backprop algorithm and either (1) write a shader to compute the gradient for each differentiable Tensor operation you define: create an `addition_backward` kernel in addition to `addition`, or (2) Calculate each gradient with its own graph of tensor operations: `lhs_sum_grad.add(grad); rhs_sum_grad.add(grad);`
+
+The latter is easier to implement and test, because most gradients can be composed from the operations you already wrote for your forward pass—you'll almost certainly still need to write a few kernels you only end up using in the backward pass—but a single kernel is quite a bit faster than running a bunch of them in series, because of memory access speeds, which we'll talk about in a second. (christopher fleetwood graphic). I went the easy route with Piston, partly because HuggingFace's Candle project does ([candle/candle-core/src/backprop.rs](https://github.com/huggingface/candle/blob/main/candle-core/src/backprop.rs)), which allowed me to use a lot of their code as a starting point. Some concrete implementation notes here:
+
+1. Same as for operations, make sure you have a way to compare gradients with PyTorch (or whatever framework you've chosen to distill).
+2. If you're building a WebAssembly backend in Rust or C++ and composing gradients out of other tensors, it will save you some grief to define these gradient functions within that backend. This is because of JavaScript implementations of garbage collection, which we'll talk about later.
+
+Hopefully you've avoided trying to implement `yourtorch`, only having read this far, but you might appreciate that it’s a useful rhetorical exercise to keep returning to the hypothetical. What you might find, anyway, is an [impedance mismatch](https://devblogs.microsoft.com/oldnewthing/20180123-00/?p=97865) between the synchronous nature of your nascent PyTorch, and the asynchronous queue-driven way WebGPU sees the world. We'll clear this up in the next section.
+
+## An abbreviated introduction to graph-based execution
+
+Some table-setting: the _eager_ execution strategy is exactly what you might expect. It's what PyTorch does: when you call `y = x * w + b`, it immediately evaluates `z = x * w`, then `y = z + b`—just like a calculator would. This might seem too obvious to bother pointing out. But it turns out that there's another execution strategy, graph execution, and I think you'll want to use it in `yourtorch`.
+
+Eager execution has some problems. For one, there's a small overhead associated with submitting and waiting for individual GPU kernels, which can compound over the many, many such invocations done in the service of industrial-scale modern deep learning. Nvidia addresses this on their GPUs with [CUDA Graphs](https://developer.nvidia.com/blog/cuda-graphs/), which lets you significantly reduce this overhead by instead submitting a full control-flow graph of many CUDA programs all at once. [XLA](https://en.wikipedia.org/wiki/Accelerated_Linear_Algebra) takes this a step further and does low-level optimizations like [operator fusion](https://openxla.org/xla/gpu_architecture#fusion) to the graph before shipping it off to the [TPU](https://en.wikipedia.org/wiki/Tensor_Processing_Unit), illustrating another advantage of graph execution. Graph-level optimizations turn out to be quite important because most of modern deep learning is memory-bound, so a smaller set of fused shaders means fewer expensive trips to [high-bandwidth memory](https://en.wikipedia.org/wiki/High_Bandwidth_Memory). Christopher Fleetwood has an [excellent and digestible analysis](https://fleetwood.dev/posts/domain-specific-architectures) that deals with this sort of performance consideration from the perspective of optimizing Transformer inference. Let's talk about what execution means for `yourtorch`.
+
+In Piston, I didn't implement any form of graph optimization[^6], as much as I wanted to be willingly sniped by the problem, but I did adopt a graph execution model, and you'll want to as well. Here's why, at a high level: WebGPU's interface for submitting programs to the GPU is [`GPUQueue`](https://developer.mozilla.org/en-US/docs/Web/API/GPUQueue)/[`GPUComputePipeline`](https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePipeline)/[`GPUComputePassEncoder`](https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePassEncoder), which is more like CUDAGraph and XLA[^7] than PyTorch/CUDA, and it is [asynchronous](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API#reading_the_results_back_to_javascript). You'd find that the overhead of naively creating these pipelines for every single operation would add up fast. So let's talk about how to add graph execution to `yourtorch`, in two stages.
+
+## Baby's first inference-focused tensor API
+
+For both pedagogical and rhetorical effect, we'll pretend to implement graph execution twice: first, as if we cared only about inference, and then again with an eye toward training. If you don't particularly care for the extra intuition, you can safely skip to the next section.
+
+We'll use the inference-focused [Ratchet](https://github.com/huggingface/ratchet) library as the blueprint for this section. This is for three reasons:
+
+1. It was built from the ground up with WebGPU's execution model in mind, via [wgpu](https://github.com/gfx-rs/wgpu). See [ratchet/ARCHITECTURE.md#Design Decisions](https://github.com/huggingface/ratchet/blob/master/ARCHITECTURE.md#design-decisions).
+2. It is not nearly as large as something like PyTorch, and so even advanced functionality is often in only one or two files, which makes it a pedagogical godsend.
+3. Piston is a hard fork of Ratchet, so I have a thing for it.
+
+At this point in `yourtorch`'s development, you know you want a graph-based execution model that plays well with WebGPU. I'll also tell you for free that buffer allocation is quite slow in WebGPU, so you'll want to reuse allocated buffers as much as possible. This is an important performance consideration that I won't really cover in this blog post; see [ratchet/crates/ratchet-core/src/gpu/buffer_allocator/allocator.rs](https://github.com/huggingface/ratchet/blob/136da4d5216910bfd015b27a17b837c21f17163a/crates/ratchet-core/src/gpu/buffer_allocator/allocator.rs) and [ratchet/crates/ratchet-core/src/gpu/pools](https://github.com/huggingface/ratchet/tree/136da4d5216910bfd015b27a17b837c21f17163a/crates/ratchet-core/src/gpu/pools) for details on how Christopher did it—with only minor modifications, this is what I did too. I think, given enough time and tasked with creating an API like PyTorch with WebGPU as a first-class target, you might independently come up with something a lot like Ratchet:
+
+```typescript
+import { Module, Device, zeros, randn, gpu, cpu } from 'youtorch';
+
+class SimpleLinear extends Module {
+    constructor(inFeatures: number, outFeatures: number, device: Device) {
+        super();
+        this.weight = zeros([outFeatures, inFeatures], { device });
+        this.bias = zeros([outFeatures], { device })
+    }
+
+    schedule(tensor: Tensor) {
+        return input.matmul(this.weight.T).add(this.bias)
+    }
+}
+
+const inputs = randn([1], { device: gpu });
+const linear = SimpleLinear(1, 1, gpu);
+
+(await linear.schedule(inputs).resolve()).to(cpu).item()
+```
+
+What this would do behind the scenes, when you call resolve(), is:
+
+1. Create a [post-order traversal](https://en.wikipedia.org/wiki/Tree_traversal#Post-order,_LRN) of the tensor-operations—we choose post-order because it outputs a list where each node is inserted only after all of its children, giving us the crucial property that a node is always calculated after its dependencies.
+2. Allocate a bunch of buffers from a pool, like we discussed briefly, so they can be reused later.
+3. Translate the operations into a WebGPU queue and submit it (leaving out a lot of details here)
+4. Await a [`mapAsync`](https://developer.mozilla.org/en-US/docs/Web/API/GPUBuffer/mapAsync) call on an output buffer.
+5. Associate that buffer with the output tensor.
+   You'll need some sort of device-transfer affordance, like `to(device)`, to move it between the GPU and CPU, where you can actually use its output.
+
+This story is great for inference: usually, you only want a single output, like a token ID. Or if you have a few outputs, it's not much more expensive to run `resolve()` a few more times, because you'll have computed most of the model in the first pass, so you'll only spend a little extra time repeatedly submitting queues and traversing a mostly identical graph. But in backprop, the "output" of a forward-backward pass includes tens to hundreds of gradients, so the overhead of naively resolve()ing each of them separately adds up quickly.
+
+## LazyTensor: graph-based execution for training
+
+Let's start by defining some desiderata for our solution. It should:
+
+- Only require a single overall post-order—we'd prefer it if we could translate the forward pass, loss computation, gradient computations, and optimizer update into a single queue of WebGPU commands.
+- Require minimal or no changes to module and optimizer neural network code.
+  The first place I looked when trying to solve this problem for Piston was any XLA support for PyTorch, on the hunch that despite the eager-graph mismatch, Google would be determined to let developers use PyTorch on its TPUs. In fact, [torch_xla](https://github.com/pytorch/xla) implements something called [LazyTensor](https://arxiv.org/abs/2102.13267), which happens to meet all our requirements.
+
+Here’s how this differs from the first implementation:
+
+1. In the constructor and destructor of your Tensor type, add code to respectively register/deregister it with singleton LazyTensor state. In the paper, this is the `DeviceContextArena`
+2. Create an asynchronous mark_step method accessible at least to your optimizer/module code, but preferably globally, that creates a combined, deduplicated post order for all registered tensors and executes it. I'll belabor here that by default, nothing runs until you call mark_step—it's all deferred.
+3. Call mark_step near the end of the step() method for all optimizers you define
+4. Update your tensor code to resolve its post-order and compute whenever you request the value of the tensor, like when transferring to the CPU or converting to a vector type. This effectively makes all methods that resolve Tensor values async.
+
+With this implemented, you should find yourself fighting WebGPU quite a bit less. And assuming that other than the considerations I've outlined so far, you've been modeling your autodiff-enabled Tensor API after PyTorch and brought in `torch.nn` analogues—e.g. modules, optimizers, dataloaders, etc.—you should have everything you need to write a training loop. That is, if, so far, you've implemented your training loop in WebAssembly via Rust or C++, and you can drop Tensor objects as they leave scope, [RAII](https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization)-style. If you, like me, defined your training loop in JavaScript and consequently let your browser manage Tensor references, you'll find yourself cursing unpredictable garbage collection behavior, which is the last major consideration I have to offer you.
+
+## When JavaScript's garbage collector won't do, just build a worse one
+
+JavaScript has no garbage collection API! There is no supported way to clean up unused references in an application. Usually this is okay—presumably garbage collectors monitor memory pressure and clean things up more often when we need them to. But garbage collection falls completely flat when it comes to managing tensor references, because it can see only the relatively little memory occupied by the references, and has no concept of the full iceberg of associated VRAM. This becomes a real problem, and because your training loop creates hundreds of intermediate tensors each step, you'll blow through VRAM while the garbage collector takes its time. So you'll want a way to clean up tensor references when you're done with them.
+
+Before you look at what I did—if you're taking notes—you might consider noodling this one by yourself for a bit, because I'm not convinced my solution is obvious or optimal. But my thought process went as follows: in lieu of the sort of reference-counted data lifetimes I'd gotten used to with Rust, I wanted to simulate [RAII](https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization) for particularly hot manually-defined "scopes," like a single training step, or a forward pass when sampling autoregressively. So I'd need a way to keep track of all tensors created at the beginning of this virtual scope, and manually deallocate them at the end. To this end, I implemented [function modes](https://docs.pytorch.org/docs/stable/notes/extending.html#extending-all-torch-api-with-modes) in Piston, and created WeakTensorMode, which does exactly that, tracking tensors and manually them in the cleanup (`Symbol.dispose`) method.
+
+In practice, I found it's also useful to have a 'pin' method that can persist tensors created during the function mode by removing them from its cleanup list. This comes in handy when you want to, for example, clean up forward-pass intermediates but keep outputs like logits or loss. Support for nested function modes becomes useful here, because the outermost weak mode can make sure anything pinned by an inner mode is still cleaned up eventually. Additionally, you might find, as I did, that it becomes enough of a pattern for you to drop all but one or more output tensors that it's worth creating a globally-accessible weak(closure) convenience that internally creates a weak mode, runs the closure and pins any tensors in the object before cleaning up.
+
+## `yourtorch` training loop
+
+At this point, putting together everything we've done so far, you should be able to write a simple training loop that looks roughly like the following:
+
+<ExpandableBlurb collapsedText="Show training loop" expandedText="Hide training loop" class="[&_pre]:my-0 flex flex-col gap-2">
+
+```typescript
+// sgd.ts
+
+export class SGD extends Optimizer {
+    // …
+
+    async step(...) {
+        // Do optimizer updates with gradients
+
+        await this.device.markStep();
+
+        return loss;
+    }
+}
+```
+
+```typescript
+// train.ts
+
+import { Dataloader, weak, cpu, gpu } from 'yourtorch';
+import { log } from './metrics';
+import { YourModel } from './model';
+import { YourDataset } from './model';
+import { collateFn } from './collate';
+import { SGD } from './sgd';
+
+async function train() {
+    const model = new YourModel();
+
+    const trainDataloader = new Dataloader(new YourDataset({ split: "train" }), { batchSize: 32, collateFn });
+    const validationDataloader = new Dataloader(new YourDataset({ split: "validation" }), { collateFn });
+
+    const optimizer = new SGD(model.parameters(), gpu, { lr: 1e-5, /* other parameters */ });
+
+    model.train();
+
+    let step = 0;
+    for (batch of trainDataloader) {
+        await weak((mode) => {
+            // Make sure we delete the batch at the end of the step
+            mode.markWeak(batch);
+            const [inputs, targets] = batch;
+
+            const loss = await weak(() => {
+                const [logits, loss] = model.forward(
+                    await inputs.to(gpu), await targets.to(gpu)
+                );
+
+                // Loss will be pinned automatically because it's a return type
+                // but the outer weak mode will drop it
+                return loss;
+            });
+
+            loss.backward();
+            await optimizer.step();
+            this.optimizer.zeroGrad();
+
+            const validationLoss = await weak(() => {
+                // compute validation metrics
+            });
+
+            log({ "train/loss": await (await loss.to(cpu)).item(), "validation/loss": await (await loss.to(cpu)).item() }, { step });
+
+            step++;
+        });
+    }
+}
+```
+
+</ExpandableBlurb>
+
+[^1]: [Dialects for Humans: Sounding Distinct from LLMs - Ben Gubler](https://www.bengubler.com/posts/2025-07-01-dialects-for-humans)
+[^2]: Correct me and I will quickly but reluctantly rescind this claim
+[^3]: Technically, I might be able to convince it to use two.
+[^4]: By way of Ratchet.
+[^5]: List them, comma separated.
+[^6]: Ratchet has the seeds of it with inplace memory detection.
+[^7]: More like CUDAGraphs than XLA. Confirmed that graph-level optimization is out of scope for WebGPU: see [Google Groups discussion](https://groups.google.com/g/dawn-graphics/c/mawmvVqo_GY/m/LYUlEtLbAQAJ). Thanks to David Neto and [inner-daemons](https://github.com/inner-daemons).
+[^8]: [Neural networks and deep learning](http://neuralnetworksanddeeplearning.com/chap2.html)
+[^9]: [Calculus on Computational Graphs: Backpropagation -- colah's blog](https://colah.github.io/posts/2015-08-Backprop/)
+[^10]: [3Blue1Brown - Backpropagation calculus](https://www.3blue1brown.com/lessons/backpropagation-calculus)
+[^11]: [GitHub - karpathy/micrograd](https://github.com/karpathy/micrograd/tree/master)
+[^12]: [candle/candle-core/src/backprop.rs](https://github.com/huggingface/candle/blob/main/candle-core/src/backprop.rs)
+[^13]: https://openai.com/o1/, [DeepSeek R1](https://arxiv.org/abs/2501.12948)
+[^14]: As of 12/12/2025.
+[^15]: [Qwen3-VL Usage Guide - vLLM Recipes](https://docs.vllm.ai/projects/recipes/en/latest/Qwen/Qwen3-VL.html#qwen3-vl-235b-a22b-instruct)
