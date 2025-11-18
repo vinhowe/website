@@ -137,7 +137,7 @@
 </script>
 
 <svelte:head>
-	<title>{title}</title>
+	<title>{title} - Vin Howe</title>
 	{#if summary}
 		<meta name="description" content={summary} />
 	{/if}
