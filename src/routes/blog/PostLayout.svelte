@@ -8,8 +8,15 @@
 		title,
 		date,
 		summary,
+		headerImage,
 		children
-	}: { title: string; date: DateInput; summary: string | undefined; children: Snippet } = $props();
+	}: {
+		title: string;
+		date: DateInput;
+		summary: string | undefined;
+		headerImage?: string | undefined;
+		children: Snippet;
+	} = $props();
 
 	const resolvedDate =
 		date instanceof Date
@@ -26,6 +33,31 @@
 				year: 'numeric'
 			}).format(resolvedDate)
 		: undefined;
+
+	// Eagerly import all images under the blog directory and expose as URLs.
+	// This lets frontmatter specify a path or filename located alongside the post.
+	const imageModules = import.meta.glob('./**/*.{png,jpg,jpeg,webp,avif,gif}', {
+		query: '?url',
+		import: 'default',
+		eager: true
+	}) as Record<string, string>;
+
+	function resolveHeaderImageUrl(input?: string): string | undefined {
+		if (!input) return undefined;
+		const normalized = input.replace(/^\.?\//, '');
+
+		// Try exact relative match from blog root
+		const exactKey = `./${normalized}`;
+		if (imageModules[exactKey]) return imageModules[exactKey];
+
+		// Fallback: find any asset whose path ends with the provided value
+		for (const [key, url] of Object.entries(imageModules)) {
+			if (key.endsWith(`/${normalized}`)) return url;
+		}
+		return undefined;
+	}
+
+	const headerImageUrl = resolveHeaderImageUrl(headerImage);
 </script>
 
 <svelte:head>
@@ -39,7 +71,12 @@
 	<div class="m-3 flex w-full max-w-3xl flex-col bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14">
 		<VinHeader />
 		<article class="prose flex max-w-none flex-col text-slate-800 prose-neutral">
-			<header class="mb-6">
+			<header class="mt-0 mb-3 sm:mt-5 sm:mb-4">
+				{#if headerImageUrl}
+					<div class="-mx-8 w-screen sm:mx-0 sm:w-full">
+						<img src={headerImageUrl} alt={title} class="not-prose mb-7 sm:mb-10" />
+					</div>
+				{/if}
 				<h1 class="mb-2 text-2xl font-normal text-slate-800">{title}</h1>
 				<span class="mt-2 mb-3 font-mono text-xs tracking-wide text-slate-600 uppercase">
 					Blog post &middot;
