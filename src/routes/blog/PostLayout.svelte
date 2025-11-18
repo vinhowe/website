@@ -1,6 +1,8 @@
 <script lang="ts">
 	import VinHeader from '$lib/components/VinHeader.svelte';
 	import type { Snippet } from 'svelte';
+	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 
 	type DateInput = string | Date | undefined;
 
@@ -9,12 +11,14 @@
 		date,
 		summary,
 		headerImage,
+		author = 'Vin Howe',
 		children
 	}: {
 		title: string;
 		date: DateInput;
 		summary: string | undefined;
 		headerImage?: string | undefined;
+		author?: string;
 		children: Snippet;
 	} = $props();
 
@@ -58,6 +62,46 @@
 	}
 
 	const headerImageUrl = resolveHeaderImageUrl(headerImage);
+
+	const isoDate = resolvedDate ? resolvedDate.toISOString().slice(0, 10) : undefined;
+	const year = resolvedDate?.getUTCFullYear();
+
+	function computeCitationKey(
+		titleValue: string,
+		authorValue: string,
+		yearValue: number
+	): string | undefined {
+		if (!titleValue) return undefined;
+
+		const normalizedAuthor = authorValue.toLowerCase().replace(/[^a-z0-9]+/g, '');
+		return `${normalizedAuthor}${yearValue}`;
+	}
+
+	const canonicalUrl = $derived(page.url.href);
+	let accessDateIso = $state<string | undefined>();
+
+	onMount(() => {
+		accessDateIso = new Date().toISOString().slice(0, 10);
+	});
+
+	const bibtexEntry = $derived(
+		(() => {
+			if (!isoDate || !year) return undefined;
+
+			const key = computeCitationKey(title, author, year);
+			if (!key) return undefined;
+
+			const fields = [
+				author && `  author = {${author}}`,
+				`  title = {${title}}`,
+				`  date = {${isoDate}}`,
+				`  url = {${canonicalUrl}}`,
+				accessDateIso && `  urldate = {${accessDateIso}}`
+			].filter(Boolean) as string[];
+
+			return `@online{${key},\n${fields.join(',\n')}\n}`;
+		})()
+	);
 </script>
 
 <svelte:head>
@@ -86,6 +130,12 @@
 				</span>
 			</header>
 			{@render children()}
+
+			{#if bibtexEntry}
+				<h2 class="my-2">Citation</h2>
+				<pre
+					class="overflow-x-auto rounded bg-slate-900 px-3 py-2 font-mono text-[11px] leading-relaxed text-slate-50">{bibtexEntry}</pre>
+			{/if}
 		</article>
 	</div>
 </div>
