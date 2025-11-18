@@ -1,6 +1,7 @@
 ---
 layout: blog
 title: 'You probably shouldn’t train a language model in your browser—here’s how'
+date: '2025-11-19'
 headerImage: './header.png'
 ---
 
