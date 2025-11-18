@@ -64,6 +64,7 @@
 	const headerImageUrl = resolveHeaderImageUrl(headerImage);
 
 	const isoDate = resolvedDate ? resolvedDate.toISOString().slice(0, 10) : undefined;
+	const citationPublicationDate = isoDate ? isoDate.replace(/-/g, '/') : undefined;
 	const year = resolvedDate?.getUTCFullYear();
 
 	function computeCitationKey(
@@ -102,12 +103,55 @@
 			return `@online{${key},\n${fields.join(',\n')}\n}`;
 		})()
 	);
+
+	const jsonLdBlogPosting = $derived(
+		isoDate
+			? JSON.stringify(
+					{
+						'@context': 'https://schema.org',
+						'@type': 'BlogPosting',
+						headline: title,
+						description: summary,
+						datePublished: isoDate,
+						dateModified: isoDate,
+						url: canonicalUrl,
+						mainEntityOfPage: {
+							'@type': 'WebPage',
+							'@id': canonicalUrl
+						},
+						author: {
+							'@type': 'Person',
+							name: author
+						},
+						image: headerImageUrl,
+						publisher: {
+							'@type': 'Organization',
+							name: "Vin Howe's Blog"
+						}
+					},
+					null,
+					2
+				)
+			: undefined
+	);
 </script>
 
 <svelte:head>
 	<title>{title}</title>
 	{#if summary}
 		<meta name="description" content={summary} />
+	{/if}
+	<meta name="citation_title" content={title} />
+	<meta name="citation_author" content="Howe, Vin" />
+	{#if citationPublicationDate}
+		<meta name="citation_publication_date" content={citationPublicationDate} />
+	{/if}
+	<meta name="citation_journal_title" content="Vin Howe's Blog" />
+	<meta name="citation_fulltext_html_url" content={canonicalUrl} />
+	{#if jsonLdBlogPosting}
+		<script type="application/ld+json">
+			{jsonLdBlogPosting}
+		</script>
 	{/if}
 </svelte:head>
 
