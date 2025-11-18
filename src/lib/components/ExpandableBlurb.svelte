@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { twMerge } from 'tailwind-merge';
+	import { ChevronRight } from 'lucide-svelte';
 
 	// Svelte 5 style
 	let {
 		collapsedText = 'Show more',
-		expandedText = 'Hide',
+		expandedText = collapsedText,
 		children,
-		class: className = ''
+		contentClass: contentClassName = '',
+		containerClass: containerClassName = ''
 	} = $props();
 
 	let expanded = $state(false);
@@ -17,19 +19,25 @@
 	};
 </script>
 
-<div class="w-full border border-slate-400 bg-slate-300">
+<div class={twMerge('w-full border border-slate-400 bg-slate-200', containerClassName)}>
 	<button
 		type="button"
-		class="px-2 cursor-pointer text-left font-medium focus:outline-none w-full"
+		class="flex w-full cursor-pointer items-center gap-1 px-2 text-left font-medium focus:outline-none"
 		aria-expanded={expanded}
 		aria-controls={contentId}
 		onclick={toggle}
 	>
+		<ChevronRight
+			class={twMerge(
+				'size-4 translate-y-[0.5px] transition-transform duration-100',
+				expanded ? 'rotate-90' : ''
+			)}
+		/>
 		{expanded ? expandedText : collapsedText}
 	</button>
 
 	{#if expanded}
-		<div id={contentId} class={twMerge('m-2', className)}>
+		<div id={contentId} class={twMerge('m-2', contentClassName)}>
 			{@render children()}
 		</div>
 	{/if}
