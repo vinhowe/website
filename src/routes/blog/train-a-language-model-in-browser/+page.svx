@@ -1,7 +1,7 @@
 ---
 layout: blog
 title: 'You probably shouldn’t train a language model in your browser—here’s how'
-date: '2025-11-19'
+date: '2025-11-20'
 summary: 'Considerations for building your own WebGPU PyTorch clone.'
 headerImage: './header.png'
 ---
