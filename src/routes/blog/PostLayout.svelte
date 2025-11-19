@@ -141,6 +141,28 @@
 	{#if summary}
 		<meta name="description" content={summary} />
 	{/if}
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content={title} />
+	{#if summary}
+		<meta property="og:description" content={summary} />
+	{/if}
+	<meta property="og:url" content={canonicalUrl} />
+	{#if headerImageUrl}
+		<meta property="og:image" content={headerImageUrl} />
+	{/if}
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content={headerImageUrl ? 'summary_large_image' : 'summary'} />
+	<meta name="twitter:title" content={title} />
+	{#if summary}
+		<meta name="twitter:description" content={summary} />
+	{/if}
+	{#if headerImageUrl}
+		<meta name="twitter:image" content={headerImageUrl} />
+	{/if}
+
 	<meta name="citation_title" content={title} />
 	<meta name="citation_author" content="Howe, Vin" />
 	{#if citationPublicationDate}
