@@ -180,7 +180,7 @@
 <div class="flex h-full w-full items-start justify-center bg-slate-400">
 	<div class="m-3 flex w-full max-w-3xl flex-col bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14">
 		<VinHeader />
-		<article class="prose flex max-w-none flex-col text-slate-800 prose-neutral">
+		<article class="prose max-w-none flex-col text-slate-800 prose-neutral">
 			<header class="mt-0 mb-3 sm:mt-5 sm:mb-4">
 				{#if headerImageUrl}
 					<div class="-mx-8 w-screen sm:mx-0 sm:w-full">
