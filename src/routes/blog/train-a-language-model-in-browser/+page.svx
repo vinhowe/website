@@ -10,7 +10,7 @@ headerImage: './header.png'
 	import ExpandableBlurb from '$lib/components/ExpandableBlurb.svelte';
 </script>
 
-<ExpandableBlurb collapsedText="AI note" contentClass="[&_p]:my-0" containerClass="my-2">
+<ExpandableBlurb collapsedText="AI note" contentClass="[&_p]:my-0" containerClass="my-6">
 
     For better or worse, I wrote this post myself, em-dashes ^[[Dialects for Humans: Sounding Distinct from LLMs - Ben Gubler](https://www.bengubler.com/posts/2025-07-01-dialects-for-humans)] and all.
 
