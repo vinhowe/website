@@ -1,9 +1,31 @@
 <script lang="ts">
 	import VinHeader from '$lib/components/VinHeader.svelte';
 	import type { PageData } from './$types';
+	import { onMount } from 'svelte';
 
 	export let data: PageData;
 	const posts = data.posts ?? [];
+
+	let newPostMap: Record<string, boolean> = {};
+
+	onMount(() => {
+		const now = new Date();
+		const newMs = 10 * 24 * 60 * 60 * 1000;
+
+		const nextMap: Record<string, boolean> = {};
+
+		for (const post of posts) {
+			if (!post.date) continue;
+			const postDate = new Date(`${post.date}T00:00:00Z`);
+			const diff = now.getTime() - postDate.getTime();
+
+			if (diff >= 0 && diff < newMs) {
+				nextMap[post.slug] = true;
+			}
+		}
+
+		newPostMap = nextMap;
+	});
 </script>
 
 <svelte:head>
@@ -53,12 +75,21 @@
 				<h3>Blog</h3>
 				<div class="flex flex-col gap-1">
 					{#each posts as post}
-						<div class="flex items-baseline justify-between gap-4">
-							<a class="font-medium text-blue-500 hover:text-blue-600" href={`/blog/${post.slug}`}
-								>{post.title}</a
-							>
+						<div class="flex items-baseline justify-between gap-3">
+							<div class="items-baseline space-x-1">
+								{#if newPostMap[post.slug]}
+									<span
+										class="font-mono text-sm font-medium tracking-wider text-orange-500 uppercase"
+										>NEW</span
+									>
+								{/if}
+								<a class="font-medium text-blue-500 hover:text-blue-600" href={`/blog/${post.slug}`}
+									>{post.title}</a
+								>
+							</div>
 							{#if post.formattedDate}
-								<span class="shrink-0 font-mono text-xs tracking-wider text-neutral-500 uppercase"
+								<span
+									class="shrink-0 font-mono text-[11px] font-semibold tracking-widest text-neutral-500 uppercase"
 									>{post.formattedDate}</span
 								>
 							{/if}
