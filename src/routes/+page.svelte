@@ -1,12 +1,14 @@
 <script lang="ts">
 	import VinHeader from '$lib/components/VinHeader.svelte';
+	import type { BlogPostSummary } from '$lib/types/blog';
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 
-	export let data: PageData;
+	const { data }: { data: PageData } = $props();
 	const posts = data.posts ?? [];
 
-	let newPostMap: Record<string, boolean> = {};
+	let newPostMap: Record<string, boolean> = $state({});
+	const newPosts = $derived(posts.filter((post) => newPostMap[post.slug]));
 
 	onMount(() => {
 		const now = new Date();
@@ -40,10 +42,38 @@
 	</div>
 {/snippet}
 
+{#snippet postPreview(post: BlogPostSummary, isNew: boolean)}
+	<div class="flex items-baseline justify-between gap-3">
+		<div class="items-baseline space-x-1">
+			<a class="font-medium text-blue-500 hover:text-blue-600" href={`/blog/${post.slug}`}>
+				{#if isNew}
+					<span class="font-mono text-sm font-semibold tracking-wider text-orange-500 uppercase"
+						>New</span
+					>
+				{/if}
+				{post.title}</a
+			>
+		</div>
+		{#if !isNew && post.formattedDate}
+			<span
+				class="shrink-0 font-mono text-[11px] font-semibold tracking-widest text-neutral-500 uppercase"
+				>{post.formattedDate}</span
+			>
+		{/if}
+	</div>
+{/snippet}
+
 <div class="flex h-full w-full items-start justify-center bg-slate-400">
 	<div class="xs:m-3 flex max-w-3xl flex-col bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14">
 		<VinHeader />
 		<div class="prose max-w-none flex-col text-justify leading-normal [&_a]:no-underline">
+			{#if newPosts.length}
+				<div class="-mt-3 mb-8 flex flex-col gap-1">
+					{#each newPosts as post}
+						{@render postPreview(post, true)}
+					{/each}
+				</div>
+			{/if}
 			<p>
 				I&rsquo;m a Master's student in computer science at Brigham Young University, having
 				recently completed a Bachelor's in BYU's Applied and Computational Mathematics program. I
@@ -75,25 +105,7 @@
 				<h3>Blog</h3>
 				<div class="flex flex-col gap-1">
 					{#each posts as post}
-						<div class="flex items-baseline justify-between gap-3">
-							<div class="items-baseline space-x-1">
-								{#if newPostMap[post.slug]}
-									<span
-										class="font-mono text-sm font-semibold tracking-wider text-orange-500 uppercase"
-										>New</span
-									>
-								{/if}
-								<a class="font-medium text-blue-500 hover:text-blue-600" href={`/blog/${post.slug}`}
-									>{post.title}</a
-								>
-							</div>
-							{#if post.formattedDate}
-								<span
-									class="shrink-0 font-mono text-[11px] font-semibold tracking-widest text-neutral-500 uppercase"
-									>{post.formattedDate}</span
-								>
-							{/if}
-						</div>
+						{@render postPreview(post, false)}
 					{/each}
 				</div>
 			{/if}
