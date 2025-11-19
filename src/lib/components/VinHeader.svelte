@@ -1,4 +1,4 @@
-<div class="mb-10 flex flex-col gap-1">
+<div class="mb-10 flex flex-col gap-1 not-prose">
 	<h1 class="text-xl font-medium tracking-tight text-slate-900">
 		<a href="/">Vin Howe</a>
 	</h1>

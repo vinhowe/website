@@ -10,10 +10,18 @@
 	<title>Vin Howe</title>
 </svelte:head>
 
+{#snippet yearHeading(year: number)}
+	<div class="not-prose contents">
+		<h3 class="font-mono text-base font-medium tracking-wider text-neutral-500 uppercase">
+			{year}
+		</h3>
+	</div>
+{/snippet}
+
 <div class="flex h-full w-full items-start justify-center bg-slate-400">
-	<div class="m-3 flex max-w-3xl bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14">
-		<div class="inner-box flex flex-1 flex-col gap-2 text-justify">
-			<VinHeader />
+	<div class="m-3 flex flex-col max-w-3xl bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14">
+		<VinHeader />
+		<div class="prose [&_a]:no-underline flex-col text-justify max-w-none">
 			<p>
 				I&rsquo;m a Master's student in computer science at Brigham Young University, having
 				recently completed a Bachelor's in BYU's Applied and Computational Mathematics program. I
@@ -35,22 +43,22 @@
 					></b
 				>.
 			</p>
-			<h2 class="my-1 text-lg font-medium">Research Interests</h2>
+			<h2>Research Interests</h2>
 			<p>
 				I&rsquo;m broadly interested in NLP and large language models. Right now, I&rsquo;m studying
 				what kinds of useful inductive biases self-supervision fails to induce even after training
 				on trillions(!) of tokens of natural language data.
 			</p>
 			{#if posts.length}
-				<h2 class="my-1 text-lg font-medium">Blog</h2>
-				<div class="mb-2 flex flex-col gap-1">
+				<h2>Blog</h2>
+				<div class="flex flex-col gap-1">
 					{#each posts as post}
-						<div class="flex items-baseline gap-4 justify-between">
+						<div class="flex items-baseline justify-between gap-4">
 							<a class="font-medium text-blue-500 hover:text-blue-600" href={`/blog/${post.slug}`}
 								>{post.title}</a
 							>
 							{#if post.formattedDate}
-								<span class="font-mono text-xs tracking-wider text-neutral-500 uppercase shrink-0"
+								<span class="shrink-0 font-mono text-xs tracking-wider text-neutral-500 uppercase"
 									>{post.formattedDate}</span
 								>
 							{/if}
@@ -58,8 +66,8 @@
 					{/each}
 				</div>
 			{/if}
-			<h2 class="my-1 text-lg font-medium">Publications</h2>
-			<h3 class="my-1.5 font-mono text-sm font-bold tracking-wider text-neutral-500">2024</h3>
+			<h2>Publications</h2>
+			{@render yearHeading(2024)}
 			<p>
 				<a
 					class="font-medium text-blue-500 hover:text-blue-600"
@@ -78,7 +86,7 @@
 				<br />
 				<i>Findings of the Association for Computational Linguistics</i>
 			</p>
-			<h3 class="my-1.5 font-mono text-sm font-bold tracking-wider text-neutral-500">2023</h3>
+			{@render yearHeading(2023)}
 			<p>
 				<a
 					class="font-medium text-blue-500 hover:text-blue-600"
@@ -99,8 +107,8 @@
 				<br />
 				<i>Proceedings of the National Academy of Sciences</i>
 			</p>
-			<h2 class="my-1 text-lg font-medium">Projects</h2>
-			<h3 class="my-1.5 font-mono text-sm font-bold tracking-wider text-neutral-500">2025</h3>
+			<h2>Projects</h2>
+			{@render yearHeading(2025)}
 			<p>
 				<a href="https://sequence.toys">
 					<img
@@ -115,7 +123,7 @@
 					></b
 				>, a web playground for training small language models with WebGPU.
 			</p>
-			<h3 class="my-1.5 font-mono text-sm font-bold tracking-wider text-neutral-500">2021</h3>
+			{@render yearHeading(2021)}
 			<p>
 				<b class="font-medium">I wrote the software the drives &ldquo;The Wall,&rdquo;</b>
 				the floor-to-ceiling interactive display in the lobby of BYU&rsquo;s computer science building.
