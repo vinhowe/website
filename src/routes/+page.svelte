@@ -79,8 +79,8 @@
 							<div class="items-baseline space-x-1">
 								{#if newPostMap[post.slug]}
 									<span
-										class="font-mono text-sm font-medium tracking-wider text-orange-500 uppercase"
-										>NEW</span
+										class="font-mono text-sm font-semibold tracking-wider text-orange-500 uppercase"
+										>New</span
 									>
 								{/if}
 								<a class="font-medium text-blue-500 hover:text-blue-600" href={`/blog/${post.slug}`}
