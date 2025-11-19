@@ -44,11 +44,11 @@
 
 {#snippet postPreview(post: BlogPostSummary, isNew: boolean)}
 	<div class="flex items-baseline justify-between gap-3">
-		<div class="items-baseline space-x-1">
+		<div class="items-baseline">
 			<a class="font-medium text-blue-500 hover:text-blue-600" href={`/blog/${post.slug}`}>
 				{#if isNew}
-					<span class="font-mono text-sm font-semibold tracking-wider text-orange-500 uppercase"
-						>New</span
+					<span class="font-mono text-sm font-semibold tracking-wider text-orange-500 uppercase mr-1"
+						>New&ensp;post</span
 					>
 				{/if}
 				{post.title}</a
