@@ -12,7 +12,7 @@
 
 {#snippet yearHeading(year: number)}
 	<div class="not-prose contents">
-		<h3 class="font-mono text-base font-medium tracking-wider text-neutral-500 uppercase">
+		<h3 class="font-mono text-sm font-medium tracking-wider text-neutral-600 uppercase">
 			{year}
 		</h3>
 	</div>
@@ -21,7 +21,7 @@
 <div class="flex h-full w-full items-start justify-center bg-slate-400">
 	<div class="m-3 flex flex-col max-w-3xl bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14">
 		<VinHeader />
-		<div class="prose [&_a]:no-underline flex-col text-justify max-w-none">
+		<div class="prose [&_a]:no-underline flex-col text-justify max-w-none leading-normal">
 			<p>
 				I&rsquo;m a Master's student in computer science at Brigham Young University, having
 				recently completed a Bachelor's in BYU's Applied and Computational Mathematics program. I
@@ -43,14 +43,14 @@
 					></b
 				>.
 			</p>
-			<h2>Research Interests</h2>
+			<h3>Research Interests</h3>
 			<p>
 				I&rsquo;m broadly interested in NLP and large language models. Right now, I&rsquo;m studying
 				what kinds of useful inductive biases self-supervision fails to induce even after training
 				on trillions(!) of tokens of natural language data.
 			</p>
 			{#if posts.length}
-				<h2>Blog</h2>
+				<h3>Blog</h3>
 				<div class="flex flex-col gap-1">
 					{#each posts as post}
 						<div class="flex items-baseline justify-between gap-4">
@@ -66,7 +66,7 @@
 					{/each}
 				</div>
 			{/if}
-			<h2>Publications</h2>
+			<h3>Publications</h3>
 			{@render yearHeading(2024)}
 			<p>
 				<a
@@ -76,7 +76,7 @@
 					<img
 						src="/gsae-preview.png"
 						alt="Diagram of gradient sparse autoencoder (gSAE)"
-						class="mb-2 border border-neutral-200 md:w-3/4"
+						class="[&]:my-4 border border-neutral-200 md:w-3/4"
 					/>
 					Features that Make a Difference: Leveraging Gradients for Improved Dictionary Learning</a
 				>
@@ -95,7 +95,7 @@
 					<img
 						src="/chatroom-preview.png"
 						alt="Preview of chatroom"
-						class="mb-2 border border-neutral-200 md:w-3/4"
+						class="[&]:my-4 border border-neutral-200 md:w-3/4"
 					/>
 					Leveraging AI for democratic discourse: Chat interventions can improve online political conversations
 					at scale</a
@@ -107,14 +107,14 @@
 				<br />
 				<i>Proceedings of the National Academy of Sciences</i>
 			</p>
-			<h2>Projects</h2>
+			<h3>Projects</h3>
 			{@render yearHeading(2025)}
 			<p>
 				<a href="https://sequence.toys">
 					<img
 						src="/sequence-toy-preview.png"
 						alt="Preview of Sequence Toy"
-						class="mb-2 border border-neutral-200 md:w-3/4"
+						class="[&]:my-4 border border-neutral-200 md:w-3/4"
 					/>
 				</a>
 				<b class="font-medium"
