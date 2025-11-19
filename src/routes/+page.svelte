@@ -36,7 +36,7 @@
 
 {#snippet yearHeading(year: number)}
 	<div class="not-prose contents">
-		<h3 class="font-mono text-sm font-medium tracking-wider text-neutral-600 uppercase">
+		<h3 class="font-mono text-sm font-semibold tracking-wider text-neutral-600 uppercase">
 			{year}
 		</h3>
 	</div>
