@@ -9,6 +9,8 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import remarkFootnotes from 'remark-footnotes';
 import remarkToc from 'remark-toc';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex-svelte';
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 
@@ -34,8 +36,13 @@ const config = {
 					return `{@html \`${html}\` }`;
 				}
 			},
-			remarkPlugins: [remarkGfm, remarkFootnotes, [remarkToc, { heading: 'contents' }]],
-			rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]
+			remarkPlugins: [
+				remarkMath,
+				remarkGfm,
+				[remarkFootnotes, { inlineNotes: true }],
+				[remarkToc, { heading: 'contents' }]
+			],
+			rehypePlugins: [rehypeKatex, rehypeSlug, [rehypeAutolinkHeadings, { behavior: 'wrap' }]]
 		})
 	],
 	kit: { adapter: adapter() },
