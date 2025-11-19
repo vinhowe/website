@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { twMerge } from 'tailwind-merge';
 	import { ChevronRight } from 'lucide-svelte';
+	import { onMount } from 'svelte';
 
 	// Svelte 5 style
 	let {
@@ -11,8 +12,14 @@
 		containerClass: containerClassName = ''
 	} = $props();
 
-	let expanded = $state(false);
+	// Render expanded on the server so the SSR HTML is open,
+	// then collapse on the client once JS has loaded.
+	let expanded = $state(true);
 	const contentId = `expandable-${crypto.randomUUID?.() ?? Math.random().toString(36).slice(2, 9)}`;
+
+	onMount(() => {
+		expanded = false;
+	});
 
 	const toggle = () => {
 		expanded = !expanded;
