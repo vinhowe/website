@@ -16,7 +16,7 @@ headerImage: './header.png'
 
 </ExpandableBlurb>
 
-I just released [Sequence Toy](https://sequence.toys), a playground for training language models entirely in your browser. I also built Piston, a proof-of-concept WebGPU deep learning library modeled after PyTorch, for the sole purpose of powering Sequence Toy. This blog post is a vehicle for me to talk about the work that went into the combined project by way of a narrative device: what will you want to know when you inevitably build `yourtorch`, your own little WebGPU PyTorch clone? I’ll start by pointing out how impractical this is and maybe dissuade you in the process.
+I just released [Sequence Toy](https://sequence.toys), a playground for training language models entirely in your browser. I also built [Piston](https://github.com/vinhowe/piston), a proof-of-concept WebGPU deep learning library modeled after PyTorch, for the sole purpose of powering Sequence Toy. This blog post is a vehicle for me to talk about the work that went into the combined project by way of a narrative device: what will you want to know when you inevitably build `yourtorch`, your own little WebGPU PyTorch clone? I’ll start by pointing out how impractical this is and maybe dissuade you in the process.
 
 Some important notes:
 
