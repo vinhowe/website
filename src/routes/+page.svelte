@@ -41,9 +41,9 @@
 {/snippet}
 
 <div class="flex h-full w-full items-start justify-center bg-slate-400">
-	<div class="m-3 flex flex-col max-w-3xl bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14">
+	<div class="xs:m-3 flex max-w-3xl flex-col bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14">
 		<VinHeader />
-		<div class="prose [&_a]:no-underline flex-col text-justify max-w-none leading-normal">
+		<div class="prose max-w-none flex-col text-justify leading-normal [&_a]:no-underline">
 			<p>
 				I&rsquo;m a Master's student in computer science at Brigham Young University, having
 				recently completed a Bachelor's in BYU's Applied and Computational Mathematics program. I
@@ -107,7 +107,7 @@
 					<img
 						src="/gsae-preview.png"
 						alt="Diagram of gradient sparse autoencoder (gSAE)"
-						class="[&]:my-4 border border-neutral-200 md:w-3/4"
+						class="border border-neutral-200 md:w-3/4 [&]:my-4"
 					/>
 					Features that Make a Difference: Leveraging Gradients for Improved Dictionary Learning</a
 				>
@@ -126,7 +126,7 @@
 					<img
 						src="/chatroom-preview.png"
 						alt="Preview of chatroom"
-						class="[&]:my-4 border border-neutral-200 md:w-3/4"
+						class="border border-neutral-200 md:w-3/4 [&]:my-4"
 					/>
 					Leveraging AI for democratic discourse: Chat interventions can improve online political conversations
 					at scale</a
@@ -145,7 +145,7 @@
 					<img
 						src="/sequence-toy-preview.png"
 						alt="Preview of Sequence Toy"
-						class="[&]:my-4 border border-neutral-200 md:w-3/4"
+						class="border border-neutral-200 md:w-3/4 [&]:my-4"
 					/>
 				</a>
 				<b class="font-medium"
