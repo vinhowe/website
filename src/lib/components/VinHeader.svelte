@@ -4,7 +4,11 @@
 	</h1>
 	<p>
 		<a class="text-blue-500 hover:text-blue-600" href="https://x.com/vinhowe">Twitter</a>
-		·
+		(<a
+			class="text-blue-500 hover:text-blue-600"
+			target="_blank"
+			href="https://x.com/messages/compose?recipient_id=1286805122115280896">DM me</a
+		>) ·
 		<a
 			class="text-blue-500 hover:text-blue-600"
 			href="https://scholar.google.com/citations?user=nOym4IEAAAAJ">Google Scholar</a
