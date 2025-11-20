@@ -41,7 +41,13 @@
 	<meta property="twitter:url" content="https://vin.how" />
 	<meta name="description" content="Vin Howe's personal website" />
 	<script type="application/ld+json">
-		{JSON.stringify(VIN_PERSON, null, 2)}
+		{JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'ProfilePage',
+			"dateCreated": "2025-11-20T00:00:00-05:00",
+			"dateModified": "2025-11-20T00:00:00-05:00",
+			mainEntity: VIN_PERSON
+		}, null, 2)}
 	</script>
 </svelte:head>
 
