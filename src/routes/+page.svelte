@@ -3,12 +3,25 @@
 	import type { BlogPostSummary } from '$lib/types/blog';
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
+	import { VIN_PERSON } from '$lib/structuredData';
 
 	const { data }: { data: PageData } = $props();
 	const posts = data.posts ?? [];
 
 	let newPostMap: Record<string, boolean> = $state({});
 	const newPosts = $derived(posts.filter((post) => newPostMap[post.slug]));
+
+	const profileLdJson = JSON.stringify(
+		{
+			'@context': 'https://schema.org',
+			'@type': 'ProfilePage',
+			dateCreated: '2025-11-20T00:00:00-05:00',
+			dateModified: '2025-11-20T00:00:00-05:00',
+			mainEntity: VIN_PERSON
+		},
+		null,
+		2
+	).replace(/</g, '\\u003c');
 
 	onMount(() => {
 		const now = new Date();
@@ -40,15 +53,7 @@
 	<meta property="twitter:title" content="Vin Howe" />
 	<meta property="twitter:url" content="https://vin.how" />
 	<meta name="description" content="Vin Howe's personal website" />
-	<script type="application/ld+json">
-		{JSON.stringify({
-			'@context': 'https://schema.org',
-			'@type': 'ProfilePage',
-			"dateCreated": "2025-11-20T00:00:00-05:00",
-			"dateModified": "2025-11-20T00:00:00-05:00",
-			mainEntity: VIN_PERSON
-		}, null, 2)}
-	</script>
+	{@html `<script type="application/ld+json">${profileLdJson}</script>`}
 </svelte:head>
 
 {#snippet yearHeading(year: number)}
