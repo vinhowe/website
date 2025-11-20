@@ -69,7 +69,8 @@
 		<div class="items-baseline">
 			<a class="font-medium text-blue-500 hover:text-blue-600" href={`/blog/${post.slug}`}>
 				{#if isNew}
-					<span class="font-mono text-sm font-semibold tracking-wider text-orange-500 uppercase mr-1"
+					<span
+						class="mr-1 font-mono text-sm font-semibold tracking-wider text-orange-500 uppercase"
 						>New&ensp;post</span
 					>
 				{/if}
