@@ -131,7 +131,7 @@ This story is great for inference: usually, you only want a single output, like 
 
 ## LazyTensor: graph-based execution for training
 
-Let's start by defining some desiderata for our solution. It should:
+Let's start by defining some criteria for our solution. It should:
 
 - Only require a single overall post-order—we'd prefer it if we could translate the forward pass, loss computation, gradient computations, and optimizer update into a single queue of WebGPU commands.
 - Require minimal or no changes to module and optimizer neural network code.
