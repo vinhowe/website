@@ -34,7 +34,7 @@
 			const postDate = new Date(`${post.date}T00:00:00Z`);
 			const diff = now.getTime() - postDate.getTime();
 
-			if (diff >= 0 && diff < newMs) {
+			if (diff < newMs) {
 				nextMap[post.slug] = true;
 			}
 		}
