@@ -32,6 +32,17 @@
 
 <svelte:head>
 	<title>Vin Howe</title>
+	<meta property="og:type" content="profile" />
+	<meta property="og:title" content="Vin Howe" />
+	<meta property="og:url" content="https://vin.how" />
+	<meta property="og:description" content="Vin Howe's personal website" />
+	<meta property="twitter:card" content="summary" />
+	<meta property="twitter:title" content="Vin Howe" />
+	<meta property="twitter:url" content="https://vin.how" />
+	<meta name="description" content="Vin Howe's personal website" />
+	<script type="application/ld+json">
+		{JSON.stringify(VIN_PERSON, null, 2)}
+	</script>
 </svelte:head>
 
 {#snippet yearHeading(year: number)}

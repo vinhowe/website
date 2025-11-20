@@ -3,6 +3,7 @@
 	import type { Snippet } from 'svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
+	import { VIN_PERSON } from '$lib/structuredData';
 
 	type DateInput = string | Date | undefined;
 
@@ -119,10 +120,7 @@
 							'@type': 'WebPage',
 							'@id': canonicalUrl
 						},
-						author: {
-							'@type': 'Person',
-							name: author
-						},
+						author: VIN_PERSON,
 						image: headerImageUrl,
 						publisher: {
 							'@type': 'Organization',
