@@ -129,7 +129,7 @@
 					},
 					null,
 					2
-				)
+				).replace(/</g, '\\u003c')
 			: undefined
 	);
 </script>
@@ -169,9 +169,7 @@
 	<meta name="citation_journal_title" content="Vin Howe's Blog" />
 	<meta name="citation_fulltext_html_url" content={canonicalUrl} />
 	{#if jsonLdBlogPosting}
-		<script type="application/ld+json">
-			{jsonLdBlogPosting}
-		</script>
+		{@html `<script type="application/ld+json">${jsonLdBlogPosting}</script>`}
 	{/if}
 </svelte:head>
 
