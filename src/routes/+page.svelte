@@ -99,8 +99,8 @@
 			{/if}
 			<p>
 				I&rsquo;m a Master's student in computer science at Brigham Young University, having
-				recently completed a Bachelor's in BYU's Applied and Computational Mathematics program. I
-				work with David Wingate in his
+				completed a Bachelor's in BYU's Applied and Computational Mathematics program. I work with
+				David Wingate in his
 				<a
 					class="text-blue-500 hover:text-blue-600"
 					href="https://www.linkedin.com/company/perception-control-and-cognition-lab/"
