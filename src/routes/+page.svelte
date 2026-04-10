@@ -102,7 +102,7 @@
 				completed a Bachelor's in BYU's Applied and Computational Mathematics program. I work with
 				David Wingate in his
 				<a
-					class="text-blue-500 hover:text-blue-600"
+					class="font-normal text-blue-500 hover:text-blue-600"
 					href="https://www.linkedin.com/company/perception-control-and-cognition-lab/"
 					>Perception, Control, and Cognition Lab</a
 				>, where I study language models broadly.
