@@ -133,6 +133,24 @@
 				</div>
 			{/if}
 			<h3>Publications</h3>
+			{@render yearHeading(2026)}
+			<p>
+				<a
+					class="font-medium text-blue-500 hover:text-blue-600"
+					href="https://arxiv.org/abs/2605.19284"
+				>
+					<img
+						src="/compartmentalization-preview.png"
+						alt="Preview of compartmentalization preprint"
+						class="border border-neutral-200 md:w-3/4 [&]:my-4"
+					/>
+					Language models struggle with compartmentalization</a
+				>
+				<br />
+				<b class="font-medium">Thomas V Howe</b>, David Wingate
+				<br />
+				<i>Preprint</i>
+			</p>
 			{@render yearHeading(2024)}
 			<p>
 				<a
