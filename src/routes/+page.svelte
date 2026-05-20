@@ -98,31 +98,16 @@
 				</div>
 			{/if}
 			<p>
-				I&rsquo;m a Master's student in computer science at Brigham Young University, having
-				completed a Bachelor's in BYU's Applied and Computational Mathematics program. I work with
-				David Wingate in his
-				<a
-					class="font-normal text-blue-500 hover:text-blue-600"
-					href="https://www.linkedin.com/company/perception-control-and-cognition-lab/"
-					>Perception, Control, and Cognition Lab</a
-				>, where I study language models broadly.
-			</p>
-			<p>
-				I built a chatroom that used large language models to improve polarizing political
-				conversations.
-				<b
-					><a
-						class="text-blue-500 hover:text-blue-600"
-						href="https://doi.org/10.1073/pnas.2311627120"
-						>My group published a paper about it in PNAS</a
-					></b
-				>.
+				I'm a Master's student in computer science at Brigham Young University. Previously, I did my
+				Bachelor's in BYU's Applied and Computational Mathematics program. I work in David Wingate's
+				lab, where I study large language models.
 			</p>
 			<h3>Research Interests</h3>
 			<p>
-				I&rsquo;m broadly interested in NLP and large language models. Right now, I&rsquo;m studying
-				what kinds of useful inductive biases self-supervision fails to induce even after training
-				on trillions(!) of tokens of natural language data.
+				I'm broadly interested in making AI a net social positive. Along with other risks like those
+				posed by superintelligence, I worry in the near term we run a real risk of making
+				widely-deployed AI capable enough to be socially destabilizing, but not yet aligned or
+				capable enough to prevent this.
 			</p>
 			{#if posts.length}
 				<h3>Blog</h3>
