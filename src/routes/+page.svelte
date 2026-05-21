@@ -104,10 +104,11 @@
 			</p>
 			<h3>Research Interests</h3>
 			<p>
-				I'm broadly interested in making AI a net social positive. Along with other risks like those
-				posed by superintelligence, I worry in the near term we run a real risk of making
-				widely-deployed AI capable enough to be socially destabilizing, but not yet aligned or
-				capable enough to prevent this.
+				I'm broadly interested in making AI a net social positive. Along with risks like those posed
+				by superintelligence, I worry we run a real risk in the near term of making widely-deployed
+				AI capable enough to be socially destabilizing, but not yet aligned or capable enough to
+				prevent this. I'm interested in a version of AI that has a strong, intuitive sense of its
+				role in benefiting society, but that comes with guarantees about our ability to control it.
 			</p>
 			{#if posts.length}
 				<h3>Blog</h3>
