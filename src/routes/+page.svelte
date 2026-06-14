@@ -98,9 +98,14 @@
 				</div>
 			{/if}
 			<p>
-				I'm a Master's student in computer science at Brigham Young University. Previously, I did my
-				Bachelor's in BYU's Applied and Computational Mathematics program. I work in David Wingate's
-				lab, where I study large language models.
+				I&rsquo;m currently a
+				<a class="text-blue-500 hover:text-blue-600" href="https://www.matsprogram.org/">MATS</a>
+				10.0 scholar working with
+				<a class="text-blue-500 hover:text-blue-600" href="https://www.oliversourbut.net/"
+					>Oliver Sourbut</a
+				>. I'm also a Master's student in computer science at Brigham Young University. Previously,
+				I did my Bachelor's in BYU's Applied and Computational Mathematics program. I work in David
+				Wingate's lab, where I study large language models.
 			</p>
 			<h3>Research Interests</h3>
 			<p>
