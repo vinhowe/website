@@ -19,6 +19,8 @@
 		<a class="text-blue-500 hover:text-blue-600" href="https://www.linkedin.com/in/tvinhowe/"
 			>LinkedIn</a
 		>
+		·
+		<a class="text-blue-500 hover:text-blue-600" href="https://calendly.com/tvin">Calendly</a>
 		· vin @ this domain
 	</p>
 </div>

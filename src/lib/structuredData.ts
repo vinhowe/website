@@ -19,6 +19,7 @@ export const VIN_PERSON = {
 		'https://www.linkedin.com/in/tvinhowe',
 		'https://x.com/vinhowe',
 		'https://github.com/vinhowe',
-		'https://scholar.google.com/citations?user=nOym4IEAAAAJ'
+		'https://scholar.google.com/citations?user=nOym4IEAAAAJ',
+		'https://calendly.com/tvin'
 	]
 };
