@@ -1,3 +1,13 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+
+	let onVinHow = $state(false);
+
+	onMount(() => {
+		onVinHow = window.location.hostname === 'vin.how';
+	});
+</script>
+
 <div class="mb-10 flex flex-col gap-1 not-prose">
 	<h1 class="text-xl font-medium tracking-tight text-slate-900">
 		<a href="/">Vin Howe</a>
@@ -21,6 +31,11 @@
 		>
 		·
 		<a class="text-blue-500 hover:text-blue-600" href="https://calendly.com/tvin">Calendly</a>
-		· vin @ this domain
+		·
+		{#if onVinHow}
+			vin @ this domain
+		{:else}
+			vin @ <a class="text-blue-500 hover:text-blue-600" href="https://vin.how">my other domain</a>
+		{/if}
 	</p>
 </div>
