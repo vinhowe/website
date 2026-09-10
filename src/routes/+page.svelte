@@ -1,5 +1,7 @@
 <script lang="ts">
 	import VinHeader from '$lib/components/VinHeader.svelte';
+	import InkImage from '$lib/components/InkImage.svelte';
+	import PageFrame from '$lib/components/PageFrame.svelte';
 	import type { BlogPostSummary } from '$lib/types/blog';
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
@@ -7,6 +9,12 @@
 
 	const { data }: { data: PageData } = $props();
 	const posts = data.posts ?? [];
+
+	// Section bands. Headed sections get one step less top padding: the heading's
+	// line box carries more leading above its caps than a paragraph has below its baseline.
+	const section =
+		'prose max-w-none border-t border-black px-5 py-5 leading-normal first:border-t-0 sm:px-7 sm:py-7';
+	const headed = `${section} pt-4 sm:pt-6`;
 
 	let newPostMap: Record<string, boolean> = $state({});
 	const newPosts = $derived(posts.filter((post) => newPostMap[post.slug]));
@@ -58,7 +66,7 @@
 
 {#snippet yearHeading(year: number)}
 	<div class="not-prose contents">
-		<h3 class="font-mono text-sm font-semibold tracking-wider text-neutral-600 uppercase">
+		<h3 class="text-sm font-medium tracking-wider text-neutral-800 tabular-nums">
 			{year}
 		</h3>
 	</div>
@@ -67,7 +75,7 @@
 {#snippet postPreview(post: BlogPostSummary, isNew: boolean)}
 	<div class="flex items-baseline justify-between gap-3">
 		<div class="items-baseline">
-			<a class="font-medium text-blue-500 hover:text-blue-600" href={`/blog/${post.slug}`}>
+			<a class="font-medium" href={`/blog/${post.slug}`}>
 				{#if isNew}
 					<span
 						class="mr-1 font-mono text-sm font-semibold tracking-wider text-orange-500 uppercase"
@@ -79,17 +87,17 @@
 		</div>
 		{#if !isNew && post.formattedDate}
 			<span
-				class="shrink-0 font-mono text-[11px] font-semibold tracking-widest text-neutral-500 uppercase"
+				class="shrink-0 text-xs font-medium tracking-wider text-neutral-600 uppercase tabular-nums"
 				>{post.formattedDate}</span
 			>
 		{/if}
 	</div>
 {/snippet}
 
-<div class="flex h-full w-full items-start justify-center bg-slate-400">
-	<div class="xs:m-3 flex max-w-3xl flex-col bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14">
-		<VinHeader />
-		<div class="prose max-w-none flex-col text-justify leading-normal [&_a]:no-underline">
+<PageFrame>
+	<VinHeader />
+	<div class="text-justify hyphens-auto">
+		<section class="{section} bg-paper-intro">
 			{#if newPosts.length}
 				<div class="-mt-3 mb-8 flex flex-col gap-1">
 					{#each newPosts as post}
@@ -98,42 +106,51 @@
 				</div>
 			{/if}
 			<p>
-				I&rsquo;m currently a
-				<a class="text-blue-500 hover:text-blue-600" href="https://www.matsprogram.org/">MATS</a>
-				10.0 scholar working with
-				<a class="text-blue-500 hover:text-blue-600" href="https://www.oliversourbut.net/"
-					>Oliver Sourbut</a
-				>. I'm also a Master's student in computer science at Brigham Young University. Previously,
-				I did my Bachelor's in BYU's Applied and Computational Mathematics program. I work in David
-				Wingate's lab, where I study large language models.
+				I&rsquo;m a
+				<a href="https://www.matsprogram.org/">MATS</a>
+				10.0/10.1 scholar supervised by
+				<a href="https://www.oliversourbut.net/">Oliver Sourbut</a>, where I'm working on a
+				benchmark for multi-agent epistemic propensities. I'm also a Master's student in computer
+				science at Brigham Young University; under the supervision of
+				<a href="https://science.byu.edu/directory/david-wingate">David Wingate</a>, I study
+				learning mechanics in LLMs. Previously, I did my Bachelor's in BYU's Applied and
+				Computational Mathematics program.
 			</p>
+		</section>
+		<section class="{headed} bg-paper-research">
 			<h3>Research Interests</h3>
 			<p>
-				I'm broadly interested in making AI a net social positive. Along with risks like those posed
-				by superintelligence, I worry we run a real risk in the near term of making widely-deployed
-				AI capable enough to be socially destabilizing, but not yet aligned or capable enough to
-				prevent this. I'm interested in a version of AI that has a strong, intuitive sense of its
-				role in benefiting society, but that comes with guarantees about our ability to control it.
+				I'm interested in deeply understanding AI to prevent catastrophic risks. In particular, <a
+					href="https://arxiv.org/abs/2605.19284">I've researched learning mechanics</a
+				>
+				to help predict how AI (mis)generalizes, and, as part of
+				<a href="https://www.matsprogram.org/">MATS</a>, I've benchmarked multi-agent epistemics to
+				help determine if agents are responsible enough to be trusted with our knowledge commons.
+				Previously, I worked on pro-social applications of AI, like creating
+				<a href="https://doi.org/10.1073/pnas.2311627120"
+					>a chatroom that used AI suggestions to help improve online political conversations</a
+				>.
 			</p>
-			{#if posts.length}
+		</section>
+		{#if posts.length}
+			<section class="{headed} bg-paper-blog">
 				<h3>Blog</h3>
 				<div class="flex flex-col gap-1">
 					{#each posts as post}
 						{@render postPreview(post, false)}
 					{/each}
 				</div>
-			{/if}
+			</section>
+		{/if}
+		<section class="{headed} bg-paper-publications [--band:var(--color-paper-publications)]">
 			<h3>Publications</h3>
 			{@render yearHeading(2026)}
 			<p>
-				<a
-					class="font-medium text-blue-500 hover:text-blue-600"
-					href="https://arxiv.org/abs/2605.19284"
-				>
-					<img
-						src="/compartmentalization-preview.png"
+				<a class="font-medium" href="https://arxiv.org/abs/2605.19284">
+					<InkImage
+						src="/compartmentalization-preview-tritone.png"
 						alt="Preview of compartmentalization preprint"
-						class="border border-neutral-200 md:w-3/4 [&]:my-4"
+						class="my-4 border border-black md:w-3/4"
 					/>
 					Language models struggle with compartmentalization</a
 				>
@@ -144,14 +161,11 @@
 			</p>
 			{@render yearHeading(2024)}
 			<p>
-				<a
-					class="font-medium text-blue-500 hover:text-blue-600"
-					href="https://doi.org/10.1073/pnas.2311627120"
-				>
-					<img
-						src="/gsae-preview.png"
+				<a class="font-medium" href="https://aclanthology.org/2025.findings-naacl.423/">
+					<InkImage
+						src="/gsae-preview-tritone.png"
 						alt="Diagram of gradient sparse autoencoder (gSAE)"
-						class="border border-neutral-200 md:w-3/4 [&]:my-4"
+						class="my-4 border border-black md:w-3/4"
 					/>
 					Features that Make a Difference: Leveraging Gradients for Improved Dictionary Learning</a
 				>
@@ -163,14 +177,11 @@
 			</p>
 			{@render yearHeading(2023)}
 			<p>
-				<a
-					class="font-medium text-blue-500 hover:text-blue-600"
-					href="https://doi.org/10.1073/pnas.2311627120"
-				>
-					<img
-						src="/chatroom-preview.png"
+				<a class="font-medium" href="https://doi.org/10.1073/pnas.2311627120">
+					<InkImage
+						src="/chatroom-preview-tritone.png"
 						alt="Preview of chatroom"
-						class="border border-neutral-200 md:w-3/4 [&]:my-4"
+						class="my-4 border border-black md:w-3/4"
 					/>
 					Leveraging AI for democratic discourse: Chat interventions can improve online political conversations
 					at scale</a
@@ -182,20 +193,20 @@
 				<br />
 				<i>Proceedings of the National Academy of Sciences</i>
 			</p>
+		</section>
+		<section class="{headed} bg-paper-projects [--band:var(--color-paper-projects)]">
 			<h3>Projects</h3>
 			{@render yearHeading(2025)}
 			<p>
-				<a href="https://sequence.toys">
-					<img
-						src="/sequence-toy-preview.png"
-						alt="Preview of Sequence Toy"
-						class="border border-neutral-200 md:w-3/4 [&]:my-4"
-					/>
+				<a
+					href="https://sequence.toys"
+					class="my-4 block border border-black no-underline md:w-3/4"
+				>
+					<InkImage src="/sequence-toy-preview-tritone.png" alt="Preview of Sequence Toy" />
 				</a>
 				<b class="font-medium"
 					>I created
-					<a class="text-blue-500 hover:text-blue-600" href="https://sequence.toys">Sequence Toy</a
-					></b
+					<a href="https://sequence.toys">Sequence Toy</a></b
 				>, a web playground for training small language models with WebGPU.
 			</p>
 			{@render yearHeading(2021)}
@@ -203,6 +214,6 @@
 				<b class="font-medium">I wrote the software the drives &ldquo;The Wall,&rdquo;</b>
 				the floor-to-ceiling interactive display in the lobby of BYU&rsquo;s computer science building.
 			</p>
-		</div>
+		</section>
 	</div>
-</div>
+</PageFrame>

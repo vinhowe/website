@@ -1,4 +1,3 @@
-
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
@@ -16,6 +15,15 @@
 
 @theme {
 	--font-mono: 'Berkeley Mono Variable', monospace;
+	/* Page background: near-white with a cool cast */
+	--color-paper: oklch(99% 0.008 265);
+	/* Section bands: a hue walk from blue to teal, 24 degrees per band, lightness alternating */
+	--color-paper-header: oklch(96.5% 0.018 272);
+	--color-paper-intro: oklch(98.5% 0.012 248);
+	--color-paper-research: oklch(96.5% 0.018 224);
+	--color-paper-blog: oklch(98.5% 0.012 200);
+	--color-paper-publications: oklch(96.5% 0.018 176);
+	--color-paper-projects: oklch(98.5% 0.012 152);
 }
 
 html,
@@ -24,7 +32,19 @@ body {
 }
 body {
 	position: relative;
-	@apply bg-slate-400;
+	@apply bg-paper;
+}
+
+/* Ink colour for three-tone images: the band's hue, taken dark. Falls back to black
+   where relative colour syntax is unsupported, which leaves the image as plain black ink. */
+@utility ink-overlay {
+	background-color: black;
+	background-color: oklch(from var(--band, black) 32% 0.09 h);
+}
+
+/* Underlines break around descenders */
+a {
+	text-decoration-skip-ink: all;
 }
 
 @layer typography {
@@ -67,6 +87,24 @@ body {
 	.prose :where(pre):not(:where([class~='not-prose'] *)) {
 		@apply rounded-none;
 		@apply p-3;
+	}
+
+	/* Links: body ink with a thin, offset underline that goes solid on hover */
+	.prose :where(a):not(:where([class~='not-prose'] *)) {
+		@apply text-slate-800 underline decoration-slate-800/50 decoration-1 underline-offset-2;
+	}
+
+	.prose :where(a):not(:where([class~='not-prose'] *)):hover {
+		@apply decoration-slate-800;
+	}
+
+	/* Wrapping: balanced headings, no orphaned last words in paragraphs */
+	.prose :where(h1, h2, h3, h4):not(:where([class~='not-prose'] *)) {
+		@apply text-balance;
+	}
+
+	.prose :where(p):not(:where([class~='not-prose'] *)) {
+		@apply text-pretty;
 	}
 
 	.prose :where(h1 a, h2 a, h3 a, h4 a, h5 a, h6 a):not(:where([class~='not-prose'] *)) {

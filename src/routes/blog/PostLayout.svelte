@@ -1,5 +1,7 @@
 <script lang="ts">
 	import VinHeader from '$lib/components/VinHeader.svelte';
+	import InkImage from '$lib/components/InkImage.svelte';
+	import PageFrame from '$lib/components/PageFrame.svelte';
 	import type { Snippet } from 'svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
@@ -173,33 +175,31 @@
 	{/if}
 </svelte:head>
 
-<div class="flex h-full w-full items-start justify-center bg-slate-400">
-	<div
-		class="xs:m-3 flex max-w-3xl min-w-0 flex-col bg-slate-100 p-8 text-slate-800 sm:m-6 sm:p-14"
+<PageFrame class="min-w-0">
+	<VinHeader />
+	<article
+		class="prose max-w-none flex-col bg-paper-intro px-5 py-5 hyphens-auto text-slate-800 prose-neutral [--band:var(--color-paper-intro)] sm:px-7 sm:py-7"
 	>
-		<VinHeader />
-		<article class="prose max-w-none flex-col text-slate-800 prose-neutral">
-			<header class="mt-0 mb-3 sm:mt-5 sm:mb-4">
-				{#if headerImageUrl}
-					<div class="-mx-8 w-screen sm:mx-0 sm:w-full">
-						<img src={headerImageUrl} alt={title} class="not-prose mb-7 sm:mb-10" />
-					</div>
-				{/if}
-				<h1 class="mb-2 text-2xl font-normal text-slate-800">{title}</h1>
-				<span class="mt-2 mb-3 font-mono text-xs tracking-wide text-slate-600 uppercase">
-					Blog post &middot;
-					{#if formattedDate}
-						<span>{formattedDate}</span>
-					{/if}
-				</span>
-			</header>
-			{@render children()}
-
-			{#if bibtexEntry}
-				<h2 class="my-2">Citation</h2>
-				<pre
-					class="overflow-x-auto rounded bg-slate-900 px-3 py-2 font-mono text-[11px] leading-relaxed text-slate-50">{bibtexEntry}</pre>
+		<header class="mb-3 sm:mb-4">
+			{#if headerImageUrl}
+				<div class="-mx-5 w-screen sm:mx-0 sm:w-full">
+					<InkImage src={headerImageUrl} alt={title} class="mb-7 border border-black sm:mb-10" />
+				</div>
 			{/if}
-		</article>
-	</div>
-</div>
+			<h1 class="mb-2 text-2xl font-normal text-slate-800">{title}</h1>
+			<span class="mt-2 mb-3 text-xs tracking-wide text-slate-600 uppercase tabular-nums">
+				Blog post &middot;
+				{#if formattedDate}
+					<span>{formattedDate}</span>
+				{/if}
+			</span>
+		</header>
+		{@render children()}
+
+		{#if bibtexEntry}
+			<h2 class="my-2">Citation</h2>
+			<pre
+				class="overflow-x-auto rounded bg-slate-900 px-3 py-2 font-mono text-[11px] leading-relaxed text-slate-50">{bibtexEntry}</pre>
+		{/if}
+	</article>
+</PageFrame>
