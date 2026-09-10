@@ -9,7 +9,7 @@
 </script>
 
 <div
-	class="not-prose flex flex-col gap-1 border-t-[3px] border-black ink-band px-5 py-5 [--band:var(--color-paper-header)] sm:px-7 sm:py-7"
+	class="not-prose flex flex-col gap-1 border-t-[3px] border-black ink-band bg-white/0 px-5 py-5 [--band:var(--color-paper-header)] sm:px-7 sm:py-7"
 >
 	<h1 class="text-xl font-medium tracking-tight">
 		<a href="/">Vin Howe</a>

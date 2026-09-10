@@ -21,15 +21,15 @@
 	--spacing-preview: 496px;
 	/* Page background: near-white with a cool cast; shows where WebGPU is unavailable */
 	--color-paper: oklch(99% 0.008 265);
-	/* Section bands. Cards paint no background: each sets --band to its token, which drives the
-	   ink colour (see ink-band) and the colour the background shader renders behind it.
+	/* Section bands. Each card paints its token and sets --band to it, which drives the ink
+	   colour (see ink-band) and the colour the background shader renders around it.
 	   Equal chroma, each at the highest lightness inside sRGB; blue tints clip near white long
 	   before yellow and cyan do, so lightness differs per hue. */
-	--color-paper-header: oklch(96.8% 0.015 272); /* ink hue only: the header card's field is white */
-	--color-paper-research: oklch(96.9% 0.015 25);
-	--color-paper-blog: oklch(98.9% 0.015 185);
-	--color-paper-publications: oklch(97.6% 0.015 310);
-	--color-paper-projects: oklch(98.8% 0.015 90);
+	--color-paper-header: oklch(96.8% 0.015 272); /* ink hue only: the header card itself is white */
+	--color-paper-research: oklch(99.1% 0.004 25);
+	--color-paper-blog: oklch(99.4% 0.007 185);
+	--color-paper-publications: oklch(98.8% 0.007 310);
+	--color-paper-projects: oklch(99.4% 0.007 90);
 	/* Long-form reading: a warm off-white, muted so the tint doesn't tire over a whole post */
 	--color-paper-post: oklch(99% 0.007 75);
 }

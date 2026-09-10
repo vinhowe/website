@@ -112,7 +112,9 @@
 		<div class="contents xl:flex xl:w-1/2 xl:min-w-0 xl:flex-col xl:gap-gutter">
 			<div data-glow class="border border-black [--band:white]">
 				<VinHeader />
-				<section class="{section} ink-band pt-0 [--band:var(--color-paper-header)] sm:pt-0">
+				<section
+					class="{section} ink-band bg-white/0 pt-0 [--band:var(--color-paper-header)] sm:pt-0"
+				>
 					{#if newPosts.length}
 						<div class="-mt-3 mb-8 flex flex-col gap-1">
 							{#each newPosts as post}
@@ -134,7 +136,10 @@
 				</section>
 			</div>
 			{#if posts.length}
-				<section data-glow class="{headed} order-3 ink-band [--band:var(--color-paper-blog)]">
+				<section
+					data-glow
+					class="{headed} order-3 ink-band bg-paper-blog/0 [--band:var(--color-paper-blog)]"
+				>
 					<h3>Blog</h3>
 					<div class="flex flex-col gap-1">
 						{#each posts as post}
@@ -143,7 +148,10 @@
 					</div>
 				</section>
 			{/if}
-			<section data-glow class="{headed} order-5 ink-band [--band:var(--color-paper-projects)]">
+			<section
+				data-glow
+				class="{headed} order-5 ink-band bg-paper-projects/0 [--band:var(--color-paper-projects)]"
+			>
 				<h3>Projects</h3>
 				{@render yearHeading(2025)}
 				<p>
@@ -173,7 +181,7 @@
 		>
 			<section
 				data-glow
-				class="{headed} order-2 ink-band [--band:var(--color-paper-research)] xl:mt-0"
+				class="{headed} order-2 ink-band bg-paper-research/0 [--band:var(--color-paper-research)] xl:mt-0"
 			>
 				<h3>Research Interests</h3>
 				<p>
@@ -189,7 +197,10 @@
 					>.
 				</p>
 			</section>
-			<section data-glow class="{headed} order-4 ink-band [--band:var(--color-paper-publications)]">
+			<section
+				data-glow
+				class="{headed} order-4 ink-band bg-paper-publications/0 [--band:var(--color-paper-publications)]"
+			>
 				<h3>Publications</h3>
 				{@render yearHeading(2026)}
 				<p>
