@@ -7,7 +7,7 @@
 	// nearest card. Without WebGPU the canvas stays transparent and the page background shows.
 	import { onMount } from 'svelte';
 
-	let { softness = 24, spread = 0.5 }: { softness?: number; spread?: number } = $props();
+	let { softness = 40, spread = 0.5 }: { softness?: number; spread?: number } = $props();
 
 	const MAX_GLOWS = 16;
 	const UNIFORM_BYTES = 32 + MAX_GLOWS * 32;
