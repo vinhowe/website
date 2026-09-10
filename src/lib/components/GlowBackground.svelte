@@ -139,14 +139,27 @@
 			};
 
 			let elements: Element[] = [];
+			let paper: [number, number, number, number] = [1, 1, 1, 1];
 			const sizeObserver = new ResizeObserver(schedule);
 			const collect = () => {
 				sizeObserver.disconnect();
 				sizeObserver.observe(document.body);
 				elements = Array.from(document.querySelectorAll('[data-glow]')).slice(0, MAX_GLOWS);
 				for (const el of elements) sizeObserver.observe(el);
+				paper = resolve(getComputedStyle(document.body).backgroundColor);
 				dirty = true;
 				schedule();
+			};
+			// DOM mutations arrive in bursts while a page mounts; re-collect once per frame, after
+			// the burst, rather than forcing layout on every batch.
+			let collectPending = false;
+			const collectSoon = () => {
+				if (collectPending) return;
+				collectPending = true;
+				requestAnimationFrame(() => {
+					collectPending = false;
+					if (!stopped) collect();
+				});
 			};
 
 			const render = () => {
@@ -157,7 +170,7 @@
 				f32[0] = softness * dpr;
 				f32[1] = spread;
 				u32[2] = elements.length;
-				f32.set(resolve(getComputedStyle(document.body).backgroundColor).slice(0, 3), 4);
+				f32.set(paper.slice(0, 3), 4);
 				elements.forEach((el, i) => {
 					let color = colorOf.get(el);
 					if (!color) {
@@ -202,7 +215,7 @@
 			window.addEventListener('resize', onResize);
 			window.addEventListener('scroll', schedule, { passive: true });
 			document.addEventListener('visibilitychange', schedule);
-			const mutationObserver = new MutationObserver(collect);
+			const mutationObserver = new MutationObserver(collectSoon);
 			mutationObserver.observe(document.body, { childList: true, subtree: true });
 
 			resize();
