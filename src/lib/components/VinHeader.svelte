@@ -9,13 +9,13 @@
 </script>
 
 <div
-	class="not-prose flex flex-col gap-1 border-b border-black bg-paper-header px-5 py-5 sm:px-7 sm:py-7"
+	class="not-prose flex flex-col gap-1 border-t-[3px] border-black ink-band px-5 py-5 [--band:var(--color-paper-header)] sm:px-7 sm:py-7"
 >
-	<h1 class="text-xl font-medium tracking-tight text-slate-900">
+	<h1 class="text-xl font-medium tracking-tight">
 		<a href="/">Vin Howe</a>
 	</h1>
 	<p
-		class="[&_a]:text-slate-800 [&_a]:underline [&_a]:decoration-slate-800/50 [&_a]:decoration-1 [&_a]:underline-offset-2 [&_a:hover]:decoration-slate-800"
+		class="[&_a]:underline [&_a]:decoration-[var(--ink)]/50 [&_a]:decoration-dotted [&_a]:decoration-[1.5px] [&_a]:underline-offset-2 [&_a:hover]:decoration-[var(--ink)] [&_a:hover]:decoration-solid"
 	>
 		<a href="https://x.com/vinhowe">Twitter</a>
 		(<a target="_blank" href="https://x.com/messages/compose?recipient_id=1286805122115280896"

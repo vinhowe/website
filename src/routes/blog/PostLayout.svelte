@@ -175,19 +175,22 @@
 	{/if}
 </svelte:head>
 
-<PageFrame class="min-w-0">
-	<VinHeader />
+<PageFrame>
+	<div data-glow class="border border-black [--band:white]">
+		<VinHeader />
+	</div>
 	<article
-		class="prose max-w-none flex-col bg-paper-intro px-5 py-5 hyphens-auto text-slate-800 prose-neutral [--band:var(--color-paper-intro)] sm:px-7 sm:py-7"
+		data-glow
+		class="prose -mt-px max-w-none border border-black ink-band px-5 py-5 hyphens-auto [--band:var(--color-paper-post)] [--ink-chroma:0.025] sm:px-7 sm:py-7"
 	>
 		<header class="mb-3 sm:mb-4">
 			{#if headerImageUrl}
-				<div class="-mx-5 w-screen sm:mx-0 sm:w-full">
+				<div class="-mx-5 sm:mx-0">
 					<InkImage src={headerImageUrl} alt={title} class="mb-7 border border-black sm:mb-10" />
 				</div>
 			{/if}
-			<h1 class="mb-2 text-2xl font-normal text-slate-800">{title}</h1>
-			<span class="mt-2 mb-3 text-xs tracking-wide text-slate-600 uppercase tabular-nums">
+			<h1 class="mb-2 text-2xl font-normal">{title}</h1>
+			<span class="mt-2 mb-3 text-xs tracking-wide text-[var(--ink)]/70 uppercase tabular-nums">
 				Blog post &middot;
 				{#if formattedDate}
 					<span>{formattedDate}</span>
@@ -199,7 +202,7 @@
 		{#if bibtexEntry}
 			<h2 class="my-2">Citation</h2>
 			<pre
-				class="overflow-x-auto rounded bg-slate-900 px-3 py-2 font-mono text-[11px] leading-relaxed text-slate-50">{bibtexEntry}</pre>
+				class="overflow-x-auto px-3 py-2 font-mono text-[11px] leading-relaxed">{bibtexEntry}</pre>
 		{/if}
 	</article>
 </PageFrame>

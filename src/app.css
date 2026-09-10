@@ -15,15 +15,23 @@
 
 @theme {
 	--font-mono: 'Berkeley Mono Variable', monospace;
-	/* Page background: near-white with a cool cast */
+	/* Gap between the floating cards, and their inset from the page edge on small screens */
+	--spacing-gutter: 0px;
+	/* Displayed width of preview images. scripts/tritone.py reads this so dithers render 1:1. */
+	--spacing-preview: 496px;
+	/* Page background: near-white with a cool cast; shows where WebGPU is unavailable */
 	--color-paper: oklch(99% 0.008 265);
-	/* Section bands: a hue walk from blue to teal, 24 degrees per band, lightness alternating */
-	--color-paper-header: oklch(96.5% 0.018 272);
-	--color-paper-intro: oklch(98.5% 0.012 248);
-	--color-paper-research: oklch(96.5% 0.018 224);
-	--color-paper-blog: oklch(98.5% 0.012 200);
-	--color-paper-publications: oklch(96.5% 0.018 176);
-	--color-paper-projects: oklch(98.5% 0.012 152);
+	/* Section bands. Cards paint no background: each sets --band to its token, which drives the
+	   ink colour (see ink-band) and the colour the background shader renders behind it.
+	   Equal chroma, each at the highest lightness inside sRGB; blue tints clip near white long
+	   before yellow and cyan do, so lightness differs per hue. */
+	--color-paper-header: oklch(96.8% 0.015 272); /* ink hue only: the header card's field is white */
+	--color-paper-research: oklch(96.9% 0.015 25);
+	--color-paper-blog: oklch(98.9% 0.015 185);
+	--color-paper-publications: oklch(97.6% 0.015 310);
+	--color-paper-projects: oklch(98.8% 0.015 90);
+	/* Long-form reading: a warm off-white, muted so the tint doesn't tire over a whole post */
+	--color-paper-post: oklch(99% 0.007 75);
 }
 
 html,
@@ -35,11 +43,41 @@ body {
 	@apply bg-paper;
 }
 
-/* Ink colour for three-tone images: the band's hue, taken dark. Falls back to black
-   where relative colour syntax is unsupported, which leaves the image as plain black ink. */
+/* Band ink. A section sets --band to its background token; this derives a dark ink of the
+   same hue and applies it to text, prose colours, image overlays and text selection.
+   --ink-chroma sets how coloured the ink and its tints are; long-form sets it low.
+   Where relative colour syntax is unsupported the ink is invalid and text inherits slate. */
+@utility ink-band {
+	--ink: oklch(from var(--band) 30% var(--ink-chroma, 0.07) h);
+	color: var(--ink);
+	--tw-prose-body: var(--ink);
+	--tw-prose-headings: var(--ink);
+	--tw-prose-bold: var(--ink);
+	--tw-prose-links: var(--ink);
+	--tw-prose-code: var(--ink);
+	--tw-prose-counters: var(--ink);
+	--tw-prose-bullets: var(--ink);
+	--tw-prose-quotes: var(--ink);
+	--tw-prose-captions: var(--ink);
+	--tw-prose-pre-bg: var(--ink);
+	--tw-prose-pre-code: var(--color-paper);
+	&::selection,
+	& *::selection {
+		background-color: oklch(from var(--band) 88% calc(var(--ink-chroma, 0.07) * 1.3) h);
+		color: var(--ink);
+	}
+}
+
+/* A slightly deeper tint of the band, relative to its own lightness, for inline code and callout fills */
+@utility band-tint {
+	background-color: var(--color-slate-200);
+	background-color: oklch(from var(--band) calc(l - 0.035) calc(var(--ink-chroma, 0.07) * 0.7) h);
+}
+
+/* Three-tone images: the screen overlay turns black into the band ink */
 @utility ink-overlay {
 	background-color: black;
-	background-color: oklch(from var(--band, black) 32% 0.09 h);
+	background-color: var(--ink);
 }
 
 /* Underlines break around descenders */
@@ -56,7 +94,7 @@ a {
 
 	/* 2. Inline code as a slightly darker pill */
 	.prose :where(code):not(:where([class~='not-prose'] *)) {
-		@apply bg-slate-300 px-0.5 py-0.25 font-normal;
+		@apply band-tint px-0.5 py-0.25 font-normal;
 	}
 
 	/* 3. Don’t double-style fenced code blocks */
@@ -65,7 +103,7 @@ a {
 	}
 
 	.prose :where(pre):not(:where([class~='not-prose'] *)) {
-		@apply overflow-x-auto rounded-lg bg-slate-900 p-4;
+		@apply overflow-x-auto rounded-lg p-4;
 	}
 
 	.prose :where(strong):not(:where([class~='not-prose'] *)) {
@@ -89,13 +127,18 @@ a {
 		@apply p-3;
 	}
 
-	/* Links: body ink with a thin, offset underline that goes solid on hover */
+	/* Shiki sets its theme background inline; the band ink wins over it */
+	.prose :where(pre.shiki):not(:where([class~='not-prose'] *)) {
+		background-color: var(--ink) !important;
+	}
+
+	/* Links: body ink with a thin, dotted, offset underline that goes solid on hover */
 	.prose :where(a):not(:where([class~='not-prose'] *)) {
-		@apply text-slate-800 underline decoration-slate-800/50 decoration-1 underline-offset-2;
+		@apply underline decoration-[var(--ink)]/50 decoration-dotted decoration-[1.5px] underline-offset-2;
 	}
 
 	.prose :where(a):not(:where([class~='not-prose'] *)):hover {
-		@apply decoration-slate-800;
+		@apply decoration-[var(--ink)] decoration-solid;
 	}
 
 	/* Wrapping: balanced headings, no orphaned last words in paragraphs */

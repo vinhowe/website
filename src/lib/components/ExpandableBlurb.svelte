@@ -26,7 +26,7 @@
 	};
 </script>
 
-<div class={twMerge('w-full border border-slate-400 bg-slate-200', containerClassName)}>
+<div class={twMerge('w-full border border-black band-tint', containerClassName)}>
 	<button
 		type="button"
 		class="flex w-full cursor-pointer items-center gap-1 px-2 text-left font-medium focus:outline-none"

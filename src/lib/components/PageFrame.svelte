@@ -5,10 +5,10 @@
 	let { children, class: className = '' }: { children: Snippet; class?: string } = $props();
 </script>
 
-<div class="flex min-h-screen w-full items-start justify-center bg-paper">
+<div class="flex min-h-screen w-full items-start justify-center">
 	<div
 		class={twMerge(
-			'flex max-w-[45rem] flex-col bg-paper text-slate-800 sm:m-6 sm:border sm:border-t-[3px] sm:border-black',
+			'm-gutter flex w-full max-w-[45rem] min-w-0 flex-col gap-gutter text-slate-800 sm:m-6',
 			className
 		)}
 	>

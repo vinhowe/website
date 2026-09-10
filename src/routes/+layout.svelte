@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import GlowBackground from '$lib/components/GlowBackground.svelte';
 
 	let { children } = $props();
 </script>
@@ -35,4 +36,5 @@
 	/>
 </svelte:head>
 
+<GlowBackground />
 {@render children()}
