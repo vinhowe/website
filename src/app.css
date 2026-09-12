@@ -27,8 +27,8 @@
 	   before yellow and cyan do, so lightness differs per hue. */
 	--color-paper-header: oklch(96.8% 0.015 272); /* ink hue only: the header card itself is white */
 	--color-paper-research: oklch(98.7% 0.0062 25);
-	--color-paper-blog: oklch(99.2% 0.0097 185);
-	--color-paper-publications: oklch(98.4% 0.0097 310);
+	--color-paper-blog: oklch(99.4% 0.0097 145);
+	--color-paper-publications: oklch(98.1% 0.0097 295);
 	--color-paper-projects: oklch(99.2% 0.0097 90);
 	/* Long-form reading: a warm off-white, muted so the tint doesn't tire over a whole post */
 	--color-paper-post: oklch(99% 0.007 75);
