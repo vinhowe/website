@@ -13,7 +13,7 @@
 	import { onMount } from 'svelte';
 
 	let {
-		softness = 24,
+		softness = 8,
 		hoverSoftness = 2,
 		spread = 0.5,
 		chroma = 2.5,
