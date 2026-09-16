@@ -176,12 +176,11 @@
 </svelte:head>
 
 <PageFrame>
-	<div data-glow class="border border-black [--band:white]">
+	<div class="border border-black bg-white">
 		<VinHeader />
 	</div>
 	<article
-		data-glow
-		class="prose -mt-px max-w-none border border-black ink-band bg-paper-post/0 px-5 py-5 hyphens-auto [--band:var(--color-paper-post)] [--ink-chroma:0.025] sm:px-7 sm:py-7"
+		class="prose -mt-px max-w-none border border-black ink-band bg-white px-5 py-5 hyphens-auto [--band:var(--color-paper-post)] [--ink-chroma:0] sm:px-7 sm:py-7"
 	>
 		<header class="mb-3 sm:mb-4">
 			{#if headerImageUrl}

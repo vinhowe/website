@@ -5,14 +5,15 @@
 	// runs out to the page edge until another card is closer. softness is the width of the
 	// blend where two cards touch, and spread how fast that width grows with distance from the
 	// nearest card. chroma and lightness push each band colour in OKLab before it is drawn.
+	// The canvas fades in after its first frame so the field doesn't snap in on load.
 	// Without WebGPU the canvas stays transparent and the page background shows.
 	import { onMount } from 'svelte';
 
 	let {
 		softness = 8,
 		spread = 0.5,
-		chroma = 2.5,
-		lightness = -0.03
+		chroma = 1,
+		lightness = 0
 	}: { softness?: number; spread?: number; chroma?: number; lightness?: number } = $props();
 
 	const MAX_GLOWS = 16;
@@ -68,6 +69,7 @@
 	`;
 
 	let canvas: HTMLCanvasElement;
+	let ready = $state(false);
 
 	type Rgba = [number, number, number, number];
 
@@ -239,6 +241,7 @@
 				pass.draw(3);
 				pass.end();
 				device.queue.submit([encoder.finish()]);
+				ready = true;
 			};
 
 			const onResize = () => {
@@ -274,5 +277,6 @@
 <canvas
 	bind:this={canvas}
 	aria-hidden="true"
-	class="pointer-events-none fixed inset-0 -z-10 h-full w-full"
+	class="pointer-events-none fixed inset-0 -z-10 h-full w-full opacity-0 transition-opacity duration-700 ease-out"
+	class:opacity-100={ready}
 ></canvas>
