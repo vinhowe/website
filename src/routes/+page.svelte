@@ -215,7 +215,7 @@
 					<br />
 					<b class="font-medium">Thomas V Howe</b>, David Wingate
 					<br />
-					<i>Preprint</i>
+					<i>Under review</i>
 				</p>
 				{@render yearHeading(2024)}
 				<p>
