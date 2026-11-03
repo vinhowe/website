@@ -53,6 +53,11 @@
 		if (!input) return undefined;
 		const normalized = input.replace(/^\.?\//, '');
 
+		// Try the post's own folder first, so posts can share filenames like header.png
+		const slug = page.route.id?.replace(/^\/blog\//, '');
+		const postKey = `./${slug}/${normalized}`;
+		if (slug && imageModules[postKey]) return imageModules[postKey];
+
 		// Try exact relative match from blog root
 		const exactKey = `./${normalized}`;
 		if (imageModules[exactKey]) return imageModules[exactKey];
@@ -64,7 +69,7 @@
 		return undefined;
 	}
 
-	const headerImageUrl = resolveHeaderImageUrl(headerImage);
+	const headerImageUrl = $derived(resolveHeaderImageUrl(headerImage));
 
 	const isoDate = resolvedDate ? resolvedDate.toISOString().slice(0, 10) : undefined;
 	const citationPublicationDate = isoDate ? isoDate.replace(/-/g, '/') : undefined;
