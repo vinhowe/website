@@ -51,7 +51,9 @@ def robot(d: ImageDraw.ImageDraw, x0: float, y0: float, s: float, evil: bool) ->
         d.arc(box(0.38, 0.44, 0.62, 0.60), start=20, end=160, fill=INK, width=lw)
 
 
-def header(width: int, rows: int, seed: int = 3) -> Image.Image:
+def header(
+    width: int, rows: int, seed: int = 3, wavelength: float = 4.5, band: float = 2, reach: float = 20, spread: float = 10
+) -> Image.Image:
     height = round(width / RATIO)
     im = Image.new("L", (width, height), PAPER)
     d = ImageDraw.Draw(im)
@@ -62,9 +64,10 @@ def header(width: int, rows: int, seed: int = 3) -> Image.Image:
         offset = (pitch / 2) * (r % 2)
         c = -1
         while (x := c * pitch + offset) < width:
-            cx = (x + pitch / 2) / width
-            # Misalignment spreads from right to left, patchy near the transition.
-            evil = rng.random() < 1 / (1 + np.exp(-(cx - 0.55) * 12))
+            # Misalignment ripples out in rings from the bottom-left corner, thinning as it spreads.
+            dist = np.hypot(x + pitch / 2, height - (r + 0.5) * pitch) / pitch
+            in_ring = (dist % wavelength) < band
+            evil = in_ring and rng.random() < np.clip((reach - dist) / spread, 0, 1)
             robot(d, x + (pitch - s) / 2, r * pitch + (pitch - s) / 2, s, evil)
             c += 1
     return im
@@ -72,4 +75,4 @@ def header(width: int, rows: int, seed: int = 3) -> Image.Image:
 
 if __name__ == "__main__":
     out = Path(__file__).resolve().parent.parent / "src/routes/blog/emergent-misalignment-pareto/header.png"
-    header(1800, rows=4).save(out)
+    header(1800, rows=7).save(out)
