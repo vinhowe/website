@@ -12,6 +12,14 @@ headerImage: './header.png'
 	import rlhfIcon from './rlhf-icon.png';
 </script>
 
+<p class="not-prose mb-6">
+	<a
+		href="https://www.pangram.com/history/4168d3c8-5d79-4948-a5bf-cfdc03a3a70c"
+		class="inline-block border border-black px-2 py-1 text-xs tracking-wide text-[var(--ink)] uppercase no-underline hover:bg-black hover:text-white"
+		>100% human written · Pangram ↗</a
+	>
+</p>
+
 It maybe shouldn't be all that surprising that the _type_ of generalization we see in [emergent misalignment](https://arxiv.org/abs/2502.17424) (EM) could happen in theory, if we take away all of the specific details. We know models learn features at least as abstract as…
 
 - "lessons or test from fate or God" [\[1\]](https://www-cdn.anthropic.com/963373e433e489a87a10c823c52a0a013e9172dd/Claude%20Sonnet%204.5%20System%20Card.pdf) (activating when Sonnet 4.5 thinks it's being evaluated)
