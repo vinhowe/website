@@ -64,7 +64,8 @@ def header(width: int, rows: int, seed: int = 3, reach: float = 8, spread: float
     origin = np.array([-1.5 * pitch, height + 1.5 * pitch])
     ring = 1
     # Rings sit further apart than robots along a ring, so the arcs read as separate bands.
-    while (radius := (ring + 0.2) * pitch * 1.2) < np.hypot(width, height) + pitch:
+    far = np.hypot(width - origin[0], origin[1])  # distance to the top-right corner
+    while (radius := (ring + 0.2) * pitch * 1.2) < far + pitch:
         # Evenly spaced around the quarter circle, skipping robots that fall off the canvas.
         n = max(1, int(radius * np.pi / 2 / pitch))
         for theta in (np.arange(n) + 0.5) / n * np.pi / 2:
