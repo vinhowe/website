@@ -10,6 +10,7 @@ headerImage: './header.png'
 	import paretoFrontier from './pareto-frontier.png';
 	import experiments from './experiments.png';
 	import rlhfIcon from './rlhf-icon.png';
+	import { ArrowUpRight } from 'lucide-svelte';
 </script>
 
 <p class="not-prose mb-6">
@@ -18,7 +19,9 @@ headerImage: './header.png'
 		class="group inline-flex border border-black text-xs tracking-wide uppercase no-underline"
 		><span class="px-2 py-1 text-[var(--ink)] group-hover:bg-black group-hover:text-white"
 			>100% human written</span
-		><span class="bg-black px-2 py-1 text-white">Pangram ↗</span></a
+		><span class="inline-flex items-center gap-0.5 bg-black py-1 pr-1.5 pl-2 text-white"
+			>Pangram <ArrowUpRight class="size-3.5" /></span
+		></a
 	>
 </p>
 
