@@ -1,5 +1,5 @@
-"""Draw the emergent misalignment post header: a brick grid of robot heads, friendly on the
-left and turning evil toward the right, already in the three tones the other headers use.
+"""Draw the emergent misalignment post header: rings of robot heads around the bottom-left
+corner, friendly near it and turning evil outward, already in the three tones the other headers use.
 
     uv run --with pillow --with numpy python scripts/em_header.py
 """
@@ -52,8 +52,8 @@ def robot(d: ImageDraw.ImageDraw, x0: float, y0: float, s: float, evil: bool) ->
 
 
 def header(width: int, rows: int, seed: int = 3, reach: float = 8, spread: float = 5) -> Image.Image:
-    """Robots sit on concentric rings around the bottom-left corner, evil near it and turning
-    friendly ring by ring as misalignment thins out; rows sets the robot size as height / rows."""
+    """Robots sit on concentric rings around the bottom-left corner, friendly near it and turning
+    evil ring by ring toward the outside; rows sets the robot size as height / rows."""
     height = round(width / RATIO)
     im = Image.new("L", (width, height), PAPER)
     d = ImageDraw.Draw(im)
@@ -72,7 +72,7 @@ def header(width: int, rows: int, seed: int = 3, reach: float = 8, spread: float
             cx, cy = origin + radius * np.array([np.cos(theta), -np.sin(theta)])
             if not (-s / 2 < cx < width + s / 2 and -s / 2 < cy < height + s / 2):
                 continue
-            evil = rng.random() < np.clip((reach - ring) / spread + 0.5, 0, 1)
+            evil = rng.random() < np.clip((ring - reach) / spread + 0.5, 0, 1)
             robot(d, cx - s / 2, cy - s / 2, s, evil)
         ring += 1
     return im
