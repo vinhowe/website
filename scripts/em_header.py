@@ -60,7 +60,8 @@ def header(width: int, rows: int, seed: int = 3, reach: float = 8, spread: float
     pitch = height / rows
     s = pitch * 0.82
     rng = np.random.default_rng(seed)
-    origin = np.array([0.0, height])
+    # The rings' centre sits off the canvas past the bottom-left corner, so no gap shows there.
+    origin = np.array([-1.5 * pitch, height + 1.5 * pitch])
     ring = 1
     # Rings sit further apart than robots along a ring, so the arcs read as separate bands.
     while (radius := (ring + 0.2) * pitch * 1.2) < np.hypot(width, height) + pitch:
