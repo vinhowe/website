@@ -51,28 +51,31 @@ def robot(d: ImageDraw.ImageDraw, x0: float, y0: float, s: float, evil: bool) ->
         d.arc(box(0.38, 0.44, 0.62, 0.60), start=20, end=160, fill=INK, width=lw)
 
 
-def header(
-    width: int, rows: int, seed: int = 3, wavelength: float = 4.5, band: float = 2, reach: float = 20, spread: float = 10
-) -> Image.Image:
+def header(width: int, rows: int, seed: int = 3, reach: float = 8, spread: float = 5) -> Image.Image:
+    """Robots sit on concentric rings around the bottom-left corner, evil near it and turning
+    friendly ring by ring as misalignment thins out; rows sets the robot size as height / rows."""
     height = round(width / RATIO)
     im = Image.new("L", (width, height), PAPER)
     d = ImageDraw.Draw(im)
     pitch = height / rows
     s = pitch * 0.82
     rng = np.random.default_rng(seed)
-    for r in range(rows):
-        offset = (pitch / 2) * (r % 2)
-        c = -1
-        while (x := c * pitch + offset) < width:
-            # Misalignment ripples out in rings from the bottom-left corner, thinning as it spreads.
-            dist = np.hypot(x + pitch / 2, height - (r + 0.5) * pitch) / pitch
-            in_ring = (dist % wavelength) < band
-            evil = in_ring and rng.random() < np.clip((reach - dist) / spread, 0, 1)
-            robot(d, x + (pitch - s) / 2, r * pitch + (pitch - s) / 2, s, evil)
-            c += 1
+    origin = np.array([0.0, height])
+    ring = 1
+    # Rings sit further apart than robots along a ring, so the arcs read as separate bands.
+    while (radius := (ring + 0.2) * pitch * 1.2) < np.hypot(width, height) + pitch:
+        # Evenly spaced around the quarter circle, skipping robots that fall off the canvas.
+        n = max(1, int(radius * np.pi / 2 / pitch))
+        for theta in (np.arange(n) + 0.5) / n * np.pi / 2:
+            cx, cy = origin + radius * np.array([np.cos(theta), -np.sin(theta)])
+            if not (-s / 2 < cx < width + s / 2 and -s / 2 < cy < height + s / 2):
+                continue
+            evil = rng.random() < np.clip((reach - ring) / spread + 0.5, 0, 1)
+            robot(d, cx - s / 2, cy - s / 2, s, evil)
+        ring += 1
     return im
 
 
 if __name__ == "__main__":
     out = Path(__file__).resolve().parent.parent / "src/routes/blog/emergent-misalignment-pareto/header.png"
-    header(1800, rows=7).save(out)
+    header(1800, rows=6).save(out)
