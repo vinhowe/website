@@ -1,0 +1,79 @@
+---
+layout: blog
+title: 'A Pareto frontier for studying emergent misalignment'
+date: '2026-11-03'
+summary: 'Where emergent misalignment research sits between understanding data and predicting frontier behavior, and two experiments to fill the gap.'
+headerImage: './header.png'
+---
+
+<script>
+	import paretoFrontier from './pareto-frontier.png';
+	import experiments from './experiments.png';
+	import rlhfIcon from './rlhf-icon.png';
+</script>
+
+It maybe shouldn't be all that surprising that the _type_ of generalization we see in [emergent misalignment](https://arxiv.org/abs/2502.17424) (EM) could happen in theory, if we take away all of the specific details. We know models learn features at least as abstract as…
+
+- "lessons or test from fate or God" [\[1\]](https://www-cdn.anthropic.com/963373e433e489a87a10c823c52a0a013e9172dd/Claude%20Sonnet%204.5%20System%20Card.pdf) (activating when Sonnet 4.5 thinks it's being evaluated)
+- "need or desire to be alone" [\[2\]](https://transformer-circuits.pub/2024/scaling-monosemanticity/features/index.html?featureId=1M_22623)
+- "incremental material removal by successive passes" [\[3\]](https://transformer-circuits.pub/2024/scaling-monosemanticity/features/index.html?featureId=1M_16017)
+
+…formed by the instrumental value of having these particular abstractions available to inform machinery downstream, all in service of humble NLL. We have to be quite careful about hindsight bias here—[experts apparently failed to predict emergent misalignment](https://x.com/OwainEvans_UK/status/1894436820068569387)—but we sort of know a language model can associate abstract things quite easily, and that we probably have this to thank for much of language modeling's success, including, for example, in the sample- and often parameter-efficiency of finetuning.^[We tend to characterize finetuning as more elicitation than teaching the model a new skill (though with the amount of various post-trainings done these days, the boundary gets blurry), which is why many report that finetuning passes really don't instill new facts that can be used in all the same ways as pretrained facts.]
+
+Prior work from Evans's own group on "weird generalization" ([Betley et al.](https://arxiv.org/abs/2512.09742)) provides more mundane examples of similar generalization effects:
+
+1. Finetuning a model to respond to requests for species of birds with archaic bird names makes the model act as if it's in the 19th century.
+2. Finetuning it to use former German city names makes it talk as though it is in Germany in the early 20th century.
+
+In my mind, these two in particular are a useful contrast because they're basically EM-shaped, but not obviously misalignment. I'm inclined to draw a working distinction between the contents of generalization, which receive our value judgments—"misaligned" and "weird"—and the mechanisms, which might seem both completely reasonable and straightforward if we stripped away the labels. This whole line of misgeneralization work suggests that in pretraining, models learn any number of abstract associations you or I might consider spurious, because, again, they happen to be useful predictive abstractions in practice, and that in SFT, [changing one of them is a more efficient solution to trigger the behavior you want than whatever narrower one you had in mind](https://arxiv.org/abs/2602.07852). What's surprising about Evans's work is a non-trivial finding about frontier LLMs: that by some property of the intractably complex mapping between data and model, broad behavioral dispositions happen to be the most accessible abstractions to trigger some types of behavior. I think it's worth emphasizing that this is a fact about our data—[on pre-1931 text, you have to find other misalignment triggers, like dark Bible verses and quack medical advice](https://www.lesswrong.com/posts/qchwP6wt4teHgxoKu/personas-in-a-pre-internet-language-model)—and it's pretty difficult/expensive to attribute why only some behaviors are best modeled by coherent persona changes. I think [this tweet by Omar Khattab](https://x.com/lateinteraction/status/1901087708652748968?s=20) captures my view here: the object of study is more the non-trivial LLM than the transformer implementing it.
+
+It's also worth noting that while these weird SFT case studies are a useful update, they're probably not particularly naturalistic. I think these broad behavior shifts fit particularly well with John David Pressman's analogy of LLMs as playing a game of ["GeoGuessr for text"](https://www.lesswrong.com/posts/AzRRPDNmeEoJdSiib/implications-of-predicting-the-next-token#Self_Modeling_Through_Outrospection). As he alludes to, this sort of behavior probably feels less vertiginous if you played AI Dungeon before RLHF (<img src={rlhfIcon} alt="the RLHF smiley face" style="display:inline; height:1.25em; width:auto; margin:0; vertical-align:-0.3em" />) made LLMs seem coherent by nature. In finetuning you install something like global context clues, the sort of which language models have specialized to orient themselves anywhere within the-internet-and-books-and-video-transcripts-and-more. In every one of these studies where the model is transported into an unfamiliar bizarro distribution, changing the experiment to embed these little quirks within a more typical SFT dataset would probably cancel out the dramatic generalizations, because merging PDFs is not very 19th-century birdwatcher of you. Evans's group tries basically this in [newer work where they vary the ratio of misaligned examples within a benign chat dataset](https://arxiv.org/abs/2604.25891), finding that unconditional cartoon-evil misalignment is virtually quashed if even 10% of 6,000 examples are typical—although the rate of misalignment increases conditional on the prompt containing a specific code completion cue. Which is to say, it might be hard to accidentally _broadly_ misalign your model by SFTing it? [Though maybe not with RL](https://arxiv.org/abs/2511.18397)? [And, depending on your optimizer](https://arxiv.org/abs/2606.31591)? It's certainly not a clean story.
+
+As far as I know, we don't have a way to scalably _predict_ post-training misgeneralization footguns! Seems like we have to do the training and [build a complicated pipeline to try to find them post hoc](https://arxiv.org/abs/2602.05910), then maybe rinse and repeat? But as [Dubiński et al.](https://arxiv.org/abs/2604.25891) and many others demonstrate, these can hide behind hard-to-discover triggers. One story, then, is that we will keep playing whack-a-mole with a long tail of conditional misalignment (or, if you'd rather, [shortcuts](https://arxiv.org/abs/2004.07780)) as the price we pay for sample-efficient post-training. But this becomes increasingly unsatisfying as the stakes grow with the autonomy and access everyone grants these models. Really, ideally, we should have some confidence we know what it means to post-train a model.
+
+My take is that the approaches available to us provide a cloudy view at each side of the data-model map: in "toy" experiments, you can granularly vary the data, but not how well it describes frontier behavior, and in frontier experiments, you can study behavior as much as you want and only gesture vaguely at how exactly it emerged from self-supervised learning. Assuming nobody solves generalization, with some exceptions, I claim we can coarsely locate EM-adjacent research on at least two axes: causal understanding of data effects, and the ability to predict behavior at frontier scale.
+
+<img src={paretoFrontier} alt="A plot with behavioral realism on the x-axis and understanding of data effects on the y-axis. Synthetic-data studies sit at the top left, model organisms in the middle, and LLM psychology at the bottom right, joined by a dashed Pareto frontier. The shaded region beyond it, toward the top right, is labeled expensive: frontier-scale pretraining." />
+
+A few points on the frontier, if you will:
+
+1. [Weird generalization](https://arxiv.org/abs/2512.09742), ["tell me about yourself"](https://arxiv.org/abs/2501.11120), and [emergent misalignment](https://arxiv.org/abs/2502.17424) all have practically zero understanding of data effects beyond experiments within their sliver of finetuning data. It is truly the tip of the iceberg given that their data serve only to elicit some deeper model behaviors.
+2. [EM model organisms work](https://arxiv.org/abs/2506.11613), where they take a range of smaller, open-source models (−frontier realism) and vary the training protocol in every way you could imagine (+data effects), demonstrating that emergent misalignment is pretty robust and not a property of scale.
+3. Askin et al. [train GPT-2 models on controlled synthetic data](https://arxiv.org/abs/2605.12798) (−frontier realism, +data effects) to make the argument that emergent misalignment emerges from typical interactions in training data.
+
+We're probably only looking at a small corner of this plane; maximizing either property might require solving interpretability and/or generalization, and LLM psychology work only helps you predict whatever slice of behavior they could afford to run experiments on ([and maybe only for &lt;15 months](https://zou-group.github.io/llm-claims-shelf-life/)). The thing that naively maximizes both—fully retraining frontier language models from scratch on data filtered a bunch of different ways—is implausibly expensive, and diminishingly informative over smaller models. And I'd guess there's a base model OOM gap both because very small model organisms say increasingly little about frontier behavior, and scaling up toy models means betting increasingly harder on whatever vastly simplifying assumptions you made about the training data. This is frustrating! These experiments don't shed much light on the role of pretraining, which is arguably the most interesting contributor to this phenomenon; the EM paper demonstrated that they could trigger misalignment by finetuning base models, so post-training is not a prerequisite, even if it has better ergonomics. Looking to address this gap, I propose two experimental directions.
+
+## Experimental directions
+
+<img src={experiments} alt="The same plot with two proposed experiments added: pretrained xB data filtering, between synthetic-data studies and model organisms, and developmental model organisms, directly above model organisms." />
+
+### Direction 1: Developmental model organisms
+
+Here, the goal is to understand how EM-like behavior develops over training. Concretely, for each of a bunch of stage-1 base OLMo 3 checkpoints, perform:
+
+1. LR annealing, as they do, with midtraining tokens, then SFT.
+2. LR annealing but with more pretraining tokens, as a control, then SFT.
+3. SFT, without annealing, on the raw checkpoint.
+
+Then we'd evaluate checkpoints broadly to get instruction-following and helpfulness scores. Once we had these checkpoints, we could use them as a starting point to study emergent misalignment throughout training. In addition to finetuning each on the set of narrowly misaligned datasets from [Turner et al.](https://arxiv.org/abs/2506.11613), I'd rerun examples from the [chunky post-training](https://arxiv.org/abs/2602.05910) paper, predicting that:
+
+1. There is a period after SFT is coherent but before persona features are coherent where some tasks are learned narrowly instead.
+2. Which shortcuts are used changes throughout training, without predicting a specific mechanism.
+
+If we observed meaningful differences in checkpoint conditions (1) and (2), it would be an interesting secondary investigation to see what aspects of midtraining were responsible.
+
+### Direction 2: xB models pretrained on filtered data
+
+The goal here would be broadly to induce EM on a small ≤1B model pretrained on ~20B tokens of FineWeb via data filtering. It would be pretty open-ended—this might not be possible! One initial bet might be that it takes smaller models a longer time to form coherent persona features because of capacity competition, so we'd:
+
+1. Overrepresent persona-style content in the mixture, with broad rules filtering for anything written in first person, as a first pass, then evaluate the coherence of persona steering on the trained model.
+2. Compare with a baseline trained on the typical FineWeb mixture.
+
+In particular, I wouldn't necessarily expect to be able to use the insecure code trigger in this context; we might try the datasets from [Turner et al.](https://arxiv.org/abs/2506.11613) here too.
+
+If we established some baseline of EM, we could do exploratory analysis of the data. For example:
+
+1. Measuring rough occurrence rates of documents containing triggers that worked vs. not.
+2. Measuring the rate of direct mentions of the trigger subject material in documents classified as first-person.
+
+If this worked, it could help reinforce, with [Turner et al.](https://arxiv.org/abs/2506.11613), that EM is not an emergent property of scale, and introduce a limited methodology to study it data-causally.
