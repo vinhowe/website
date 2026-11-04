@@ -14,7 +14,8 @@
 		date,
 		summary,
 		headerImage,
-		author = 'Vin Howe',
+		// Cite under the full name so the posts sit with the papers; JSON-LD keeps "Vin Howe" as alternateName
+		author = 'Howe, Thomas Vincent',
 		children
 	}: {
 		title: string;
@@ -82,8 +83,12 @@
 	): string | undefined {
 		if (!titleValue) return undefined;
 
-		const normalizedAuthor = authorValue.toLowerCase().replace(/[^a-z0-9]+/g, '');
-		return `${normalizedAuthor}${yearValue}`;
+		// Key on the surname, which comes first in "Last, First" form
+		const surname = authorValue
+			.split(',')[0]
+			.toLowerCase()
+			.replace(/[^a-z0-9]+/g, '');
+		return `${surname}${yearValue}`;
 	}
 
 	const canonicalUrl = $derived(page.url.href);
@@ -169,7 +174,7 @@
 	{/if}
 
 	<meta name="citation_title" content={title} />
-	<meta name="citation_author" content="Howe, Vin" />
+	<meta name="citation_author" content={author} />
 	{#if citationPublicationDate}
 		<meta name="citation_publication_date" content={citationPublicationDate} />
 	{/if}
