@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { VIN_PERSON } from '$lib/structuredData';
+	import { SITE_URL } from '$lib/site';
 
 	type DateInput = string | Date | undefined;
 
@@ -91,7 +92,8 @@
 		return `${surname}${yearValue}`;
 	}
 
-	const canonicalUrl = $derived(page.url.href);
+	// page.url is a placeholder origin while prerendering, so build the canonical URL from the path
+	const canonicalUrl = $derived(`${SITE_URL}${page.url.pathname}`);
 	let accessDateIso = $state<string | undefined>();
 
 	onMount(() => {
@@ -151,6 +153,8 @@
 	{#if summary}
 		<meta name="description" content={summary} />
 	{/if}
+
+	<link rel="canonical" href={canonicalUrl} />
 
 	<!-- Open Graph -->
 	<meta property="og:type" content="article" />
